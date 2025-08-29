@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String                 @id @default(uuid())
+  email         String                 @unique
+  passwordHash  String
+  createdAt     DateTime               @default(now())
+  tokens        DeviceToken[]
+  joinReqs      HouseholdJoinRequest[]
+  memberships   HouseholdMember[]
+  ledgerEntries LedgerEntry[]          @relation("UserLedgerEntries")
+}
+
+model DeviceToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  platform  String
+  createdAt DateTime @default(now())
+  lastSeen  DateTime @default(now())
+  revoked   Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Household {
+  id            String                 @id @default(uuid())
+  name          String
+  currency      String                 @default("EUR")
+  createdAt     DateTime               @default(now())
+  invites       HouseholdInvite[]
+  joinReqs      HouseholdJoinRequest[]
+  members       HouseholdMember[]
+  ledgerEntries LedgerEntry[]          @relation("HouseholdLedgerEntries")
+}
+
+model HouseholdMember {
+  householdId String
+  userId      String
+  role        HouseholdRole @default(MEMBER)
+  joinedAt    DateTime      @default(now())
+  household   Household     @relation(fields: [householdId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+
+  @@id([householdId, userId])
+}
+
+model HouseholdInvite {
+  id              String                 @id @default(uuid())
+  householdId     String
+  codeHash        String
+  expiresAt       DateTime
+  maxUses         Int                    @default(10)
+  uses            Int                    @default(0)
+  requireApproval Boolean                @default(true)
+  createdBy       String
+  usedAt          DateTime?
+  revokedAt       DateTime?
+  household       Household              @relation(fields: [householdId], references: [id])
+  joinRequests    HouseholdJoinRequest[] @relation("InviteJoinRequests")
+
+  @@index([householdId])
+}
+
+model HouseholdJoinRequest {
+  id          String          @id @default(uuid())
+  householdId String
+  userId      String
+  inviteId    String
+  status      JoinStatus      @default(PENDING)
+  createdAt   DateTime        @default(now())
+  decidedAt   DateTime?
+  decidedBy   String?
+  household   Household       @relation(fields: [householdId], references: [id])
+  invite      HouseholdInvite @relation("InviteJoinRequests", fields: [inviteId], references: [id])
+  user        User            @relation(fields: [userId], references: [id])
+
+  @@unique([householdId, userId, status])
+}
+
+model LedgerEntry {
+  id          String    @id @default(uuid())
+  householdId String
+  userId      String
+  type        EntryType
+  amount      Decimal   @db.Decimal(14, 2)
+  category    String?
+  note        String?
+  occursAt    DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  household   Household @relation("HouseholdLedgerEntries", fields: [householdId], references: [id])
+  user        User      @relation("UserLedgerEntries", fields: [userId], references: [id])
+
+  @@index([householdId, occursAt])
+}
+
+enum HouseholdRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum JoinStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EntryType {
+  INCOME
+  EXPENSE
+}

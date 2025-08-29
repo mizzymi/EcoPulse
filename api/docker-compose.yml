@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: eco
+      POSTGRES_PASSWORD: eco
+      POSTGRES_DB: ecopulse
+    ports: ["5432:5432"]
+    volumes: [dbdata:/var/lib/postgresql/data]
+  api:
+    build: .
+    command: npm run dev
+    ports: ["3000:3000"]
+    depends_on: [db]
+volumes:
+  dbdata:

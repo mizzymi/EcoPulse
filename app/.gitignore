@@ -5,13 +5,23 @@
 *.swp
 .DS_Store
 .atom/
-.build/
+/build/
+/.dart_tool/
+/.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
 .buildlog/
 .history
 .svn/
 .swiftpm/
 migrate_working_dir/
-
+/android/
+/ios/
+/linux/
+/windows/
+/macos/
 # IntelliJ related
 *.iml
 *.ipr

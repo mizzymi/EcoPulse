@@ -1,5 +1,5 @@
 name: ecopulse
-description: EcoPulse client (Windows)
+description: EcoPulse
 publish_to: "none"
 
 environment:
@@ -8,7 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10
   flutter_riverpod: ^2.5.1
+  flutter_launcher_icons: ^0.13.1
   dio: ^5.5.0
   cupertino_icons: ^1.0.8
   socket_io_client: ^2.0.3
@@ -19,3 +21,15 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - lib/assets/app_icon.svg
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+
+  image_path: "lib/assets/app_icon_1024.png"
+
+  adaptive_icon_foreground: "lib/assets/app_icon_1024.png"
+  adaptive_icon_background: "#FFFFFF"
+  remove_alpha_ios: true

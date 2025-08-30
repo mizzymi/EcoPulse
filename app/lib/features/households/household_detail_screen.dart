@@ -598,21 +598,25 @@ class _AddEntrySheetState extends ConsumerState<_AddEntrySheet> {
               style:
                   const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const Spacer(),
-          SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(
-                  value: 'EXPENSE',
-                  label: Text('Gasto'),
-                  icon: Icon(Icons.trending_down)),
-              ButtonSegment(
-                  value: 'INCOME',
-                  label: Text('Ingreso'),
-                  icon: Icon(Icons.trending_up)),
-            ],
-            selected: {_type},
-            onSelectionChanged: (s) => setState(() => _type = s.first),
-          ),
         ]),
+        Row(
+          children: [
+            SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(
+                    value: 'EXPENSE',
+                    label: Text('Gasto'),
+                    icon: Icon(Icons.trending_down)),
+                ButtonSegment(
+                    value: 'INCOME',
+                    label: Text('Ingreso'),
+                    icon: Icon(Icons.trending_up)),
+              ],
+              selected: {_type},
+              onSelectionChanged: (s) => setState(() => _type = s.first),
+            )
+          ],
+        ),
         const SizedBox(height: 12),
         TextField(
           controller: _amountCtrl,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api/dio.dart';
 import 'features/auth/auth_screen.dart';
@@ -60,7 +61,23 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
           ? const AuthScreen()
           : Builder(
               builder: (innerContext) => Scaffold(
-                appBar: AppBar(title: const Text('EcoPulse - Demo Households')),
+                appBar: AppBar(
+                  title: const Text('EcoPulse - Households'),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: SvgPicture.asset(
+                        'lib/assets/app_icon.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 body: Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 420),
@@ -97,7 +114,8 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
                             _messenger.currentState?.showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    'Casa creada: ${created['name'] ?? ''}'),
+                                  'Casa creada: ${created['name'] ?? ''}',
+                                ),
                               ),
                             );
 

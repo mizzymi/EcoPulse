@@ -28,18 +28,20 @@ export class HouseholdsService {
     private notifications: NotificationsService,
   ) {}
 
-  /* ===== Members / roles ===== */
+  /* ========= helpers de membresía ========= */
 
   private async getMembership(userId: string, householdId: string) {
     return this.prisma.householdMember.findUnique({
       where: { householdId_userId: { householdId, userId } },
     });
   }
+
   private async assertMember(userId: string, householdId: string) {
     const m = await this.getMembership(userId, householdId);
     if (!m) throw new ForbiddenException('No perteneces a esta casa');
     return m;
   }
+
   private async assertAdmin(userId: string, householdId: string) {
     const m = await this.assertMember(userId, householdId);
     if (m.role !== 'OWNER' && m.role !== 'ADMIN') {
@@ -47,7 +49,7 @@ export class HouseholdsService {
     }
   }
 
-  /* ===== Households ===== */
+  /* ================= Households ================= */
 
   async createHousehold(userId: string, name: string, currency = 'EUR') {
     if (!name?.trim()) throw new BadRequestException('Nombre requerido');
@@ -66,6 +68,7 @@ export class HouseholdsService {
       include: { household: true },
       orderBy: { joinedAt: 'desc' },
     });
+
     return ms.map((m) => ({
       id: m.household.id,
       name: m.household.name,
@@ -75,7 +78,7 @@ export class HouseholdsService {
     }));
   }
 
-  /* ===== Invites / Join by code ===== */
+  /* ============== Invitaciones / Join por código ============== */
 
   async createInvite(
     userId: string,
@@ -162,7 +165,7 @@ export class HouseholdsService {
     return { status: 'APPROVED', householdId: invite.householdId };
   }
 
-  /* ===== Ledger (ingresos/gastos) ===== */
+  /* ================= Ledger (gastos/ingresos) ================= */
 
   async addEntry(
     userId: string,
@@ -311,5 +314,209 @@ export class HouseholdsService {
 
     await this.prisma.ledgerEntry.delete({ where: { id: entryId } });
     return { ok: true };
+  }
+
+  /* ===================== Ahorros ===================== */
+
+  // Metas
+  async createSavingsGoal(
+    userId: string,
+    householdId: string,
+    dto: { name: string; target: number | string; deadline?: string | Date },
+  ) {
+    await this.assertAdmin(userId, householdId);
+    const target =
+      typeof dto.target === 'string' ? Number(dto.target) : dto.target;
+    if (!dto.name?.trim()) throw new BadRequestException('name requerido');
+    if (!Number.isFinite(target) || target <= 0)
+      throw new BadRequestException('target > 0');
+
+    return this.prisma.savingsGoal.create({
+      data: {
+        householdId,
+        name: dto.name.trim(),
+        target,
+        deadline: dto.deadline ? new Date(dto.deadline) : null,
+        createdBy: userId,
+      },
+    });
+  }
+
+  async listSavingsGoals(userId: string, householdId: string) {
+    await this.assertMember(userId, householdId);
+    const goals = await this.prisma.savingsGoal.findMany({
+      where: { householdId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const sums = await this.prisma.savingsTxn.groupBy({
+      by: ['goalId', 'type'],
+      where: { goalId: { in: goals.map((g) => g.id) } },
+      _sum: { amount: true },
+    });
+
+    const map: Record<string, { deposit: number; withdraw: number }> = {};
+    for (const s of sums) {
+      const g = (map[s.goalId] ||= { deposit: 0, withdraw: 0 });
+      const val = Number(s._sum.amount ?? 0);
+      if (s.type === 'DEPOSIT') g.deposit += val;
+      else g.withdraw += val;
+    }
+
+    return goals.map((g) => {
+      const agg = map[g.id] || { deposit: 0, withdraw: 0 };
+      const saved = agg.deposit - agg.withdraw;
+      const pct = Math.max(0, Math.min(100, (saved / Number(g.target)) * 100));
+      return { ...g, saved, progress: Number.isFinite(pct) ? pct : 0 };
+    });
+  }
+
+  async updateSavingsGoal(
+    userId: string,
+    householdId: string,
+    goalId: string,
+    dto: { name?: string; target?: number | string; deadline?: string | Date | null },
+  ) {
+    await this.assertAdmin(userId, householdId);
+    const goal = await this.prisma.savingsGoal.findUnique({ where: { id: goalId } });
+    if (!goal || goal.householdId !== householdId)
+      throw new NotFoundException('Meta no encontrada');
+
+    const data: any = {};
+    if (dto.name !== undefined) {
+      if (!dto.name.trim())
+        throw new BadRequestException('name no puede ser vacío');
+      data.name = dto.name.trim();
+    }
+    if (dto.target !== undefined) {
+      const n = typeof dto.target === 'string' ? Number(dto.target) : dto.target;
+      if (!Number.isFinite(n) || n <= 0)
+        throw new BadRequestException('target > 0');
+      data.target = n;
+    }
+    if (dto.deadline !== undefined) {
+      data.deadline = dto.deadline === null ? null : new Date(dto.deadline as any);
+    }
+
+    return this.prisma.savingsGoal.update({ where: { id: goalId }, data });
+  }
+
+  async deleteSavingsGoal(userId: string, householdId: string, goalId: string) {
+    await this.assertAdmin(userId, householdId);
+    const goal = await this.prisma.savingsGoal.findUnique({ where: { id: goalId } });
+    if (!goal || goal.householdId !== householdId)
+      throw new NotFoundException('Meta no encontrada');
+
+    // Borrado en cascada + asientos de gasto asociados a depósitos de esta meta
+    await this.prisma.$transaction(async (tx) => {
+      await tx.savingsTxn.deleteMany({ where: { goalId } });
+      await tx.ledgerEntry.deleteMany({
+        where: {
+          householdId,
+          category: 'Ahorros',
+          // Marcados con la etiqueta en la nota:
+          note: { contains: `[AHORRO:${goalId}]` },
+        },
+      });
+      await tx.savingsGoal.delete({ where: { id: goalId } });
+    });
+
+    return { ok: true };
+  }
+
+  // Transacciones de ahorro
+  async addSavingsTxn(
+    userId: string,
+    householdId: string,
+    goalId: string,
+    dto: { type: 'DEPOSIT' | 'WITHDRAW'; amount: number | string; note?: string; occursAt?: string | Date },
+  ) {
+    await this.assertMember(userId, householdId);
+    const goal = await this.prisma.savingsGoal.findUnique({ where: { id: goalId } });
+    if (!goal || goal.householdId !== householdId)
+      throw new NotFoundException('Meta no encontrada');
+
+    const t = (dto.type || '').toUpperCase();
+    if (t !== 'DEPOSIT' && t !== 'WITHDRAW')
+      throw new BadRequestException('type inválido');
+
+    const amt = typeof dto.amount === 'string' ? Number(dto.amount) : dto.amount;
+    if (!Number.isFinite(amt) || amt <= 0)
+      throw new BadRequestException('amount > 0');
+
+    const when = dto.occursAt ? new Date(dto.occursAt) : new Date();
+    const cleanNote = dto.note?.trim() || null;
+
+    // IMPORTANTE: si es DEPOSIT, también crear un gasto en Ledger (categoría "Ahorros") del mismo importe/fecha
+    return this.prisma.$transaction(async (tx) => {
+      const savedTxn = await tx.savingsTxn.create({
+        data: {
+          goalId,
+          userId,
+          type: t as any,
+          amount: amt,
+          note: cleanNote,
+          occursAt: when,
+        },
+      });
+
+      if (t === 'DEPOSIT') {
+        // Etiquetamos la nota para poder limpiar si se borra la meta
+        const marker = `[AHORRO:${goalId}]`;
+        await tx.ledgerEntry.create({
+          data: {
+            householdId,
+            userId,
+            type: 'EXPENSE',
+            amount: amt,
+            category: 'Ahorros',
+            note: `${marker} Depósito ahorro: "${goal.name}"${cleanNote ? ` — ${cleanNote}` : ''}`,
+            occursAt: when,
+          },
+        });
+      }
+
+      return savedTxn;
+    });
+  }
+
+  async listSavingsTxns(userId: string, householdId: string, goalId: string) {
+    await this.assertMember(userId, householdId);
+    const goal = await this.prisma.savingsGoal.findUnique({ where: { id: goalId } });
+    if (!goal || goal.householdId !== householdId)
+      throw new NotFoundException('Meta no encontrada');
+
+    return this.prisma.savingsTxn.findMany({
+      where: { goalId },
+      orderBy: { occursAt: 'desc' },
+      take: 200,
+    });
+  }
+
+  async savingsGoalSummary(userId: string, householdId: string, goalId: string) {
+    await this.assertMember(userId, householdId);
+    const goal = await this.prisma.savingsGoal.findUnique({ where: { id: goalId } });
+    if (!goal || goal.householdId !== householdId)
+      throw new NotFoundException('Meta no encontrada');
+
+    const grouped = await this.prisma.savingsTxn.groupBy({
+      by: ['type'],
+      where: { goalId },
+      _sum: { amount: true },
+    });
+
+    const dep = Number(grouped.find((g) => g.type === 'DEPOSIT')?._sum.amount ?? 0);
+    const wd = Number(grouped.find((g) => g.type === 'WITHDRAW')?._sum.amount ?? 0);
+    const saved = dep - wd;
+    const target = Number(goal.target);
+    const progress = target > 0 ? Math.max(0, Math.min(100, (saved / target) * 100)) : 0;
+
+    return {
+      goal,
+      saved,
+      target,
+      progress,
+      remaining: Math.max(0, target - saved),
+    };
   }
 }

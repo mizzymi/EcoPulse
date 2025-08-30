@@ -4,11 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "nest start --watch",
-    "start": "nest start",
     "build": "nest build",
+    "start": "nest start",
+    "start:prod": "node dist/main.js",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:deploy": "prisma migrate deploy",
     "postinstall": "prisma generate"
   },
   "dependencies": {

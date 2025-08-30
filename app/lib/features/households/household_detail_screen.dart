@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../api/dio.dart';
 import 'generate_invite_screen.dart';
+import 'savings/savings_goals_screen.dart';
 
 class HouseholdDetailScreen extends ConsumerStatefulWidget {
   final String householdId;
@@ -71,6 +72,220 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
+  Future<void> _openQuickSavingsDeposit() async {
+    final dio = ref.read(dioProvider);
+    List<dynamic> goals = [];
+    try {
+      final res =
+          await dio.get('/households/${widget.householdId}/savings-goals');
+      goals = (res.data as List).toList();
+    } on DioException catch (e) {
+      final msg = e.response?.data is Map &&
+              (e.response!.data as Map)['message'] != null
+          ? (e.response!.data as Map)['message'].toString()
+          : (e.message ?? 'No se pudieron cargar las metas');
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(msg)));
+      }
+      return;
+    }
+
+    if (goals.isEmpty) {
+      final go = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Sin metas de ahorro'),
+          content: const Text(
+              'Crea primero una meta para poder registrar depósitos.'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar')),
+            FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Crear meta')),
+          ],
+        ),
+      );
+      if (go == true && mounted) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => SavingsGoalsScreen(
+              householdId: widget.householdId,
+              householdName: widget.householdName ?? 'Casa',
+            ),
+          ),
+        );
+      }
+      return;
+    }
+
+    // 2) Diálogo para elegir meta + importe + nota
+    String? selectedGoalId = goals.first['id'].toString();
+    final amountCtrl = TextEditingController();
+    final noteCtrl = TextEditingController();
+    bool saving = false;
+
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setStateDialog) => AlertDialog(
+          title: const Text('Ingreso a ahorro'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButtonFormField<String>(
+                value: selectedGoalId,
+                items: [
+                  ...goals.map((g) {
+                    final name = g['name']?.toString() ?? 'Meta';
+                    return DropdownMenuItem(
+                      value: g['id'].toString(),
+                      child: Text(name),
+                    );
+                  }),
+                ],
+                onChanged: (v) => setStateDialog(() {
+                  selectedGoalId = v;
+                }),
+                decoration: const InputDecoration(
+                  labelText: 'Meta',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: amountCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                  labelText: 'Importe',
+                  hintText: 'Ej. 50.00',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: noteCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Nota (opcional)',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: saving ? null : () => Navigator.pop(context, false),
+                child: const Text('Cancelar')),
+            FilledButton.icon(
+              onPressed: saving
+                  ? null
+                  : () async {
+                      final amt =
+                          double.tryParse(amountCtrl.text.replaceAll(',', '.'));
+                      if (amt == null || amt <= 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Importe inválido')),
+                        );
+                        return;
+                      }
+                      if (selectedGoalId == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Selecciona una meta')),
+                        );
+                        return;
+                      }
+                      setStateDialog(() => saving = true);
+                      try {
+                        await dio.post(
+                          '/households/${widget.householdId}/savings-goals/$selectedGoalId/txns',
+                          data: {
+                            'type': 'DEPOSIT',
+                            'amount': amt,
+                            if (noteCtrl.text.trim().isNotEmpty)
+                              'note': noteCtrl.text.trim(),
+                          },
+                        );
+                        if (context.mounted) {
+                          Navigator.pop(context, true);
+                        }
+                      } on DioException catch (e) {
+                        final msg = e.response?.data is Map &&
+                                (e.response!.data as Map)['message'] != null
+                            ? (e.response!.data as Map)['message'].toString()
+                            : (e.message ?? 'No se pudo registrar el depósito');
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(msg)));
+                        }
+                      } finally {
+                        if (context.mounted) {
+                          setStateDialog(() => saving = false);
+                        }
+                      }
+                    },
+              icon: saving
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.check),
+              label: const Text('Guardar'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (ok == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Depósito de ahorro registrado')),
+      );
+      await _refresh();
+    }
+  }
+
+  Future<void> _confirmAndDeleteEntry(String entryId) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Eliminar movimiento'),
+        content: const Text('¿Seguro que quieres eliminarlo?'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancelar')),
+          FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Eliminar')),
+        ],
+      ),
+    );
+    if (ok == true) {
+      final dio = ref.read(dioProvider);
+      try {
+        await dio.delete('/households/${widget.householdId}/entries/$entryId');
+        await _refresh();
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Eliminado')));
+        }
+      } on DioException catch (e) {
+        final msg = e.response?.data is Map &&
+                (e.response!.data as Map)['message'] != null
+            ? (e.response!.data as Map)['message'].toString()
+            : (e.message ?? 'No se pudo eliminar');
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(msg)));
+        }
+      }
+    }
+  }
+
   String _fmtAmount(dynamic a) {
     final n = (a is num) ? a : double.tryParse(a.toString()) ?? 0;
     return n.toStringAsFixed(2);
@@ -83,6 +298,27 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       appBar: AppBar(
         title: Text(name),
         actions: [
+          IconButton(
+            tooltip: 'Ahorro',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SavingsGoalsScreen(
+                    householdId: widget.householdId,
+                    householdName: name,
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.list_alt),
+          ),
+          // Ingreso rápido a ahorro
+          IconButton(
+            tooltip: 'Ingreso ahorro',
+            onPressed: _openQuickSavingsDeposit,
+            icon: const Icon(Icons.savings),
+          ),
           IconButton(
             tooltip: 'Generar código',
             onPressed: () async {
@@ -149,12 +385,14 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     final when = dt != null
                         ? '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}'
                         : '';
+
                     return Card(
                       child: ListTile(
                         leading: CircleAvatar(
-                            child: Icon(isIncome
-                                ? Icons.trending_up
-                                : Icons.trending_down)),
+                          child: Icon(
+                            isIncome ? Icons.trending_up : Icons.trending_down,
+                          ),
+                        ),
                         title: Text(e['category']?.toString() ??
                             (isIncome ? 'Ingreso' : 'Gasto')),
                         subtitle: Text([
@@ -162,52 +400,48 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                           if ((e['note'] ?? '').toString().isNotEmpty)
                             e['note'].toString()
                         ].join('  •  ')),
-                        trailing: Text(
-                          (isIncome ? '+' : '-') + amount,
-                          style: TextStyle(
-                            color: isIncome ? Colors.teal : Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onTap: () => _openAddEntry(existing: e), // EDITAR
-                        onLongPress: () async {
-                          final ok = await showDialog<bool>(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: const Text('Eliminar movimiento'),
-                              content:
-                                  const Text('¿Seguro que quieres eliminarlo?'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancelar')),
-                                FilledButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
-                                    child: const Text('Eliminar')),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              (isIncome ? '+' : '-') + amount,
+                              style: TextStyle(
+                                color: isIncome ? Colors.teal : Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            PopupMenuButton<String>(
+                              tooltip: 'Acciones',
+                              onSelected: (v) {
+                                if (v == 'edit') {
+                                  _openAddEntry(existing: e);
+                                } else if (v == 'delete') {
+                                  _confirmAndDeleteEntry(e['id'].toString());
+                                }
+                              },
+                              itemBuilder: (ctx) => [
+                                const PopupMenuItem(
+                                  value: 'edit',
+                                  child: ListTile(
+                                    leading: Icon(Icons.edit_outlined),
+                                    title: Text('Editar'),
+                                  ),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: ListTile(
+                                    leading: Icon(Icons.delete_outline),
+                                    title: Text('Eliminar'),
+                                  ),
+                                ),
                               ],
                             ),
-                          );
-                          if (ok == true) {
-                            final dio = ref.read(dioProvider);
-                            try {
-                              await dio.delete(
-                                  '/households/${widget.householdId}/entries/${e['id']}');
-                              await _refresh();
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Eliminado')));
-                              }
-                            } on DioException {
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('No se pudo eliminar')));
-                              }
-                            }
-                          }
-                        },
+                          ],
+                        ),
+                        onTap: () => _openAddEntry(existing: e),
+                        onLongPress: () =>
+                            _confirmAndDeleteEntry(e['id'].toString()),
                       ),
                     );
                   }),
@@ -260,7 +494,7 @@ class _SummaryCard extends StatelessWidget {
 
 class _AddEntrySheet extends ConsumerStatefulWidget {
   final String householdId;
-  final Map<String, dynamic>? existing; // null = crear, no-null = editar
+  final Map<String, dynamic>? existing;
   const _AddEntrySheet({required this.householdId, this.existing});
 
   @override

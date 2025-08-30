@@ -2,23 +2,29 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_token_provider.dart';
 
+const String kWsBase = 'https://ecopulse.reimii.com';
+
 final wsProvider = Provider<IO.Socket?>((ref) {
   final token = ref.watch(authTokenProvider);
   if (token == null) return null;
 
   final socket = IO.io(
-    'http://localhost:3000',
+    kWsBase,
     IO.OptionBuilder()
-        .setTransports(['websocket'])
-        .setPath('/realtime')
-        .setExtraHeaders({'Authorization': 'Bearer $token'})
+        .setTransports(['websocket'])  
+        .setPath('/realtime')           
+        .setExtraHeaders({
+          'Authorization': 'Bearer $token',
+        })
         .disableAutoConnect()
         .build(),
   );
 
   socket.onConnect((_) => print('[WS] conectado'));
-  socket.onDisconnect((_) => print('[WS] desconectado'));
+  socket.onConnectError((e) => print('[WS] connect_error: $e'));
   socket.onError((e) => print('[WS] error: $e'));
+  socket.onDisconnect((_) => print('[WS] desconectado'));
+
   socket.connect();
 
   ref.onDispose(() {

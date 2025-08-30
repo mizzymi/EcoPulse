@@ -2,17 +2,27 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_token_provider.dart';
 
-final dioProvider = Provider<Dio>((ref) {
-  final token = ref.watch(authTokenProvider);
-  final dio = Dio(BaseOptions(baseUrl: 'http://localhost:3000'));
+const String kApiBaseUrl = 'https://ecopulse.reimii.com';
 
-  dio.interceptors.add(InterceptorsWrapper(
-    onRequest: (opt, handler) {
-      if (token != null && token.isNotEmpty) {
-        opt.headers['Authorization'] = 'Bearer $token';
-      }
-      handler.next(opt);
-    },
-  ));
+final dioProvider = Provider<Dio>((ref) {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: kApiBaseUrl,
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 20),
+      contentType: 'application/json',
+    ),
+  );
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (opts, handler) {
+        final token = ref.read(authTokenProvider);
+        if (token != null) {
+          opts.headers['Authorization'] = 'Bearer $token';
+        }
+        handler.next(opts);
+      },
+    ),
+  );
   return dio;
 });

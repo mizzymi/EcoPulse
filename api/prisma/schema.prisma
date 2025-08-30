@@ -7,15 +7,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/**
+ * ===================== ENUMS =====================
+ */
+
+enum HouseholdRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum JoinStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EntryType {
+  INCOME
+  EXPENSE
+}
+
+enum SavingsTxnType {
+  DEPOSIT
+  WITHDRAW
+}
+
+/**
+ * ===================== MODELOS =====================
+ */
+
 model User {
-  id            String                 @id @default(uuid())
-  email         String                 @unique
-  passwordHash  String
-  createdAt     DateTime               @default(now())
-  tokens        DeviceToken[]
-  joinReqs      HouseholdJoinRequest[]
-  memberships   HouseholdMember[]
-  ledgerEntries LedgerEntry[]          @relation("UserLedgerEntries")
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  tokens      DeviceToken[]
+  joinReqs    HouseholdJoinRequest[]
+  memberships HouseholdMember[]
+
+  // Ledger (lado opuesto)
+  ledgerEntries LedgerEntry[] @relation("UserLedgerEntries")
+
+  // Ahorros (lados opuestos)
+  createdSavingsGoals SavingsGoal[] @relation("UserCreatedSavingsGoals")
+  savingsTxns         SavingsTxn[]  @relation("UserSavingsTxns")
 }
 
 model DeviceToken {
@@ -32,14 +69,20 @@ model DeviceToken {
 }
 
 model Household {
-  id            String                 @id @default(uuid())
-  name          String
-  currency      String                 @default("EUR")
-  createdAt     DateTime               @default(now())
-  invites       HouseholdInvite[]
-  joinReqs      HouseholdJoinRequest[]
-  members       HouseholdMember[]
-  ledgerEntries LedgerEntry[]          @relation("HouseholdLedgerEntries")
+  id        String   @id @default(uuid())
+  name      String
+  currency  String   @default("EUR")
+  createdAt DateTime @default(now())
+
+  invites  HouseholdInvite[]
+  joinReqs HouseholdJoinRequest[]
+  members  HouseholdMember[]
+
+  // Ledger (lado opuesto)
+  ledgerEntries LedgerEntry[] @relation("HouseholdLedgerEntries")
+
+  // Ahorros (lado opuesto)
+  savingsGoals SavingsGoal[] @relation("HouseholdSavingsGoals")
 }
 
 model HouseholdMember {
@@ -86,6 +129,10 @@ model HouseholdJoinRequest {
   @@unique([householdId, userId, status])
 }
 
+/**
+ * ============== Ledger (gastos/ingresos) ==============
+ */
+
 model LedgerEntry {
   id          String    @id @default(uuid())
   householdId String
@@ -96,25 +143,45 @@ model LedgerEntry {
   note        String?
   occursAt    DateTime  @default(now())
   createdAt   DateTime  @default(now())
-  household   Household @relation("HouseholdLedgerEntries", fields: [householdId], references: [id])
-  user        User      @relation("UserLedgerEntries", fields: [userId], references: [id])
+
+  household Household @relation("HouseholdLedgerEntries", fields: [householdId], references: [id])
+  user      User      @relation("UserLedgerEntries", fields: [userId], references: [id])
 
   @@index([householdId, occursAt])
 }
 
-enum HouseholdRole {
-  OWNER
-  ADMIN
-  MEMBER
+/**
+ * ====================== Ahorros ======================
+ */
+
+model SavingsGoal {
+  id          String    @id @default(uuid())
+  householdId String
+  name        String
+  target      Decimal   @db.Decimal(14, 2)
+  deadline    DateTime?
+  createdAt   DateTime  @default(now())
+  createdBy   String
+
+  household     Household    @relation("HouseholdSavingsGoals", fields: [householdId], references: [id])
+  createdByUser User         @relation("UserCreatedSavingsGoals", fields: [createdBy], references: [id])
+  txns          SavingsTxn[] @relation("GoalTxns")
+
+  @@index([householdId])
 }
 
-enum JoinStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
+model SavingsTxn {
+  id        String         @id @default(uuid())
+  goalId    String
+  userId    String
+  type      SavingsTxnType
+  amount    Decimal        @db.Decimal(14, 2)
+  note      String?
+  occursAt  DateTime       @default(now())
+  createdAt DateTime       @default(now())
 
-enum EntryType {
-  INCOME
-  EXPENSE
+  goal SavingsGoal @relation("GoalTxns", fields: [goalId], references: [id])
+  user User        @relation("UserSavingsTxns", fields: [userId], references: [id])
+
+  @@index([goalId, occursAt])
 }

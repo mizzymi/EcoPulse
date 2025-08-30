@@ -16,15 +16,15 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 @UseGuards(JwtAuthGuard)
 @Controller('households')
 export class HouseholdsController {
-  constructor(private service: HouseholdsService) {}
+  constructor(private service: HouseholdsService) { }
 
-  // Mis casas
+  /* ===== Mis casas ===== */
   @Get()
   myHouseholds(@Req() req: any) {
     return this.service.myHouseholds(req.user.id);
   }
 
-  // Crear casa
+  /* ===== Crear casa ===== */
   @Post()
   create(@Req() req: any, @Body() dto: { name: string; currency?: string }) {
     return this.service.createHousehold(
@@ -34,7 +34,7 @@ export class HouseholdsController {
     );
   }
 
-  // Generar invitación
+  /* ===== Invitaciones / Join por código ===== */
   @Post(':id/invites')
   createInvite(
     @Req() req: any,
@@ -45,19 +45,17 @@ export class HouseholdsController {
     return this.service.createInvite(req.user.id, id, dto);
   }
 
-  // Unirse por código (ruta clásica)
   @Post('join')
   join(@Req() req: any, @Body() dto: { code: string }) {
     return this.service.joinByCode(req.user.id, dto.code);
   }
 
-  // Alias opcional
   @Post('join-by-code')
   joinByCode(@Req() req: any, @Body() dto: { code: string }) {
     return this.service.joinByCode(req.user.id, dto.code);
   }
 
-  /* ===== Movimientos ===== */
+  /* ===== Ledger (gastos/ingresos) ===== */
 
   @Post(':id/entries')
   addEntry(
@@ -123,5 +121,71 @@ export class HouseholdsController {
     @Param('entryId') entryId: string,
   ) {
     return this.service.deleteEntry(req.user.id, id, entryId);
+  }
+
+  /* ===== Ahorros ===== */
+
+  // Metas
+  @Post(':id/savings-goals')
+  createSavingsGoal(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Body() dto: { name: string; target: number | string; deadline?: string },
+  ) {
+    return this.service.createSavingsGoal(req.user.id, id, dto);
+  }
+
+  @Get(':id/savings-goals')
+  listSavingsGoals(@Req() req: any, @Param('id') id: string) {
+    return this.service.listSavingsGoals(req.user.id, id);
+  }
+
+  @Patch(':id/savings-goals/:goalId')
+  updateSavingsGoal(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('goalId') goalId: string,
+    @Body() dto: { name?: string; target?: number | string; deadline?: string | null },
+  ) {
+    return this.service.updateSavingsGoal(req.user.id, id, goalId, dto);
+  }
+
+  @Delete(':id/savings-goals/:goalId')
+  deleteSavingsGoal(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('goalId') goalId: string,
+  ) {
+    return this.service.deleteSavingsGoal(req.user.id, id, goalId);
+  }
+
+  // Transacciones
+  @Post(':id/savings-goals/:goalId/txns')
+  addSavingsTxn(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('goalId') goalId: string,
+    @Body()
+    dto: { type: 'DEPOSIT' | 'WITHDRAW'; amount: number | string; note?: string; occursAt?: string },
+  ) {
+    return this.service.addSavingsTxn(req.user.id, id, goalId, dto);
+  }
+
+  @Get(':id/savings-goals/:goalId/txns')
+  listSavingsTxns(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('goalId') goalId: string,
+  ) {
+    return this.service.listSavingsTxns(req.user.id, id, goalId);
+  }
+
+  @Get(':id/savings-goals/:goalId/summary')
+  savingsGoalSummary(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('goalId') goalId: string,
+  ) {
+    return this.service.savingsGoalSummary(req.user.id, id, goalId);
   }
 }

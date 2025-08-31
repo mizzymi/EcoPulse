@@ -55,6 +55,35 @@ export class HouseholdsController {
     return this.service.joinByCode(req.user.id, dto.code);
   }
 
+  @Get(':id/join-requests')
+  listJoinRequests(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Query('status') status?: 'PENDING' | 'APPROVED' | 'REJECTED',
+  ) {
+    return this.service.listJoinRequests(req.user.id, id, status);
+  }
+
+  // Aprobar una solicitud
+  @Post(':id/join-requests/:reqId/approve')
+  approveJoinRequest(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('reqId') reqId: string,
+  ) {
+    return this.service.decideJoinRequest(req.user.id, id, reqId, 'APPROVED');
+  }
+
+  // Rechazar una solicitud
+  @Post(':id/join-requests/:reqId/reject')
+  rejectJoinRequest(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('reqId') reqId: string,
+  ) {
+    return this.service.decideJoinRequest(req.user.id, id, reqId, 'REJECTED');
+  }
+
   /* ===== Ledger (gastos/ingresos) ===== */
 
   @Post(':id/entries')

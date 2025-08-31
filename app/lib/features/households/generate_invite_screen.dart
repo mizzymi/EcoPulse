@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../api/dio.dart';
+import 'join_requests_screen.dart';
 
 class GenerateInviteScreen extends ConsumerStatefulWidget {
   final String householdId;
@@ -71,7 +72,24 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
         : 'Generar código de invitación';
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          IconButton(
+            tooltip: 'Solicitudes pendientes',
+            icon: const Icon(Icons.group_add_outlined),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      JoinRequestsScreen(householdId: widget.householdId),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

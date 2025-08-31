@@ -26,7 +26,7 @@ export class HouseholdsService {
   constructor(
     private prisma: PrismaService,
     private notifications: NotificationsService,
-  ) {}
+  ) { }
 
   /* ========= helpers de membresía ========= */
 
@@ -116,7 +116,9 @@ export class HouseholdsService {
   async joinByCode(userId: string, code: string) {
     if (!code?.trim()) throw new BadRequestException('Código requerido');
 
-    const hash = sha256(code.trim() + (process.env.INVITE_PEPPER || 'pepper'));
+    const normalized = code.trim().toUpperCase();
+    const hash = sha256(normalized + (process.env.INVITE_PEPPER || 'pepper'));
+
     const invite = await this.prisma.householdInvite.findFirst({
       where: {
         codeHash: hash,
@@ -126,42 +128,44 @@ export class HouseholdsService {
     });
     if (!invite) throw new BadRequestException('Código inválido o expirado');
 
+    if (invite.uses >= invite.maxUses) {
+      throw new BadRequestException('Este código ya alcanzó su límite de usos');
+    }
+
     const already = await this.prisma.householdMember.findUnique({
       where: { householdId_userId: { householdId: invite.householdId, userId } },
     });
-    if (already)
-      return { status: 'APPROVED', householdId: invite.householdId };
+    if (already) return { status: 'APPROVED', householdId: invite.householdId };
 
     if (invite.requireApproval) {
       const existsPending = await this.prisma.householdJoinRequest.findFirst({
-        where: {
-          householdId: invite.householdId,
-          userId,
-          status: 'PENDING',
-        },
+        where: { householdId: invite.householdId, userId, status: 'PENDING' },
       });
       if (!existsPending) {
         await this.prisma.householdJoinRequest.create({
-          data: {
-            householdId: invite.householdId,
-            userId,
-            inviteId: invite.id,
-          },
+          data: { householdId: invite.householdId, userId, inviteId: invite.id },
         });
       }
-      await this.notifications.notifyNewJoinRequest(invite.householdId, userId);
+      try {
+        await this.notifications.notifyNewJoinRequest(invite.householdId, userId);
+      } catch (e) {
+      }
       return { status: 'PENDING', householdId: invite.householdId };
     }
 
-    await this.prisma.$transaction([
-      this.prisma.householdMember.create({
-        data: { householdId: invite.householdId, userId, role: 'MEMBER' },
-      }),
-      this.prisma.householdInvite.update({
+    await this.prisma.$transaction(async (tx) => {
+      await tx.householdMember.upsert({
+        where: { householdId_userId: { householdId: invite.householdId, userId } },
+        create: { householdId: invite.householdId, userId, role: 'MEMBER' },
+        update: {},
+      });
+
+      await tx.householdInvite.update({
         where: { id: invite.id },
         data: { uses: { increment: 1 } },
-      }),
-    ]);
+      });
+    });
+
     return { status: 'APPROVED', householdId: invite.householdId };
   }
 
@@ -399,6 +403,89 @@ export class HouseholdsService {
     }
 
     return this.prisma.savingsGoal.update({ where: { id: goalId }, data });
+  }
+
+  async listJoinRequests(
+    userId: string,
+    householdId: string,
+    status: 'PENDING' | 'APPROVED' | 'REJECTED' = 'PENDING',
+  ) {
+    await this.assertAdmin(userId, householdId);
+
+    return this.prisma.householdJoinRequest.findMany({
+      where: { householdId, status },
+      include: { user: { select: { id: true, email: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async decideJoinRequest(
+    adminUserId: string,
+    householdId: string,
+    reqId: string,
+    decision: 'APPROVED' | 'REJECTED',
+  ) {
+    await this.assertAdmin(adminUserId, householdId);
+
+    const jr = await this.prisma.householdJoinRequest.findUnique({
+      where: { id: reqId },
+    });
+
+    if (!jr || jr.householdId !== householdId) {
+      throw new NotFoundException('Solicitud no encontrada');
+    }
+    if (jr.status !== 'PENDING') {
+      throw new BadRequestException('La solicitud ya fue resuelta');
+    }
+
+    if (decision === 'APPROVED') {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.householdMember.upsert({
+          where: {
+            householdId_userId: { householdId, userId: jr.userId },
+          },
+          create: {
+            householdId,
+            userId: jr.userId,
+            role: 'MEMBER',
+          },
+          update: {},
+        });
+
+        await tx.householdJoinRequest.update({
+          where: { id: reqId },
+          data: {
+            status: 'APPROVED',
+            decidedAt: new Date(),
+            decidedBy: adminUserId,
+          },
+        });
+
+        await tx.householdInvite.update({
+          where: { id: jr.inviteId },
+          data: { uses: { increment: 1 } },
+        });
+      });
+    } else {
+      await this.prisma.householdJoinRequest.update({
+        where: { id: reqId },
+        data: {
+          status: 'REJECTED',
+          decidedAt: new Date(),
+          decidedBy: adminUserId,
+        },
+      });
+    }
+
+    try {
+      await (this.notifications as any).notifyJoinRequestDecision?.(
+        householdId,
+        jr.userId,
+        decision,
+      );
+    } catch (_) { }
+
+    return { ok: true, status: decision };
   }
 
   async deleteSavingsGoal(userId: string, householdId: string, goalId: string) {

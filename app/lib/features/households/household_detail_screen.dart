@@ -677,7 +677,7 @@ class _AddEntrySheetState extends ConsumerState<_AddEntrySheet> {
               : const Icon(Icons.save),
           label: Text(isEdit ? 'Guardar cambios' : 'Guardar'),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 35),
       ]),
     );
   }

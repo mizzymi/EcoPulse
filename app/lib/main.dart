@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api/dio.dart';
+import 'features/Licence.dart';
 import 'features/auth/auth_screen.dart';
 import 'features/households/household_detail_screen.dart';
 import 'features/households/join_household_screen.dart';
@@ -11,7 +12,9 @@ import 'features/households/my_households_screen.dart';
 import 'ws/ws_client.dart';
 import 'providers/auth_token_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await registerEulaLicense();
   runApp(const ProviderScope(child: EcoPulseApp()));
 }
 

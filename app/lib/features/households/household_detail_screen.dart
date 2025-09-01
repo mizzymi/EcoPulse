@@ -25,23 +25,43 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   List<dynamic> _entries = [];
   Map<String, dynamic>? _summary;
 
+  DateTime _month = DateTime(DateTime.now().year, DateTime.now().month);
+
   @override
   void initState() {
     super.initState();
     _refresh();
   }
 
+  String get _monthStr =>
+      '${_month.year.toString().padLeft(4, '0')}-${_month.month.toString().padLeft(2, '0')}';
+
+  (DateTime from, DateTime to) _rangeOfMonth(DateTime d) {
+    final from = DateTime(d.year, d.month, 1, 0, 0, 0);
+    final to = DateTime(d.year, d.month + 1, 0, 23, 59, 59, 999);
+    return (from, to);
+  }
+
   Future<void> _refresh() async {
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
     try {
-      final now = DateTime.now();
-      final month =
-          '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}';
-      final resList = await dio.get('/households/${widget.householdId}/entries',
-          queryParameters: {'limit': 100});
-      final resSum = await dio.get('/households/${widget.householdId}/summary',
-          queryParameters: {'month': month});
+      final (from, to) = _rangeOfMonth(_month);
+
+      final resList = await dio.get(
+        '/households/${widget.householdId}/entries',
+        queryParameters: {
+          'from': from.toIso8601String(),
+          'to': to.toIso8601String(),
+          'limit': 200,
+        },
+      );
+
+      final resSum = await dio.get(
+        '/households/${widget.householdId}/summary',
+        queryParameters: {'month': _monthStr},
+      );
+
       setState(() {
         _entries = (resList.data as List).toList();
         _summary = Map<String, dynamic>.from(resSum.data as Map);
@@ -49,7 +69,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error al cargar datos')));
+          const SnackBar(content: Text('Error al cargar datos')),
+        );
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -122,7 +143,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       return;
     }
 
-    // 2) Diálogo para elegir meta + importe + nota
     String? selectedGoalId = goals.first['id'].toString();
     final amountCtrl = TextEditingController();
     final noteCtrl = TextEditingController();
@@ -147,9 +167,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     );
                   }),
                 ],
-                onChanged: (v) => setStateDialog(() {
-                  selectedGoalId = v;
-                }),
+                onChanged: (v) => setStateDialog(() => selectedGoalId = v),
                 decoration: const InputDecoration(
                   labelText: 'Meta',
                   border: OutlineInputBorder(),
@@ -212,6 +230,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                         if (context.mounted) {
                           Navigator.pop(context, true);
                         }
+                        await _refresh();
                       } on DioException catch (e) {
                         final msg = e.response?.data is Map &&
                                 (e.response!.data as Map)['message'] != null
@@ -244,45 +263,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Depósito de ahorro registrado')),
       );
-      await _refresh();
-    }
-  }
-
-  Future<void> _confirmAndDeleteEntry(String entryId) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Eliminar movimiento'),
-        content: const Text('¿Seguro que quieres eliminarlo?'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancelar')),
-          FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Eliminar')),
-        ],
-      ),
-    );
-    if (ok == true) {
-      final dio = ref.read(dioProvider);
-      try {
-        await dio.delete('/households/${widget.householdId}/entries/$entryId');
-        await _refresh();
-        if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('Eliminado')));
-        }
-      } on DioException catch (e) {
-        final msg = e.response?.data is Map &&
-                (e.response!.data as Map)['message'] != null
-            ? (e.response!.data as Map)['message'].toString()
-            : (e.message ?? 'No se pudo eliminar');
-        if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(msg)));
-        }
-      }
     }
   }
 
@@ -291,13 +271,49 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     return n.toStringAsFixed(2);
   }
 
+  void _prevMonth() {
+    setState(() {
+      _month = DateTime(_month.year, _month.month - 1);
+    });
+    _refresh();
+  }
+
+  void _nextMonth() {
+    // no ir a futuro
+    final now = DateTime(DateTime.now().year, DateTime.now().month);
+    final cand = DateTime(_month.year, _month.month + 1);
+    if (cand.isAfter(now)) return;
+    setState(() => _month = cand);
+    _refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final name = widget.householdName ?? 'Casa';
+    final nowMonth = DateTime(DateTime.now().year, DateTime.now().month);
+    final isAtCurrentMonth =
+        _month.year == nowMonth.year && _month.month == nowMonth.month;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
         actions: [
+          IconButton(
+            tooltip: 'Mes anterior',
+            onPressed: _prevMonth,
+            icon: const Icon(Icons.chevron_left),
+          ),
+          Center(
+            child: Text(
+              _monthStr,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Mes siguiente',
+            onPressed: isAtCurrentMonth ? null : _nextMonth,
+            icon: const Icon(Icons.chevron_right),
+          ),
           IconButton(
             tooltip: 'Ahorro',
             onPressed: () {
@@ -313,7 +329,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
             },
             icon: const Icon(Icons.list_alt),
           ),
-          // Ingreso rápido a ahorro
           IconButton(
             tooltip: 'Ingreso ahorro',
             onPressed: _openQuickSavingsDeposit,
@@ -355,28 +370,20 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                 children: [
                   if (_summary != null)
                     _SummaryCard(
-                      income: (_summary!['income'] as num?)?.toDouble() ??
-                          double.tryParse(
-                              _summary!['income']?.toString() ?? '0') ??
-                          0,
-                      expense: (_summary!['expense'] as num?)?.toDouble() ??
-                          double.tryParse(
-                              _summary!['expense']?.toString() ?? '0') ??
-                          0,
-                      net: (_summary!['net'] as num?)?.toDouble() ??
-                          double.tryParse(
-                              _summary!['net']?.toString() ?? '0') ??
-                          0,
-                      month: _summary!['month']?.toString() ?? '',
+                      month: _summary!['month']?.toString() ?? _monthStr,
+                      opening: _asDouble(_summary!['openingBalance']),
+                      income: _asDouble(_summary!['income']),
+                      expense: _asDouble(_summary!['expense']),
+                      net: _asDouble(_summary!['net']),
+                      closing: _asDouble(_summary!['closingBalance']),
                     ),
                   const SizedBox(height: 12),
-                  const Text('Movimientos recientes',
+                  const Text('Movimientos del mes',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
                   if (_entries.isEmpty)
-                    const Text(
-                        'Aún no hay movimientos. Usa el botón “Añadir”.'),
+                    const Text('No hay movimientos en este mes.'),
                   ..._entries.map((e) {
                     final isIncome = e['type'] == 'INCOME';
                     final amount = _fmtAmount(e['amount']);
@@ -385,14 +392,12 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     final when = dt != null
                         ? '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}'
                         : '';
-
                     return Card(
                       child: ListTile(
                         leading: CircleAvatar(
-                          child: Icon(
-                            isIncome ? Icons.trending_up : Icons.trending_down,
-                          ),
-                        ),
+                            child: Icon(isIncome
+                                ? Icons.trending_up
+                                : Icons.trending_down)),
                         title: Text(e['category']?.toString() ??
                             (isIncome ? 'Ingreso' : 'Gasto')),
                         subtitle: Text([
@@ -400,48 +405,52 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                           if ((e['note'] ?? '').toString().isNotEmpty)
                             e['note'].toString()
                         ].join('  •  ')),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              (isIncome ? '+' : '-') + amount,
-                              style: TextStyle(
-                                color: isIncome ? Colors.teal : Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            PopupMenuButton<String>(
-                              tooltip: 'Acciones',
-                              onSelected: (v) {
-                                if (v == 'edit') {
-                                  _openAddEntry(existing: e);
-                                } else if (v == 'delete') {
-                                  _confirmAndDeleteEntry(e['id'].toString());
-                                }
-                              },
-                              itemBuilder: (ctx) => [
-                                const PopupMenuItem(
-                                  value: 'edit',
-                                  child: ListTile(
-                                    leading: Icon(Icons.edit_outlined),
-                                    title: Text('Editar'),
-                                  ),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'delete',
-                                  child: ListTile(
-                                    leading: Icon(Icons.delete_outline),
-                                    title: Text('Eliminar'),
-                                  ),
-                                ),
+                        trailing: Text(
+                          (isIncome ? '+' : '-') + amount,
+                          style: TextStyle(
+                            color: isIncome ? Colors.teal : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onTap: () => _openAddEntry(existing: e), // EDITAR
+                        onLongPress: () async {
+                          final ok = await showDialog<bool>(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Eliminar movimiento'),
+                              content:
+                                  const Text('¿Seguro que quieres eliminarlo?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancelar')),
+                                FilledButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
+                                    child: const Text('Eliminar')),
                               ],
                             ),
-                          ],
-                        ),
-                        onTap: () => _openAddEntry(existing: e),
-                        onLongPress: () =>
-                            _confirmAndDeleteEntry(e['id'].toString()),
+                          );
+                          if (ok == true) {
+                            final dio = ref.read(dioProvider);
+                            try {
+                              await dio.delete(
+                                  '/households/${widget.householdId}/entries/${e['id']}');
+                              await _refresh();
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Eliminado')));
+                              }
+                            } on DioException {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('No se pudo eliminar')));
+                              }
+                            }
+                          }
+                        },
                       ),
                     );
                   }),
@@ -451,46 +460,66 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
             ),
     );
   }
+
+  static double _asDouble(dynamic x) {
+    if (x is num) return x.toDouble();
+    return double.tryParse(x?.toString() ?? '0') ?? 0;
+  }
 }
 
 class _SummaryCard extends StatelessWidget {
-  final double income, expense, net;
   final String month;
+  final double opening, income, expense, net, closing;
   const _SummaryCard({
+    required this.month,
+    required this.opening,
     required this.income,
     required this.expense,
     required this.net,
-    required this.month,
+    required this.closing,
   });
   @override
   Widget build(BuildContext context) {
-    final pos = net >= 0;
+    final netPos = net >= 0;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child:
+        child: Column(
+          children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Resumen $month',
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 6),
-            Text('Ingresos: ${income.toStringAsFixed(2)}'),
-            Text('Gastos:   ${expense.toStringAsFixed(2)}'),
-          ]),
-          Text(
-            (pos ? '+' : '') + net.toStringAsFixed(2),
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: pos ? Colors.teal : Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ]),
+              Text('Resumen $month',
+                  style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                (netPos ? '+' : '') + net.toStringAsFixed(2),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: netPos ? Colors.teal : Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ]),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(child: Text('Gastos: ${expense.toStringAsFixed(2)}')),
+                Expanded(child: Text('Ingresos: ${income.toStringAsFixed(2)}')),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Expanded(
+                    child:
+                        Text('Saldo inicial: ${opening.toStringAsFixed(2)}')),
+                Expanded(
+                    child: Text('Saldo final: ${closing.toStringAsFixed(2)}')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
-/* ===== Sheet Crear/Editar movimiento ===== */
 
 class _AddEntrySheet extends ConsumerStatefulWidget {
   final String householdId;
@@ -598,25 +627,21 @@ class _AddEntrySheetState extends ConsumerState<_AddEntrySheet> {
               style:
                   const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const Spacer(),
+          SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(
+                  value: 'EXPENSE',
+                  label: Text('Gasto'),
+                  icon: Icon(Icons.trending_down)),
+              ButtonSegment(
+                  value: 'INCOME',
+                  label: Text('Ingreso'),
+                  icon: Icon(Icons.trending_up)),
+            ],
+            selected: {_type},
+            onSelectionChanged: (s) => setState(() => _type = s.first),
+          ),
         ]),
-        Row(
-          children: [
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(
-                    value: 'EXPENSE',
-                    label: Text('Gasto'),
-                    icon: Icon(Icons.trending_down)),
-                ButtonSegment(
-                    value: 'INCOME',
-                    label: Text('Ingreso'),
-                    icon: Icon(Icons.trending_up)),
-              ],
-              selected: {_type},
-              onSelectionChanged: (s) => setState(() => _type = s.first),
-            )
-          ],
-        ),
         const SizedBox(height: 12),
         TextField(
           controller: _amountCtrl,
@@ -677,7 +702,7 @@ class _AddEntrySheetState extends ConsumerState<_AddEntrySheet> {
               : const Icon(Icons.save),
           label: Text(isEdit ? 'Guardar cambios' : 'Guardar'),
         ),
-        const SizedBox(height: 35),
+        const SizedBox(height: 8),
       ]),
     );
   }

@@ -232,27 +232,48 @@ export class HouseholdsService {
 
   async monthlySummary(userId: string, householdId: string, month: string) {
     await this.assertMember(userId, householdId);
-    if (!/^\d{4}-\d{2}$/.test(month))
+    if (!/^\d{4}-\d{2}$/.test(month)) {
       throw new BadRequestException('month debe ser YYYY-MM');
+    }
 
     const [y, m] = month.split('-').map(Number);
     const from = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0));
     const to = new Date(Date.UTC(y, m, 0, 23, 59, 59, 999));
 
-    const rows = await this.prisma.ledgerEntry.groupBy({
+    const curr = await this.prisma.ledgerEntry.groupBy({
       by: ['type'],
       where: { householdId, occursAt: { gte: from, lte: to } },
       _sum: { amount: true },
     });
 
-    const sumIncome = Number(
-      rows.find((r) => r.type === 'INCOME')?._sum.amount ?? 0,
-    );
-    const sumExpense = Number(
-      rows.find((r) => r.type === 'EXPENSE')?._sum.amount ?? 0,
-    );
+    const prev = await this.prisma.ledgerEntry.groupBy({
+      by: ['type'],
+      where: { householdId, occursAt: { lt: from } },
+      _sum: { amount: true },
+    });
 
-    return { month, income: sumIncome, expense: sumExpense, net: sumIncome - sumExpense };
+    const sumBy = (
+      rows: { type: 'INCOME' | 'EXPENSE'; _sum: { amount: any } }[],
+      t: 'INCOME' | 'EXPENSE',
+    ) => Number(rows.find((r) => r.type === t)?._sum.amount ?? 0);
+
+    const income = sumBy(curr, 'INCOME');
+    const expense = sumBy(curr, 'EXPENSE');
+    const net = income - expense;
+
+    const prevIncome = sumBy(prev, 'INCOME');
+    const prevExpense = sumBy(prev, 'EXPENSE');
+    const openingBalance = prevIncome - prevExpense;
+    const closingBalance = openingBalance + net;
+
+    return {
+      month,
+      openingBalance,
+      income,
+      expense,
+      net,
+      closingBalance,
+    };
   }
 
   async updateEntry(

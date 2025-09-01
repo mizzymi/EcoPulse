@@ -1,0 +1,14 @@
+End-User License Agreement (EULA) – EcoPulse
+Copyright (c) 2025 MizzyMi Studios. All rights reserved.
+
+1. Licencia: MizzyMi Studios te concede una licencia no exclusiva, no transferible y revocable para instalar y usar la aplicación EcoPulse en dispositivos que posees o controlas, únicamente para tu uso personal o interno.
+2. Restricciones: No puedes copiar, distribuir, vender, arrendar, modificar, realizar ingeniería inversa ni crear obras derivadas de la aplicación salvo lo permitido por la ley.
+3. Propiedad: EcoPulse es propiedad de MizzyMi Studios. Esta EULA no transfiere ningún derecho de propiedad intelectual.
+4. Privacidad: El uso está sujeto a la Política de Privacidad disponible en: <TU_URL_PRIVACIDAD>.
+5. Actualizaciones: Las actualizaciones pueden cambiar o eliminar funciones. Podemos actualizar automáticamente.
+6. Terminación: Podemos terminar esta licencia si incumples esta EULA. Al terminar, debes desinstalar la app.
+7. Sin garantías: La app se proporciona “tal cual”, sin garantías. En la medida permitida por la ley, MizzyMi Studios no será responsable de daños.
+8. Ley aplicable: Indica jurisdicción/ley aplicable.
+9. Contacto: soporte@tudominio.com
+
+Nota: El código fuente de EcoPulse puede estar disponible bajo PolyForm Strict 1.0.0, que limita su uso, distribución y modificación. Esta EULA rige el uso del binario distribuido por MizzyMi Studios.

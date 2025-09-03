@@ -78,6 +78,42 @@ export class HouseholdsService {
     }));
   }
 
+  async updateHousehold(
+    userId: string,
+    householdId: string,
+    dto: { name?: string; currency?: string },
+  ) {
+    await this.assertAdmin(userId, householdId);
+
+    const data: any = {};
+    if (dto.name !== undefined) {
+      const name = dto.name.trim();
+      if (!name) throw new BadRequestException('name requerido');
+      if (name.length > 64) throw new BadRequestException('name demasiado largo');
+      data.name = name;
+    }
+
+    if (dto.currency !== undefined) {
+      const c = dto.currency.trim().toUpperCase();
+      if (!/^[A-Z]{3}$/.test(c)) {
+        throw new BadRequestException('currency debe ser un código ISO de 3 letras');
+      }
+      data.currency = c;
+    }
+
+    if (Object.keys(data).length === 0) {
+      throw new BadRequestException('Nada para actualizar');
+    }
+
+    const updated = await this.prisma.household.update({
+      where: { id: householdId },
+      data,
+      select: { id: true, name: true, currency: true },
+    });
+
+    return updated;
+  }
+
   /* ============== Invitaciones / Join por código ============== */
 
   async createInvite(
@@ -167,6 +203,25 @@ export class HouseholdsService {
     });
 
     return { status: 'APPROVED', householdId: invite.householdId };
+  }
+
+  async listMembers(userId: string, householdId: string) {
+    await this.assertMember(userId, householdId);
+
+    const members = await this.prisma.householdMember.findMany({
+      where: { householdId },
+      include: {
+        user: { select: { id: true, email: true } },
+      },
+      orderBy: { joinedAt: 'asc' },
+    });
+
+    return members.map((m) => ({
+      userId: m.userId,
+      role: m.role,
+      joinedAt: m.joinedAt,
+      user: m.user,
+    }));
   }
 
   /* ================= Ledger (gastos/ingresos) ================= */

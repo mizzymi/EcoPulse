@@ -2,10 +2,73 @@ import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcryptjs';
+import { createHmac } from 'crypto';
+import { NotificationsService } from '../notifications/notifications.service';
+
+function hmacBase64Url(data: string, key: string) {
+  return createHmac('sha256', key).update(data).digest('base64url');
+}
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwt: JwtService) {}
+  constructor(private prisma: PrismaService, private jwt: JwtService, private notifications: NotificationsService,) { }
+
+  private makeResetToken(userId: string, passwordHash: string) {
+    const ts = Date.now().toString();
+    const secret = process.env.RESET_SECRET || 'reset-secret';
+    const pepper = process.env.RESET_PEPPER || 'pepper';
+    const payload = `${userId}.${ts}`;
+    const sig = hmacBase64Url(`${payload}|${passwordHash}|${pepper}`, secret);
+    return `${userId}.${ts}.${sig}`;
+  }
+
+  private async verifyResetToken(token: string) {
+    const parts = token.split('.');
+    if (parts.length !== 3) throw new BadRequestException('Token inválido');
+    const [userId, tsStr, sig] = parts;
+    const ts = Number(tsStr);
+    if (!userId || !Number.isFinite(ts)) throw new BadRequestException('Token inválido');
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new BadRequestException('Token inválido');
+
+    const windowMs = Number(process.env.RESET_WINDOW_MINUTES || '30') * 60_000;
+    if (Date.now() - ts > windowMs) throw new BadRequestException('Token expirado');
+
+    const secret = process.env.RESET_SECRET || 'reset-secret';
+    const pepper = process.env.RESET_PEPPER || 'pepper';
+    const payload = `${userId}.${tsStr}`;
+    const expected = hmacBase64Url(`${payload}|${user.passwordHash}|${pepper}`, secret);
+    if (expected !== sig) throw new BadRequestException('Token inválido');
+
+    return user;
+  }
+
+  async requestPasswordReset(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) return;
+
+    const token = this.makeResetToken(user.id, user.passwordHash);
+    
+    await this.notifications.sendPasswordResetCode?.(user.email, token);
+
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    if (!newPassword || newPassword.length < 6) {
+      throw new BadRequestException('password mínimo 6 caracteres');
+    }
+    const user = await this.verifyResetToken(token);
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    });
+
+    await this.notifications.notifyPasswordChanged?.(user.email);
+    return { ok: true };
+  }
 
   async register(email: string, password: string) {
     const exists = await this.prisma.user.findUnique({ where: { email } });

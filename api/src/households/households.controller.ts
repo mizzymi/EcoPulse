@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { HouseholdsService } from './households.service';
 import { JwtAuthGuard } from '../auth/jwt.guard';
+import { UpdateHouseholdDto } from './dto/update-household.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('households')
@@ -82,6 +83,11 @@ export class HouseholdsController {
     @Param('reqId') reqId: string,
   ) {
     return this.service.decideJoinRequest(req.user.id, id, reqId, 'REJECTED');
+  }
+
+  @Get(':id/members')
+  listMembers(@Req() req: any, @Param('id') id: string) {
+    return this.service.listMembers(req.user.id, id);
   }
 
   /* ===== Ledger (gastos/ingresos) ===== */
@@ -216,5 +222,14 @@ export class HouseholdsController {
     @Param('goalId') goalId: string,
   ) {
     return this.service.savingsGoalSummary(req.user.id, id, goalId);
+  }
+
+  @Patch(':id')
+  updateHousehold(
+    @Req() req: any,
+    @Param('id') householdId: string,
+    @Body() dto: UpdateHouseholdDto,
+  ) {
+    return this.service.updateHousehold(req.user.id, householdId, dto);
   }
 }

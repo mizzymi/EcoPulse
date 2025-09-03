@@ -112,7 +112,7 @@ class _JoinHouseholdScreenState extends ConsumerState<JoinHouseholdScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dio = ref.watch(dioProvider);
+    ref.watch(dioProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Unirse a una casa')),
       body: Padding(

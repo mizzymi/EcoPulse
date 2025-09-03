@@ -4,7 +4,7 @@ import { JwtAuthGuard } from './jwt.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private service: AuthService) {}
+  constructor(private service: AuthService) { }
 
   @Post('register')
   register(@Body() dto: { email: string; password: string }) {
@@ -21,4 +21,17 @@ export class AuthController {
   me(@Req() req: any) {
     return this.service.me(req.user.id);
   }
+  @Post('forgot-password')
+
+  async forgot(@Body() dto: { email: string }) {
+    await this.service.requestPasswordReset(dto.email);
+    return { ok: true };
+  }
+
+  @Post('reset-password')
+  async reset(@Body() dto: { token: string; password: string }) {
+    await this.service.resetPassword(dto.token, dto.password);
+    return { ok: true };
+  }
+
 }

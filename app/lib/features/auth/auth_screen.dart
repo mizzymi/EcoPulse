@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +29,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _submit() async {
+    final s = S.of(context);
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
@@ -40,7 +42,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       });
 
       final token = res.data['accessToken']?.toString();
-      if (token == null) throw Exception('Respuesta sin token');
+      if (token == null) throw Exception(s.missingTokenResponse);
 
       // guarda token en estado y almacenamiento
       ref.read(authTokenProvider.notifier).state = token;
@@ -50,19 +52,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isLogin ? 'Sesión iniciada' : 'Registro completado'),
+            content: Text(_isLogin ? s.loginSuccess : s.registerSuccess),
           ),
         );
-        // Opcional: Navigator.pop(context); // si quieres cerrar la pantalla
+        // Opcional: Navigator.pop(context);
       }
     } on DioException catch (e) {
       final msg = e.response?.data is Map &&
               (e.response!.data as Map)['message'] != null
           ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? 'Error de autenticación');
+          : (e.message ?? s.authErrorGeneric);
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -71,6 +72,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   // ===== Olvidé mi contraseña: solicitar enlace/código =====
   Future<void> _requestPasswordReset() async {
+    final s = S.of(context);
     final dio = ref.read(dioProvider);
     final ctrl = TextEditingController(text: _emailCtrl.text.trim());
     bool sending = false;
@@ -79,19 +81,19 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       context: context,
       builder: (_) => StatefulBuilder(
         builder: (ctx, setStateDialog) => AlertDialog(
-          title: const Text('Recuperar contraseña'),
+          title: Text(s.forgotPasswordTitle),
           content: TextField(
             controller: ctrl,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: s.emailLabel,
+              border: const OutlineInputBorder(),
             ),
           ),
           actions: [
             TextButton(
               onPressed: sending ? null : () => Navigator.pop(ctx, false),
-              child: const Text('Cancelar'),
+              child: Text(s.cancel),
             ),
             FilledButton(
               onPressed: sending
@@ -101,7 +103,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       if (!RegExp(r'.+@.+\..+').hasMatch(email)) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Email inválido')),
+                            SnackBar(content: Text(s.invalidEmail)),
                           );
                         }
                         return;
@@ -116,8 +118,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         final msg = e.response?.data is Map &&
                                 (e.response!.data as Map)['message'] != null
                             ? (e.response!.data as Map)['message'].toString()
-                            : (e.message ??
-                                'No se pudo iniciar la recuperación');
+                            : (e.message ?? s.forgotPasswordFailed);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(msg)),
@@ -135,7 +136,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       width: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Enviar enlace/código'),
+                  : Text(s.sendResetLink),
             ),
           ],
         ),
@@ -144,16 +145,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     if (ok == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'Si el email existe, te enviamos instrucciones para recuperar tu contraseña.'),
-        ),
+        SnackBar(content: Text(s.forgotPasswordAfterMsg)),
       );
     }
   }
 
   // ===== Restablecer con código/token =====
   Future<void> _resetPasswordWithCode() async {
+    final s = S.of(context);
     final dio = ref.read(dioProvider);
     final codeCtrl = TextEditingController();
     final passCtrl = TextEditingController();
@@ -163,24 +162,24 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       context: context,
       builder: (_) => StatefulBuilder(
         builder: (ctx, setStateDialog) => AlertDialog(
-          title: const Text('Restablecer contraseña'),
+          title: Text(s.resetPasswordTitle),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: codeCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Código / Token',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: s.codeTokenLabel,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: passCtrl,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Nueva contraseña',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: s.newPasswordLabel,
+                  border: const OutlineInputBorder(),
                 ),
               ),
             ],
@@ -188,7 +187,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           actions: [
             TextButton(
               onPressed: saving ? null : () => Navigator.pop(ctx, false),
-              child: const Text('Cancelar'),
+              child: Text(s.cancel),
             ),
             FilledButton(
               onPressed: saving
@@ -199,8 +198,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       if (newPass.length < 6) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Mínimo 6 caracteres')),
+                            SnackBar(content: Text(s.minPasswordLen)),
                           );
                         }
                         return;
@@ -216,7 +214,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         final msg = e.response?.data is Map &&
                                 (e.response!.data as Map)['message'] != null
                             ? (e.response!.data as Map)['message'].toString()
-                            : (e.message ?? 'No se pudo restablecer');
+                            : (e.message ?? s.resetPasswordFailed);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(msg)),
@@ -234,7 +232,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       width: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Cambiar'),
+                  : Text(s.changeAction),
             ),
           ],
         ),
@@ -243,17 +241,18 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     if (ok == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Contraseña actualizada. Inicia sesión.'),
-        ),
+        SnackBar(content: Text(s.passwordUpdatedToast)),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(_isLogin ? 'Iniciar sesión' : 'Crear cuenta')),
+      appBar: AppBar(
+        title: Text(_isLogin ? s.loginTitle : s.registerTitle),
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
@@ -266,16 +265,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 children: [
                   TextFormField(
                     controller: _emailCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: s.emailLabel,
+                      border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (v) {
                       final t = (v ?? '').trim();
-                      if (t.isEmpty) return 'Introduce tu email';
+                      if (t.isEmpty) return s.enterYourEmail;
                       if (!RegExp(r'.+@.+\..+').hasMatch(t)) {
-                        return 'Email inválido';
+                        return s.invalidEmail;
                       }
                       return null;
                     },
@@ -283,13 +282,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _passCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Contraseña',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: s.passwordLabel,
+                      border: const OutlineInputBorder(),
                     ),
                     obscureText: true,
                     validator: (v) =>
-                        (v ?? '').length < 6 ? 'Mínimo 6 caracteres' : null,
+                        (v ?? '').length < 6 ? s.minPasswordLen : null,
                   ),
                   const SizedBox(height: 16),
                   FilledButton(
@@ -300,25 +299,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             width: 18,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(_isLogin ? 'Entrar' : 'Registrarme'),
+                        : Text(_isLogin ? s.loginAction : s.registerAction),
                   ),
                   const SizedBox(height: 8),
                   TextButton(
-                    onPressed: _loading
-                        ? null
-                        : () => setState(() => _isLogin = !_isLogin),
-                    child: Text(_isLogin
-                        ? '¿No tienes cuenta? Crea una'
-                        : '¿Ya tienes cuenta? Inicia sesión'),
+                    onPressed:
+                        _loading ? null : () => setState(() => _isLogin = !_isLogin),
+                    child: Text(_isLogin ? s.noAccountCta : s.alreadyAccountCta),
                   ),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: _loading ? null : _requestPasswordReset,
-                    child: const Text('¿Olvidaste tu contraseña?'),
+                    child: Text(s.forgotPasswordCta),
                   ),
                   TextButton(
                     onPressed: _loading ? null : _resetPasswordWithCode,
-                    child: const Text('Ya tengo un código'),
+                    child: Text(s.haveCodeCta),
                   ),
                 ],
               ),

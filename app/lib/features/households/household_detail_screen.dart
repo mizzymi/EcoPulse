@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// Pantalla principal de detalle de la casa (Household).
+// Pantalla principal de detalle de la cuenta (Household).
 //
 // Muestra:
 //   • Resumen del mes actual o “Todos los meses” (vista agregada)
@@ -12,7 +12,7 @@
 //   - widgets/summary_card.dart         → tarjeta de resumen mensual
 //   - widgets/movements_list.dart       → lista de movimientos con edición/borrado
 //   - widgets/add_entry_sheet.dart      → bottom sheet para crear/editar movimiento
-//   - dialogs/rename_household_dialog.dart → diálogo para renombrar la casa
+//   - dialogs/rename_household_dialog.dart → diálogo para renombrar la cuenta
 //   - dialogs/savings_deposit_dialog.dart  → diálogo rápido de ingreso a ahorro
 //
 // Backend esperado (ajusta si tus rutas difieren):
@@ -29,8 +29,10 @@
 // -----------------------------------------------------------------------------
 
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../api/dio.dart';
 import 'generate_invite_screen.dart';
 import 'savings/savings_goals_screen.dart';
@@ -94,7 +96,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   String get _monthStr =>
       '${_month.year.toString().padLeft(4, '0')}-${_month.month.toString().padLeft(2, '0')}';
 
-  // Rango exacto de un mes [from, to] (ej. 2025-09-01 00:00:00 → 2025-09-30 23:59:59.999)
+  // Rango exacto de un mes [from, to]
   (DateTime from, DateTime to) _rangeOfMonth(DateTime d) {
     final from = DateTime(d.year, d.month, 1, 0, 0, 0);
     final to = DateTime(d.year, d.month + 1, 0, 23, 59, 59, 999);
@@ -119,11 +121,12 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   Future<void> _refresh() async {
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
+    final s = S.of(context);
 
     try {
       final (from, to) = _rangeOfMonth(_month);
 
-      // Movimientos del mes (limite 200; pagina si necesitas más)
+      // Movimientos del mes
       final resList = await dio.get(
         '/households/${widget.householdId}/entries',
         queryParameters: {
@@ -146,7 +149,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al cargar datos')),
+          SnackBar(content: Text(s.errorLoadData)),
         );
       }
     } finally {
@@ -155,20 +158,17 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   }
 
   // Carga resúmenes de TODOS los meses con movimientos
-  // Nota: para grandes volúmenes, conviene un endpoint de backend que
-  // devuelva todo en una sola llamada.
   Future<void> _loadAllMonths() async {
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
 
     try {
-      // 1) Traer todas las entries para deducir meses únicos
       final resList = await dio.get(
         '/households/${widget.householdId}/entries',
         queryParameters: {
           'from': DateTime(2000, 1, 1).toIso8601String(),
           'to': DateTime.now().toIso8601String(),
-          'limit': 10000, // TODO: pagina/optimiza si tu dataset crece
+          'limit': 10000,
         },
       );
       final entries = (resList.data as List).toList();
@@ -187,7 +187,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         return;
       }
 
-      // 2) Pedir summary por cada mes deducido
       final months = monthsSet.toList()..sort(); // asc
       final futures = months.map((m) async {
         try {
@@ -197,13 +196,12 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
           );
           return Map<String, dynamic>.from(r.data as Map);
         } catch (_) {
-          return null; // ignora errores aislados de un mes
+          return null; // ignora errores aislados
         }
       }).toList();
 
       final results = await Future.wait(futures);
 
-      // Orden descendente por “month” (YYYY-MM) para ver lo más reciente primero
       final summaries = results.whereType<Map<String, dynamic>>().toList()
         ..sort((a, b) => (b['month'] ?? '').toString().compareTo(
               (a['month'] ?? '').toString(),
@@ -226,11 +224,11 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // Abre el bottom sheet para crear/editar movimiento y refresca al volver
+  // Bottom sheet para crear/editar movimiento y refrescar al volver
   Future<void> _openAddEntry({Map<String, dynamic>? existing}) async {
     final res = await showModalBottomSheet<Map<String, dynamic>?>(
       context: context,
-      isScrollControlled: true, // permite crecer con teclado
+      isScrollControlled: true,
       builder: (_) =>
           AddEntrySheet(householdId: widget.householdId, existing: existing),
     );
@@ -243,24 +241,27 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       }
       if (!mounted) return;
 
-      final txt =
-          (res['type'] == 'INCOME') ? 'Ingreso guardado' : 'Gasto guardado';
+      final s = S.of(context);
+      final txt = (res['type'] == 'INCOME')
+          ? s.incomeSavedToast
+          : s.expenseSavedToast;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(txt)));
     }
   }
 
-  // Diálogo rápido para ingreso a ahorro (delegado en dialogs/savings_deposit_dialog.dart)
+  // Diálogo rápido para ingreso a ahorro
   Future<void> _openQuickSavingsDeposit() async {
     final dio = ref.read(dioProvider);
+    final s = S.of(context);
 
     final ok = await showQuickSavingsDepositDialog(
       context: context,
       dio: dio,
       householdId: widget.householdId,
-      householdName: _householdNameState ?? widget.householdName ?? 'Casa',
+      householdName:
+          _householdNameState ?? widget.householdName ?? s.accountGenericLower,
     );
 
-    // Si hubo depósito, refrescar la vista que corresponda
     if (ok == true) {
       if (_viewAllMonths) {
         await _loadAllMonths();
@@ -278,7 +279,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     _refresh();
   }
 
-  // Navegar al mes siguiente (no permite ir al futuro)
+  // Navegar al mes siguiente (no futuro)
   void _nextMonth() {
     final now = DateTime(DateTime.now().year, DateTime.now().month);
     final cand = DateTime(_month.year, _month.month + 1);
@@ -289,7 +290,9 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final name = _householdNameState ?? widget.householdName ?? 'Casa';
+    final s = S.of(context);
+    final name =
+        _householdNameState ?? widget.householdName ?? s.accountGenericLower;
 
     final nowMonth = DateTime(DateTime.now().year, DateTime.now().month);
     final isAtCurrentMonth =
@@ -299,7 +302,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       appBar: AppBar(
         title: Text(name),
 
-        // Usamos un PreferredSize con dos filas: navegación y acciones.
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(88),
           child: Padding(
@@ -307,7 +309,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Fila de navegación entre meses / alternar vista
                 MonthNavRow(
                   viewAllMonths: _viewAllMonths,
                   monthStr: _monthStr,
@@ -316,10 +317,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                   onNext: _nextMonth,
                   onToggleViewAll: _toggleViewAll,
                 ),
-
                 const SizedBox(height: 8),
-
-                // Fila de acciones (ahorro, ingreso, invitar, config, refresh)
                 ActionsRow(
                   householdId: widget.householdId,
                   householdName: name,
@@ -347,7 +345,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     );
                   },
                   onOpenSettings: () async {
-                    // Diálogo para renombrar la casa; si retorna nombre, actualiza título
                     final dio = ref.read(dioProvider);
                     final newName = await showRenameHouseholdDialog(
                       context,
@@ -358,7 +355,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     if (newName != null && mounted) {
                       setState(() => _householdNameState = newName);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Nombre actualizado')),
+                        SnackBar(content: Text(s.updatedNameToast)),
                       );
                     }
                   },
@@ -368,8 +365,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
             ),
           ),
         ),
-
-        // No usamos AppBar.actions; todo va en el "bottom" para quedar en filas.
         actions: const [],
       ),
 
@@ -377,10 +372,10 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openAddEntry(),
         icon: const Icon(Icons.add),
-        label: const Text('Añadir'),
+        label: Text(s.addEntryFab),
       ),
 
-      // Cuerpo: spinner o contenido con pull-to-refresh
+      // Cuerpo
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -388,33 +383,29 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  // ---- Vista: TODOS LOS MESES ----
                   if (_viewAllMonths) ...[
                     if (_allSummaries.isEmpty)
-                      const Text('No hay meses con movimientos.')
+                      Text(s.noMonthsWithMovements)
                     else
                       ..._allSummaries.map(
-                        (s) => Padding(
+                        (summary) => Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: SummaryCard(
-                            month: s['month']?.toString() ?? '',
-                            opening: _asDouble(s['openingBalance']),
-                            income: _asDouble(s['income']),
-                            expense: _asDouble(s['expense']),
-                            net: _asDouble(s['net']),
-                            closing: _asDouble(s['closingBalance']),
+                            month: summary['month']?.toString() ?? '',
+                            opening: _asDouble(summary['openingBalance']),
+                            income: _asDouble(summary['income']),
+                            expense: _asDouble(summary['expense']),
+                            net: _asDouble(summary['net']),
+                            closing: _asDouble(summary['closingBalance']),
                             onTap: () {
-                              final ym = s['month']?.toString() ?? '';
+                              final ym = summary['month']?.toString() ?? '';
                               _openMonthFromYm(ym);
                             },
                           ),
                         ),
                       ),
                     const SizedBox(height: 72),
-                  ]
-
-                  // ---- Vista: MES ACTUAL ----
-                  else ...[
+                  ] else ...[
                     if (_summary != null)
                       SummaryCard(
                         month: _summary!['month']?.toString() ?? _monthStr,
@@ -425,15 +416,12 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                         closing: _asDouble(_summary!['closingBalance']),
                       ),
                     const SizedBox(height: 12),
-
-                    const Text(
-                      'Movimientos del mes',
+                    Text(
+                      s.monthMovementsTitle,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 8),
-
-                    // Lista de movimientos reutilizable
                     MovementsList(
                       entries: _entries,
                       onEdit: (e) => _openAddEntry(existing: e),
@@ -441,7 +429,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                         final dio = ref.read(dioProvider);
                         try {
                           await dio.delete(
-                              '/households/${widget.householdId}/entries/$id');
+                            '/households/${widget.householdId}/entries/$id',
+                          );
                           if (_viewAllMonths) {
                             await _loadAllMonths();
                           } else {
@@ -451,15 +440,13 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                         } on DioException {
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('No se pudo eliminar')),
+                              SnackBar(content: Text(s.deleteFailedToast)),
                             );
                           }
                           return false;
                         }
                       },
                     ),
-
                     const SizedBox(height: 72),
                   ],
                 ],

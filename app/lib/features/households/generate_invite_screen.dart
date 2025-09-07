@@ -1,15 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
 import '../../api/dio.dart';
 import 'join_requests_screen.dart';
 
 class GenerateInviteScreen extends ConsumerStatefulWidget {
   final String householdId;
   final String? householdName;
-  const GenerateInviteScreen(
-      {super.key, required this.householdId, this.householdName});
+  const GenerateInviteScreen({
+    super.key,
+    required this.householdId,
+    this.householdName,
+  });
 
   @override
   ConsumerState<GenerateInviteScreen> createState() =>
@@ -33,7 +39,13 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
     super.dispose();
   }
 
+  String _fmtDate(BuildContext context, DateTime d) {
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat.yMd(locale).add_Hm().format(d.toLocal());
+  }
+
   Future<void> _generate() async {
+    final s = S.of(context);
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
@@ -55,10 +67,9 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
       final msg = e.response?.data is Map &&
               (e.response!.data as Map)['message'] != null
           ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? 'Error al generar el código');
+          : (e.message ?? s.errorGenerateCode);
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -67,16 +78,17 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final title = widget.householdName != null
-        ? 'Invitar a "${widget.householdName}"'
-        : 'Generar código de invitación';
+        ? s.inviteTitleWithName(widget.householdName!)
+        : s.generateInviteTitle;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
         actions: [
           IconButton(
-            tooltip: 'Solicitudes pendientes',
+            tooltip: s.pendingRequestsTooltip,
             icon: const Icon(Icons.group_add_outlined),
             onPressed: () {
               Navigator.push(
@@ -100,37 +112,40 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
                 children: [
                   TextFormField(
                     controller: _expiresCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Caducidad (horas)',
-                      hintText: 'Ej. 48',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: s.expiresHoursLabel,
+                      hintText: s.expiresHoursHint,
+                      border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: (v) {
                       final t = (v ?? '').trim();
-                      if (t.isEmpty) return 'Escribe las horas';
+                      if (t.isEmpty) return s.expiresHoursEmpty;
                       final n = int.tryParse(t);
-                      if (n == null || n < 1 || n > 720)
-                        return 'Entre 1 y 720 horas';
+                      if (n == null || n < 1 || n > 720) {
+                        return s.expiresHoursRange;
+                      }
                       return null;
                     },
                   ),
                   const SizedBox(height: 12),
                   TextFormField(
                     controller: _maxUsesCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Usos máximos',
-                      hintText: 'Ej. 10',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: s.maxUsesLabel,
+                      hintText: s.maxUsesHint,
+                      border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: (v) {
                       final t = (v ?? '').trim();
-                      if (t.isEmpty) return 'Escribe un número';
+                      if (t.isEmpty) return s.maxUsesEmpty;
                       final n = int.tryParse(t);
-                      if (n == null || n < 1 || n > 999) return 'Entre 1 y 999';
+                      if (n == null || n < 1 || n > 999) {
+                        return s.maxUsesRange;
+                      }
                       return null;
                     },
                   ),
@@ -138,9 +153,8 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
                   SwitchListTile(
                     value: _requireApproval,
                     onChanged: (v) => setState(() => _requireApproval = v),
-                    title: const Text('Requiere aprobación del admin'),
-                    subtitle: const Text(
-                        'Si está activo, las uniones quedarán en PENDING'),
+                    title: Text(s.requireApprovalTitle),
+                    subtitle: Text(s.requireApprovalSubtitle),
                   ),
                   const SizedBox(height: 20),
                   FilledButton.icon(
@@ -149,16 +163,17 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
                         ? const SizedBox(
                             height: 18,
                             width: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2))
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
                         : const Icon(Icons.qr_code_2),
-                    label: const Text('Generar código'),
+                    label: Text(s.generateCodeButton),
                   ),
                 ],
               ),
             ),
           ] else ...[
             const SizedBox(height: 8),
-            const Text('Código generado', style: TextStyle(fontSize: 16)),
+            Text(s.codeGeneratedTitle, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
@@ -169,18 +184,20 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
               child: SelectableText(
                 _code!,
                 style: const TextStyle(
-                    fontSize: 28,
-                    letterSpacing: 2,
-                    fontFeatures: [FontFeature.tabularFigures()]),
+                  fontSize: 28,
+                  letterSpacing: 2,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 12),
             if (_expiresAt != null)
               Text(
-                'Caduca: ${_expiresAt!.toLocal()}',
+                s.expiresAtLabel(_fmtDate(context, _expiresAt!)),
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             const SizedBox(height: 16),
             Row(
@@ -191,11 +208,12 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
                       await Clipboard.setData(ClipboardData(text: _code!));
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Código copiado')));
+                          SnackBar(content: Text(s.codeCopiedToast)),
+                        );
                       }
                     },
                     icon: const Icon(Icons.copy_all_outlined),
-                    label: const Text('Copiar'),
+                    label: Text(s.copyCodeButton),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -203,10 +221,10 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
                   child: FilledButton.icon(
                     onPressed: () => Navigator.pop(context, {
                       'code': _code,
-                      'expiresAt': _expiresAt?.toIso8601String()
+                      'expiresAt': _expiresAt?.toIso8601String(),
                     }),
                     icon: const Icon(Icons.check),
-                    label: const Text('Listo'),
+                    label: Text(s.doneButton),
                   ),
                 ),
               ],
@@ -220,7 +238,7 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
                 });
               },
               icon: const Icon(Icons.refresh),
-              label: const Text('Generar otro código'),
+              label: Text(s.generateAnotherButton),
             ),
           ],
         ],

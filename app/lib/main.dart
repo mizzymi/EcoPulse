@@ -1,7 +1,11 @@
+import 'package:ecopulse/features/settings/language_picker.dart';
+import 'package:ecopulse/l10n/l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'providers/app_locale_provider.dart';
 import 'api/dio.dart';
 import 'features/Licence.dart';
 import 'features/auth/auth_screen.dart';
@@ -15,7 +19,18 @@ import 'providers/auth_token_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await registerEulaLicense();
-  runApp(const ProviderScope(child: EcoPulseApp()));
+
+  final container = ProviderContainer();
+  final prefs = await SharedPreferences.getInstance();
+  final code = prefs.getString('appLocaleCode');
+  if (code != null && code != 'system') {
+    container.read(appLocaleProvider.notifier).state = Locale(code);
+  }
+
+  runApp(UncontrolledProviderScope(
+    container: container,
+    child: const EcoPulseApp(),
+  ));
 }
 
 Future<void> _bootstrapToken(WidgetRef ref) async {
@@ -50,9 +65,18 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
   Widget build(BuildContext context) {
     ref.watch(dioProvider);
     final token = ref.watch(authTokenProvider);
-
+    final appLocale = ref.watch(appLocaleProvider);
     return MaterialApp(
-      title: 'EcoPulse (Windows)',
+      locale: appLocale,
+      onGenerateTitle: (ctx) => S.of(ctx).appTitle,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.supportedLocales,
+      title: 'EcoPulse',
       scaffoldMessengerKey: _messenger,
       theme: ThemeData(
         useMaterial3: true,
@@ -65,7 +89,8 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
           : Builder(
               builder: (innerContext) => Scaffold(
                 appBar: AppBar(
-                  title: const Text('EcoPulse - Households'),
+                  // título también localizado
+                  title: Text(S.of(innerContext).appTitle),
                   actions: [
                     Padding(
                       padding: const EdgeInsets.only(right: 12),
@@ -74,10 +99,15 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
                         width: 24,
                         height: 24,
                         colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.primary,
+                          Theme.of(innerContext).colorScheme.primary,
                           BlendMode.srcIn,
                         ),
                       ),
+                    ),
+                    IconButton(
+                      tooltip: 'Cambiar idioma',
+                      icon: const Icon(Icons.language),
+                      onPressed: () => showLanguagePicker(innerContext, ref),
                     ),
                   ],
                 ),
@@ -89,7 +119,7 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
                       children: [
                         FilledButton.icon(
                           icon: const Icon(Icons.home_outlined),
-                          label: const Text('Mis casas'),
+                          label: Text(S.of(innerContext).myAccounts),
                           onPressed: () {
                             Navigator.push(
                               innerContext,
@@ -102,7 +132,7 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
                         const SizedBox(height: 12),
                         FilledButton.icon(
                           icon: const Icon(Icons.add),
-                          label: const Text('Crear una casa'),
+                          label: Text(S.of(innerContext).createAccount),
                           onPressed: () async {
                             final created =
                                 await Navigator.push<Map<String, dynamic>?>(
@@ -117,7 +147,9 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
                             _messenger.currentState?.showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Casa creada: ${created['name'] ?? ''}',
+                                  S.of(innerContext).createdAccount(
+                                        created['name']?.toString() ?? '',
+                                      ),
                                 ),
                               ),
                             );
@@ -140,7 +172,7 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
                         const SizedBox(height: 12),
                         OutlinedButton.icon(
                           icon: const Icon(Icons.meeting_room_outlined),
-                          label: const Text('Unirse a una casa por código'),
+                          label: Text(S.of(innerContext).joinAccountByCode),
                           onPressed: () {
                             Navigator.push(
                               innerContext,
@@ -158,7 +190,7 @@ class _EcoPulseAppState extends ConsumerState<EcoPulseApp> {
                             await prefs.remove('authToken');
                           },
                           icon: const Icon(Icons.logout),
-                          label: const Text('Cerrar sesión'),
+                          label: Text(S.of(innerContext).logout),
                         ),
                       ],
                     ),

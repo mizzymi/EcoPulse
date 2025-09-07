@@ -1,0 +1,17 @@
+Added/updated files:
+ - l10n.yaml
+ - lib/l10n/app_en.arb
+ - lib/l10n/app_es.arb
+ - lib/l10n/app_ca.arb
+ - lib/l10n/app_gl.arb
+
+Patched main files:
+ - lib/main.dart
+
+Replaced hardcoded texts in:
+ - lib/features/auth/auth_screen.dart
+ - lib/features/households/dialogs/rename_household_dialog.dart
+ - lib/features/households/dialogs/savings_deposit_dialog.dart
+ - lib/features/households/savings/savings_goals_screen.dart
+ - lib/features/households/savings/savings_goal_detail_screen.dart
+ - lib/features/households/widgets/movements_list.dart

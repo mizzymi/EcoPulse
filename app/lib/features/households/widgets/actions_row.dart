@@ -1,6 +1,8 @@
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../members/household_members_screen.dart';
+import 'trends/household_movements_chart_screen.dart';
 
 class ActionsRow extends StatelessWidget {
   final String householdId;
@@ -25,26 +27,28 @@ class ActionsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = householdName ?? 'Casa';
+    final s = S.of(context);
+    final name = householdName ?? s.accountGenericLower;
+
     return Row(
       children: [
         IconButton(
-          tooltip: 'Ahorro',
+          tooltip: s.savingsTooltip,
           onPressed: onOpenSavingsGoals,
           icon: const Icon(Icons.list_alt),
         ),
         IconButton(
-          tooltip: 'Ingreso ahorro',
+          tooltip: s.quickSavingsDepositTooltip,
           onPressed: onOpenQuickSavingsDeposit,
           icon: const Icon(Icons.savings),
         ),
         IconButton(
-          tooltip: 'Generar código',
+          tooltip: s.generateCodeTooltip,
           onPressed: onOpenInvite,
           icon: const Icon(Icons.qr_code_2),
         ),
         IconButton(
-          tooltip: 'Miembros',
+          tooltip: s.membersTooltip,
           onPressed: () {
             Navigator.push(
               context,
@@ -59,12 +63,27 @@ class ActionsRow extends StatelessWidget {
           icon: const Icon(Icons.group),
         ),
         IconButton(
-          tooltip: 'Configurar',
+          tooltip: s.settingsTooltip,
           onPressed: onOpenSettings,
           icon: const Icon(Icons.settings),
         ),
         IconButton(
-          tooltip: 'Refrescar',
+          tooltip: s.movementsChartTooltip,
+          onPressed: () async {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => HouseholdMovementsChartScreen(
+                  householdId: householdId,
+                  householdName: name,
+                ),
+              ),
+            );
+          },
+          icon: const Icon(Icons.multiline_chart),
+        ),
+        IconButton(
+          tooltip: s.refreshTooltip,
           onPressed: onRefresh,
           icon: const Icon(Icons.refresh),
         ),

@@ -1,9 +1,10 @@
-// Diálogo reutilizable para renombrar la casa.
+// Diálogo reutilizable para renombrar la cuenta.
 // Retorna el nuevo nombre (String) si se guardó, o null si se canceló.
 //
 // Requiere que el backend implemente PATCH /households/:id con body { name: string }.
 
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 Future<String?> showRenameHouseholdDialog(
@@ -12,6 +13,7 @@ Future<String?> showRenameHouseholdDialog(
   required String initialName,
   required String householdId,
 }) async {
+  final s = S.of(context);
   final ctrl = TextEditingController(text: initialName);
   bool saving = false;
 
@@ -19,21 +21,22 @@ Future<String?> showRenameHouseholdDialog(
     context: context,
     builder: (_) => StatefulBuilder(
       builder: (ctx, setStateDialog) => AlertDialog(
-        title: const Text('Cambiar nombre de la casa'),
+        title: Text(s.renameHouseholdTitle),
         content: TextField(
           controller: ctrl,
           textInputAction: TextInputAction.done,
-          decoration: const InputDecoration(
-            labelText: 'Nombre',
-            hintText: 'Ej. Piso Centro',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: s.nameLabel,
+            hintText: s.nameHint,
+            border: const OutlineInputBorder(),
+            counterText: '',
           ),
-          maxLength: 64, // Debe coincidir con validación backend (si la tienes)
+          maxLength: 64, // Alinear con validación backend si aplica
         ),
         actions: [
           TextButton(
             onPressed: saving ? null : () => Navigator.pop(ctx, null),
-            child: const Text('Cancelar'),
+            child: Text(s.cancel),
           ),
           FilledButton.icon(
             onPressed: saving
@@ -42,25 +45,24 @@ Future<String?> showRenameHouseholdDialog(
                     final newName = ctrl.text.trim();
                     if (newName.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('El nombre no puede estar vacío')),
+                        SnackBar(content: Text(s.nameEmptyToast)),
                       );
                       return;
                     }
                     setStateDialog(() => saving = true);
                     try {
-                      // PATCH al backend
-                      await dio.patch('/households/$householdId',
-                          data: {'name': newName});
+                      await dio.patch(
+                        '/households/$householdId',
+                        data: {'name': newName},
+                      );
                       if (context.mounted) {
                         Navigator.pop(ctx, newName); // devuelve newName
                       }
                     } on DioException catch (e) {
-                      // Muestra error del backend si viene con 'message'
                       final msg = e.response?.data is Map &&
                               (e.response!.data as Map)['message'] != null
                           ? (e.response!.data as Map)['message'].toString()
-                          : (e.message ?? 'No se pudo actualizar el nombre');
+                          : (e.message ?? s.updateNameFailed);
                       if (context.mounted) {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(SnackBar(content: Text(msg)));
@@ -75,9 +77,10 @@ Future<String?> showRenameHouseholdDialog(
                 ? const SizedBox(
                     height: 18,
                     width: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2))
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
                 : const Icon(Icons.check),
-            label: const Text('Guardar'),
+            label: Text(s.save),
           ),
         ],
       ),

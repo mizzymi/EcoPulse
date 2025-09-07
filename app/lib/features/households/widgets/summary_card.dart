@@ -2,7 +2,9 @@
 // Muestra el "closing" grande con color (verde/rojo) y debajo el neto.
 // Al tocar, puede ejecutar un callback (ej. abrir ese mes).
 
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class SummaryCard extends StatelessWidget {
   final String month;
@@ -20,9 +22,22 @@ class SummaryCard extends StatelessWidget {
     this.onTap,
   });
 
+  String _fmtNum(BuildContext context, double value, {bool withSign = false}) {
+    final locale = Localizations.localeOf(context).toString();
+    final f = NumberFormat.decimalPattern(locale);
+    // fuerza 2 decimales
+    f.minimumFractionDigits = 2;
+    f.maximumFractionDigits = 2;
+    final abs = f.format(value.abs());
+    if (!withSign) return f.format(value);
+    final sign = value > 0 ? '+' : (value < 0 ? '-' : '');
+    return '$sign$abs';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final netPos = net >= 0;
+    final s = S.of(context);
+
     return Card(
       child: InkWell(
         onTap: onTap, // Dispara navegación si se provee
@@ -37,7 +52,7 @@ class SummaryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Resumen $month',
+                    s.summaryTitle(month),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Column(
@@ -45,7 +60,7 @@ class SummaryCard extends StatelessWidget {
                     children: [
                       // Saldo final (closing) grande y coloreado
                       Text(
-                        closing.toStringAsFixed(2),
+                        _fmtNum(context, closing),
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall
@@ -55,18 +70,18 @@ class SummaryCard extends StatelessWidget {
                             ),
                       ),
                       const SizedBox(height: 4),
-                      // Neto del mes en tono más sutil
                     ],
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              // Datos breves: gastos/ingresos
+
+              // Datos breves: neto / inicio de mes
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      'Neto del mes: ${(netPos ? '+' : '') + net.toStringAsFixed(2)}',
+                      s.netOfMonth(_fmtNum(context, net, withSign: true)),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
@@ -77,7 +92,7 @@ class SummaryCard extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      'Inicio de mes: ${opening.toStringAsFixed(2)}',
+                      s.openingOfMonth(_fmtNum(context, opening)),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
@@ -88,13 +103,19 @@ class SummaryCard extends StatelessWidget {
                   ),
                 ],
               ),
+
+              // Gastos / Ingresos
               Row(
                 children: [
                   Expanded(
-                    child: Text('Gastos: ${expense.toStringAsFixed(2)}'),
+                    child: Text(
+                      s.expensesLabel(_fmtNum(context, expense)),
+                    ),
                   ),
                   Expanded(
-                    child: Text('Ingresos: ${income.toStringAsFixed(2)}'),
+                    child: Text(
+                      s.incomeLabel(_fmtNum(context, income)),
+                    ),
                   ),
                 ],
               ),

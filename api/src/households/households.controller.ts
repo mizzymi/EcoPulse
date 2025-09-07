@@ -19,13 +19,13 @@ import { UpdateHouseholdDto } from './dto/update-household.dto';
 export class HouseholdsController {
   constructor(private service: HouseholdsService) { }
 
-  /* ===== Mis casas ===== */
+  /* ===== Mis cuentas ===== */
   @Get()
   myHouseholds(@Req() req: any) {
     return this.service.myHouseholds(req.user.id);
   }
 
-  /* ===== Crear casa ===== */
+  /* ===== Crear cuenta ===== */
   @Post()
   create(@Req() req: any, @Body() dto: { name: string; currency?: string }) {
     return this.service.createHousehold(

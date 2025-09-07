@@ -1,6 +1,8 @@
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
+
 import '../../api/dio.dart';
 
 class CreateHouseholdScreen extends ConsumerStatefulWidget {
@@ -25,6 +27,7 @@ class _CreateHouseholdScreenState extends ConsumerState<CreateHouseholdScreen> {
   }
 
   Future<void> _submit() async {
+    final s = S.of(context);
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
@@ -37,19 +40,17 @@ class _CreateHouseholdScreenState extends ConsumerState<CreateHouseholdScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Casa creada correctamente')),
+          SnackBar(content: Text(s.accountCreatedToast)),
         );
-        Navigator.pop(
-            context, res.data);
+        Navigator.pop(context, res.data);
       }
     } on DioException catch (e) {
       final msg = e.response?.data is Map &&
               (e.response!.data as Map)['message'] != null
           ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? 'Error al crear la casa');
+          : (e.message ?? s.errorCreateAccount);
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -58,8 +59,10 @@ class _CreateHouseholdScreenState extends ConsumerState<CreateHouseholdScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Crear casa')),
+      appBar: AppBar(title: Text(s.createAccountTitle)),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -67,26 +70,26 @@ class _CreateHouseholdScreenState extends ConsumerState<CreateHouseholdScreen> {
           children: [
             TextFormField(
               controller: _nameCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Nombre de la casa',
-                hintText: 'Ej. Piso Calle Mayor',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: s.accountNameLabel,
+                hintText: s.accountNameHint,
+                border: const OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.next,
               validator: (v) {
                 final t = (v ?? '').trim();
-                if (t.isEmpty) return 'Escribe un nombre';
-                if (t.length < 3) return 'Mínimo 3 caracteres';
+                if (t.isEmpty) return s.nameEmpty;
+                if (t.length < 3) return s.nameMinChars;
                 return null;
               },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _currencyCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Moneda (ISO-4217)',
-                hintText: 'EUR, USD, GBP…',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: s.currencyIsoLabel,
+                hintText: s.currencyIsoHint,
+                border: const OutlineInputBorder(),
                 counterText: '',
               ),
               maxLength: 3,
@@ -94,7 +97,7 @@ class _CreateHouseholdScreenState extends ConsumerState<CreateHouseholdScreen> {
               validator: (v) {
                 final t = (v ?? '').trim().toUpperCase();
                 final ok = RegExp(r'^[A-Z]{3}$').hasMatch(t);
-                if (!ok) return 'Usa un código de 3 letras (ej. EUR)';
+                if (!ok) return s.currencyIsoInvalid;
                 return null;
               },
               onChanged: (v) {
@@ -113,9 +116,10 @@ class _CreateHouseholdScreenState extends ConsumerState<CreateHouseholdScreen> {
                   ? const SizedBox(
                       height: 18,
                       width: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Icon(Icons.add),
-              label: const Text('Crear casa'),
+              label: Text(s.createAccountCta),
             ),
           ],
         ),

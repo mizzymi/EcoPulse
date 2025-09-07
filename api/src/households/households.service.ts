@@ -38,7 +38,7 @@ export class HouseholdsService {
 
   private async assertMember(userId: string, householdId: string) {
     const m = await this.getMembership(userId, householdId);
-    if (!m) throw new ForbiddenException('No perteneces a esta casa');
+    if (!m) throw new ForbiddenException('No perteneces a esta cuenta');
     return m;
   }
 

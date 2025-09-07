@@ -1,6 +1,8 @@
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
+
 import '../../api/dio.dart';
 import 'household_detail_screen.dart';
 
@@ -31,13 +33,25 @@ class _MyHouseholdsScreenState extends ConsumerState<MyHouseholdsScreen> {
       final msg = e.response?.data is Map &&
               (e.response!.data as Map)['message'] != null
           ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? 'Error al cargar');
+          : S.of(context).errorLoading;
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(msg)),
+        );
       }
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  String _roleLabel(BuildContext ctx, String role) {
+    switch (role) {
+      case 'OWNER':
+        return S.of(ctx).roleOwner;
+      case 'ADMIN':
+        return S.of(ctx).roleAdmin;
+      default:
+        return S.of(ctx).roleMember;
     }
   }
 
@@ -54,9 +68,11 @@ class _MyHouseholdsScreenState extends ConsumerState<MyHouseholdsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mis casas'),
+        title: Text(s.myHouseholdsTitle),
         actions: [
           IconButton(onPressed: _load, icon: const Icon(Icons.refresh))
         ],
@@ -64,26 +80,31 @@ class _MyHouseholdsScreenState extends ConsumerState<MyHouseholdsScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _items.isEmpty
-              ? const Center(child: Text('Aún no perteneces a ninguna casa.'))
+              ? Center(child: Text(s.noHouseholdsMessage))
               : ListView.separated(
                   padding: const EdgeInsets.all(12),
                   itemCount: _items.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, i) {
                     final h = _items[i] as Map<String, dynamic>;
-                    final role = (h['role'] ?? '').toString();
+                    final roleRaw = (h['role'] ?? '').toString();
+                    final role = _roleLabel(context, roleRaw);
+                    final name = h['name']?.toString() ?? s.unnamedAccount;
+
                     return Card(
                       child: ListTile(
                         leading: const CircleAvatar(child: Icon(Icons.home)),
-                        title: Text(h['name']?.toString() ?? 'Casa'),
-                        subtitle: Text('Moneda: ${h['currency'] ?? 'EUR'}'),
+                        title: Text(name),
+                        subtitle: Text(
+                          s.currencyLabel((h['currency'] ?? 'EUR').toString()),
+                        ),
                         trailing: Chip(
                           label: Text(role),
                           backgroundColor:
-                              _roleColor(role, context).withOpacity(0.12),
-                          side: BorderSide(color: _roleColor(role, context)),
+                              _roleColor(roleRaw, context).withOpacity(0.12),
+                          side: BorderSide(color: _roleColor(roleRaw, context)),
                           labelStyle:
-                              TextStyle(color: _roleColor(role, context)),
+                              TextStyle(color: _roleColor(roleRaw, context)),
                         ),
                         onTap: () {
                           Navigator.push(

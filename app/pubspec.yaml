@@ -1,6 +1,6 @@
-﻿name: ecopulse
+name: ecopulse
 description: EcoPulse client (Windows/Mobile)
-version: 1.0.3+1
+version: 2.0.0+1
 license: MIT
 
 environment:
@@ -10,18 +10,24 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.10
+  fl_chart: ^0.69.0
+  intl: any
   flutter_riverpod: ^2.5.1
   flutter_launcher_icons: ^0.13.1
   dio: ^5.5.0
   cupertino_icons: ^1.0.8
   socket_io_client: ^2.0.3
   shared_preferences: ^2.3.2
+  flutter_localizations:
+    sdk: flutter
+  flutter_gen: ^5.11.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - lib/assets/app_icon.svg
     - lib/assets/EULA.txt

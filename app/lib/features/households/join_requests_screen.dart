@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../api/dio.dart';
 
 class JoinRequestsScreen extends ConsumerStatefulWidget {
@@ -31,12 +33,12 @@ class _JoinRequestsScreenState extends ConsumerState<JoinRequestsScreen> {
     return const [];
   }
 
-  String _fmtDate(String? iso) {
+  String _fmtDateLocalized(BuildContext context, String? iso) {
     if (iso == null) return '';
     try {
       final d = DateTime.parse(iso).toLocal();
-      String two(int v) => v.toString().padLeft(2, '0');
-      return '${two(d.day)}/${two(d.month)}/${d.year} ${two(d.hour)}:${two(d.minute)}';
+      final locale = Localizations.localeOf(context).toString();
+      return DateFormat.yMd(locale).add_Hm().format(d);
     } catch (_) {
       return iso;
     }
@@ -47,6 +49,7 @@ class _JoinRequestsScreenState extends ConsumerState<JoinRequestsScreen> {
     required bool approve,
   }) async {
     final dio = ref.read(dioProvider);
+    final s = S.of(context);
     try {
       await dio.post(
         '/households/${widget.householdId}/join-requests/$reqId/${approve ? 'approve' : 'reject'}',
@@ -54,15 +57,14 @@ class _JoinRequestsScreenState extends ConsumerState<JoinRequestsScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content:
-                Text(approve ? 'Solicitud aprobada' : 'Solicitud rechazada')),
+            content: Text(approve ? s.requestApproved : s.requestRejected)),
       );
       setState(() => _future = _fetch());
     } on DioException catch (e) {
       final msg = e.response?.data is Map &&
               (e.response!.data as Map)['message'] != null
           ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? 'Error de red');
+          : (e.message ?? s.networkError);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
@@ -71,9 +73,10 @@ class _JoinRequestsScreenState extends ConsumerState<JoinRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     ref.watch(dioProvider);
+    final s = S.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Solicitudes pendientes')),
+      appBar: AppBar(title: Text(s.joinRequestsTitle)),
       body: RefreshIndicator(
         onRefresh: () async {
           setState(() => _future = _fetch());
@@ -86,11 +89,12 @@ class _JoinRequestsScreenState extends ConsumerState<JoinRequestsScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             if (snap.hasError) {
-              return Center(child: Text('Error: ${snap.error}'));
+              return Center(
+                  child: Text(s.errorWithMessage(snap.error.toString())));
             }
             final list = snap.data ?? const [];
             if (list.isEmpty) {
-              return const Center(child: Text('No hay solicitudes'));
+              return Center(child: Text(s.noJoinRequests));
             }
             return ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -100,7 +104,8 @@ class _JoinRequestsScreenState extends ConsumerState<JoinRequestsScreen> {
                 final r = list[i];
                 final email =
                     (r['user']?['email'] ?? r['userId'] ?? '').toString();
-                final createdAt = _fmtDate(r['createdAt']?.toString());
+                final createdAt =
+                    _fmtDateLocalized(context, r['createdAt']?.toString());
 
                 return ListTile(
                   leading:
@@ -111,13 +116,13 @@ class _JoinRequestsScreenState extends ConsumerState<JoinRequestsScreen> {
                     spacing: 6,
                     children: [
                       IconButton(
-                        tooltip: 'Rechazar',
+                        tooltip: s.reject,
                         icon: const Icon(Icons.close),
                         onPressed: () =>
                             _decide(reqId: r['id'].toString(), approve: false),
                       ),
                       IconButton(
-                        tooltip: 'Aprobar',
+                        tooltip: s.approve,
                         icon: const Icon(Icons.check),
                         onPressed: () =>
                             _decide(reqId: r['id'].toString(), approve: true),

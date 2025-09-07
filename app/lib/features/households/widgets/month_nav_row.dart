@@ -1,3 +1,4 @@
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class MonthNavRow extends StatelessWidget {
@@ -20,11 +21,13 @@ class MonthNavRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
+
     if (!viewAllMonths) {
       return Row(
         children: [
           IconButton(
-            tooltip: 'Mes anterior',
+            tooltip: s.prevMonthTooltip,
             onPressed: onPrev,
             icon: const Icon(Icons.chevron_left),
           ),
@@ -37,16 +40,19 @@ class MonthNavRow extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Mes siguiente',
+            tooltip: s.nextMonthTooltip,
             onPressed: isAtCurrentMonth ? null : onNext,
             icon: const Icon(Icons.chevron_right),
           ),
           const SizedBox(width: 4),
           IconButton(
-            tooltip: viewAllMonths ? 'Ver mes actual' : 'Ver todos los meses',
+            tooltip: viewAllMonths
+                ? s.seeCurrentMonthTooltip
+                : s.seeAllMonthsTooltip,
             onPressed: onToggleViewAll,
             icon: Icon(
-                viewAllMonths ? Icons.filter_1 : Icons.calendar_view_month),
+              viewAllMonths ? Icons.filter_1 : Icons.calendar_view_month,
+            ),
           ),
         ],
       );
@@ -55,17 +61,17 @@ class MonthNavRow extends StatelessWidget {
     return Row(
       children: [
         const SizedBox(width: 40),
-        const Expanded(
+        Expanded(
           child: Center(
             child: Text(
-              'Todos los meses',
-              style: TextStyle(fontWeight: FontWeight.w600),
+              s.allMonthsTitle,
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
         ),
         const SizedBox(width: 4),
         IconButton(
-          tooltip: 'Ver mes actual',
+          tooltip: s.seeCurrentMonthTooltip,
           onPressed: onToggleViewAll,
           icon: const Icon(Icons.filter_1),
         ),

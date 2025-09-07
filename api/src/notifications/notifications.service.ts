@@ -111,7 +111,7 @@ export class NotificationsService {
     }
   }
 
-  /* ============== Casa: solicitudes de unión ============== */
+  /* ============== cuenta: solicitudes de unión ============== */
 
   async notifyNewJoinRequest(householdId: string, requesterId: string) {
     const admins = await this.prisma.householdMember.findMany({
@@ -125,10 +125,10 @@ export class NotificationsService {
       try {
         await this.mail.send(
           toEmails,
-          'Nueva solicitud para unirse a tu casa',
+          'Nueva solicitud para unirse a tu cuenta',
           `<h2>Nueva solicitud pendiente</h2>
-           <p><b>${requester?.email ?? 'Usuario'}</b> quiere unirse a tu casa.</p>
-           <p>Entra en la app → Casa → Solicitudes para aprobar o rechazar.</p>`,
+           <p><b>${requester?.email ?? 'Usuario'}</b> quiere unirse a tu cuenta.</p>
+           <p>Entra en la app → cuenta → Solicitudes para aprobar o rechazar.</p>`,
         );
       } catch (e) {
         console.error('[MAIL] Error enviando join_request:', e);
@@ -181,7 +181,7 @@ export class NotificationsService {
           requester.email,
           approved ? '¡Solicitud aprobada!' : 'Solicitud rechazada',
           approved
-            ? `<h2>¡Bienvenido!</h2><p>Tu solicitud fue <b>aprobada</b>. Ya formas parte de la casa.</p>`
+            ? `<h2>¡Bienvenido!</h2><p>Tu solicitud fue <b>aprobada</b>. Ya formas parte de la cuenta.</p>`
             : `<h2>Solicitud rechazada</h2><p>Un administrador ha rechazado tu solicitud.</p>`,
         );
       } catch (e) {
@@ -199,7 +199,7 @@ export class NotificationsService {
         await this.push.sendToTokens(tokenList, {
           notification: {
             title: approved ? 'Aprobado' : 'Rechazado',
-            body: approved ? 'Ya formas parte de la casa' : 'No autorizado',
+            body: approved ? 'Ya formas parte de la cuenta' : 'No autorizado',
           },
           data: { type: 'join_request_decision', householdId, status: decision },
         });

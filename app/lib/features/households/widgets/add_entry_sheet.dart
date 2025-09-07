@@ -1,15 +1,12 @@
 // BottomSheet para crear o editar un movimiento del ledger.
 // Reutilizable: si 'existing' es null -> crea, si no -> edita.
-//
-// NOTAS:
-// - Usa dioProvider para golpear endpoints de /entries.
-// - Devuelve el movimiento creado/actualizado vía Navigator.pop(context, res.data);
-//   para que la pantalla principal decida refrescar.
 
 import 'dart:math';
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../api/dio.dart';
 
@@ -33,7 +30,6 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
   @override
   void initState() {
     super.initState();
-    // Inicializa con datos existentes o valores por defecto
     final ex = widget.existing;
     _type = (ex?['type']?.toString() ?? 'EXPENSE').toUpperCase();
     final amt = ex?['amount'];
@@ -54,12 +50,18 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
     super.dispose();
   }
 
+  String _fmtDate(BuildContext context, DateTime d) {
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat.yMd(locale).format(d.toLocal());
+  }
+
   /// Crea o edita según corresponda.
   Future<void> _submit() async {
+    final s = S.of(context);
     final amount = double.tryParse(_amountCtrl.text.replaceAll(',', '.'));
     if (amount == null || amount <= 0) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Importe inválido')));
+          .showSnackBar(SnackBar(content: Text(s.invalidAmountToast)));
       return;
     }
 
@@ -68,7 +70,6 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
 
     try {
       if (widget.existing == null) {
-        // Crear
         final res =
             await dio.post('/households/${widget.householdId}/entries', data: {
           'type': _type,
@@ -81,7 +82,6 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
         });
         if (mounted) Navigator.pop(context, res.data);
       } else {
-        // Editar
         final id = widget.existing!['id'].toString();
         final res = await dio
             .patch('/households/${widget.householdId}/entries/$id', data: {
@@ -99,10 +99,9 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
       final msg = e.response?.data is Map &&
               (e.response!.data as Map)['message'] != null
           ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? 'Error al guardar');
+          : (e.message ?? s.errorSave);
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -113,107 +112,129 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     final isEdit = widget.existing != null;
+    final s = S.of(context);
 
     return Padding(
       padding: EdgeInsets.only(
-          bottom: max(bottom, 16), left: 16, right: 16, top: 16),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        // Encabezado + selector tipo (Gasto/Ingreso)
-        Row(children: [
-          Text(isEdit ? 'Editar movimiento' : 'Nuevo movimiento',
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-          const Spacer(),
-        ]),
-        Row(
-          children: [
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(
+        bottom: max(bottom, 16),
+        left: 16,
+        right: 16,
+        top: 16,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Encabezado + selector tipo (Gasto/Ingreso)
+          Row(
+            children: [
+              Text(
+                isEdit ? s.editMovementTitle : s.newMovementTitle,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              const Spacer(),
+            ],
+          ),
+          Row(
+            children: [
+              SegmentedButton<String>(
+                segments: [
+                  ButtonSegment(
                     value: 'EXPENSE',
-                    label: Text('Gasto'),
-                    icon: Icon(Icons.trending_down)),
-                ButtonSegment(
+                    label: Text(s.expenseGeneric), // ya definida antes
+                    icon: const Icon(Icons.trending_down),
+                  ),
+                  ButtonSegment(
                     value: 'INCOME',
-                    label: Text('Ingreso'),
-                    icon: Icon(Icons.trending_up)),
-              ],
-              selected: {_type},
-              onSelectionChanged: (s) => setState(() => _type = s.first),
+                    label: Text(s.incomeGeneric),
+                    icon: const Icon(Icons.trending_up),
+                  ),
+                ],
+                selected: {_type},
+                onSelectionChanged: (selection) =>
+                    setState(() => _type = selection.first),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Importe
+          TextField(
+            controller: _amountCtrl,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              labelText: s.amountLabel,
+              hintText: s.amountHint,
+              border: const OutlineInputBorder(),
             ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        // Importe
-        TextField(
-          controller: _amountCtrl,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          decoration: const InputDecoration(
-            labelText: 'Importe',
-            hintText: 'Ej. 25.50',
-            border: OutlineInputBorder(),
           ),
-        ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-        // Categoría (opcional)
-        TextField(
-          controller: _categoryCtrl,
-          decoration: const InputDecoration(
-            labelText: 'Categoría (opcional)',
-            hintText: 'Comida, Transporte, Nómina…',
-            border: OutlineInputBorder(),
+          // Categoría (opcional)
+          TextField(
+            controller: _categoryCtrl,
+            decoration: InputDecoration(
+              labelText: s.categoryOptionalLabel,
+              hintText: s.categoryOptionalHint,
+              border: const OutlineInputBorder(),
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-        // Nota (opcional)
-        TextField(
-          controller: _noteCtrl,
-          decoration: const InputDecoration(
-            labelText: 'Nota (opcional)',
-            border: OutlineInputBorder(),
+          // Nota (opcional)
+          TextField(
+            controller: _noteCtrl,
+            decoration: InputDecoration(
+              labelText: s.noteOptionalLabel,
+              border: const OutlineInputBorder(),
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-        // Fecha y botón para cambiarla
-        Row(children: [
-          Text(
-              'Fecha: ${_date.year}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}'),
-          const Spacer(),
-          TextButton.icon(
-            onPressed: () async {
-              final picked = await showDatePicker(
-                context: context,
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-                initialDate: _date,
-              );
-              if (picked != null) {
-                setState(() => _date = DateTime(picked.year, picked.month,
-                    picked.day, _date.hour, _date.minute));
-              }
-            },
-            icon: const Icon(Icons.calendar_today),
-            label: const Text('Cambiar'),
+          // Fecha y botón para cambiarla
+          Row(
+            children: [
+              Text(s.dateLabel(_fmtDate(context, _date))),
+              const Spacer(),
+              TextButton.icon(
+                onPressed: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    initialDate: _date,
+                  );
+                  if (picked != null) {
+                    setState(() => _date = DateTime(
+                          picked.year,
+                          picked.month,
+                          picked.day,
+                          _date.hour,
+                          _date.minute,
+                        ));
+                  }
+                },
+                icon: const Icon(Icons.calendar_today),
+                label: Text(s.changeDate),
+              ),
+            ],
           ),
-        ]),
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Guardar
-        FilledButton.icon(
-          onPressed: _loading ? null : _submit,
-          icon: _loading
-              ? const SizedBox(
-                  height: 18,
-                  width: 18,
-                  child: CircularProgressIndicator(strokeWidth: 2))
-              : const Icon(Icons.save),
-          label: Text(isEdit ? 'Guardar cambios' : 'Guardar'),
-        ),
-        const SizedBox(height: 80),
-      ]),
+          // Guardar
+          FilledButton.icon(
+            onPressed: _loading ? null : _submit,
+            icon: _loading
+                ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.save),
+            label: Text(isEdit ? s.saveChanges : s.save),
+          ),
+          const SizedBox(height: 80),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../api/dio.dart';
 
 double _asDouble(dynamic v) {
@@ -8,6 +10,19 @@ double _asDouble(dynamic v) {
   if (v is num) return v.toDouble();
   if (v is String) return double.tryParse(v.replaceAll(',', '.')) ?? 0;
   return 0;
+}
+
+String _fmtNumber(BuildContext context, double n, {int min = 2, int max = 2}) {
+  final locale = Localizations.localeOf(context).toString();
+  final f = NumberFormat.decimalPattern(locale)
+    ..minimumFractionDigits = min
+    ..maximumFractionDigits = max;
+  return f.format(n);
+}
+
+String _fmtDate(BuildContext context, DateTime d) {
+  final locale = Localizations.localeOf(context).toString();
+  return DateFormat.yMd(locale).format(d.toLocal());
 }
 
 class SavingsGoalDetailScreen extends ConsumerStatefulWidget {
@@ -43,17 +58,20 @@ class _SavingsGoalDetailScreenState
     final dio = ref.read(dioProvider);
     try {
       final sum = await dio.get(
-          '/households/${widget.householdId}/savings-goals/${widget.goalId}/summary');
+        '/households/${widget.householdId}/savings-goals/${widget.goalId}/summary',
+      );
       final txs = await dio.get(
-          '/households/${widget.householdId}/savings-goals/${widget.goalId}/txns');
+        '/households/${widget.householdId}/savings-goals/${widget.goalId}/txns',
+      );
       setState(() {
         _summary = Map<String, dynamic>.from(sum.data as Map);
         _txns = (txs.data as List).toList();
       });
     } catch (e) {
       if (mounted) {
+        final s = S.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error al cargar meta')),
+          SnackBar(content: Text(s.errorLoadingGoal)),
         );
       }
     } finally {
@@ -62,13 +80,14 @@ class _SavingsGoalDetailScreenState
   }
 
   Future<void> _addTxn({required bool deposit}) async {
+    final s = S.of(context);
     final ctrl = TextEditingController();
     final note = TextEditingController();
 
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(deposit ? 'Añadir depósito' : 'Registrar retiro'),
+        title: Text(deposit ? s.addDepositTitle : s.registerWithdrawalTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -76,28 +95,30 @@ class _SavingsGoalDetailScreenState
               controller: ctrl,
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(
-                labelText: 'Importe',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: s.amountLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: note,
-              decoration: const InputDecoration(
-                labelText: 'Nota (opcional)',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: s.noteOptionalLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
         ),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancelar')),
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(s.cancel),
+          ),
           FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Guardar')),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(s.save),
+          ),
         ],
       ),
     );
@@ -115,33 +136,47 @@ class _SavingsGoalDetailScreenState
         );
         await _refresh();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(deposit ? 'Depósito registrado' : 'Retiro registrado'),
-          ));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                deposit ? s.depositRecordedToast : s.withdrawalRecordedToast,
+              ),
+            ),
+          );
         }
       } on DioException catch (e) {
-        final msg =
-            e.response?.data is Map && (e.response!.data as Map)['message'] != null
-                ? (e.response!.data as Map)['message'].toString()
-                : (e.message ?? 'No se pudo guardar');
+        final msg = e.response?.data is Map &&
+                (e.response!.data as Map)['message'] != null
+            ? (e.response!.data as Map)['message'].toString()
+            : (e.message ?? s.errorSave);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(msg)));
         }
       }
     }
   }
 
   Future<void> _deleteThisGoal() async {
-    final name =
-        widget.goalName ?? _summary?['goal']?['name']?.toString() ?? 'Meta';
+    final s = S.of(context);
+    final name = widget.goalName ??
+        _summary?['goal']?['name']?.toString() ??
+        s.goalGeneric;
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Eliminar meta'),
-        content: Text('¿Eliminar "$name" y todos sus movimientos de ahorro?'),
+        title: Text(s.deleteGoalTitle),
+        content: Text(s.deleteGoalConfirm(name)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
-          FilledButton.tonal(onPressed: () => Navigator.pop(context, true), child: const Text('Eliminar')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(s.cancel),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(s.deleteAction),
+          ),
         ],
       ),
     );
@@ -149,28 +184,34 @@ class _SavingsGoalDetailScreenState
 
     final dio = ref.read(dioProvider);
     try {
-      await dio.delete('/households/${widget.householdId}/savings-goals/${widget.goalId}');
+      await dio.delete(
+        '/households/${widget.householdId}/savings-goals/${widget.goalId}',
+      );
       if (!mounted) return;
-      Navigator.pop(context, true); // ← devolvemos true para avisar que se borró
+      Navigator.pop(context, true); // notifica borrado
     } on DioException catch (e) {
       final msg = e.response?.statusCode == 403
-          ? 'No tienes permisos para eliminar esta meta'
-          : e.response?.data is Map && (e.response!.data as Map)['message'] != null
+          ? s.deleteGoalForbidden
+          : e.response?.data is Map &&
+                  (e.response!.data as Map)['message'] != null
               ? (e.response!.data as Map)['message'].toString()
-              : (e.message ?? 'No se pudo eliminar');
+              : (e.message ?? s.deleteGoalFailed);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(msg)));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final name =
-        widget.goalName ?? _summary?['goal']?['name']?.toString() ?? 'Meta';
+    final s = S.of(context);
+    final name = widget.goalName ??
+        _summary?['goal']?['name']?.toString() ??
+        s.goalGeneric;
     final saved = _asDouble(_summary?['saved']);
     final target = _asDouble(_summary?['target']);
-    final pct = _asDouble(_summary?['progress']);
+    final pct = _asDouble(_summary?['progress']).clamp(0, 100).toDouble();
 
     DateTime? deadline;
     final dRaw = _summary?['goal']?['deadline'];
@@ -179,12 +220,16 @@ class _SavingsGoalDetailScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ahorro: $name'),
+        title: Text(s.savingsGoalTitle(name)),
         actions: [
-          IconButton(onPressed: _refresh, icon: const Icon(Icons.refresh)),
+          IconButton(
+            onPressed: _refresh,
+            tooltip: s.refreshTooltip,
+            icon: const Icon(Icons.refresh),
+          ),
           IconButton(
             onPressed: _deleteThisGoal,
-            tooltip: 'Eliminar meta',
+            tooltip: s.deleteGoalTitle,
             icon: const Icon(Icons.delete_outline),
           ),
         ],
@@ -195,12 +240,12 @@ class _SavingsGoalDetailScreenState
           FloatingActionButton.extended(
             onPressed: () => _addTxn(deposit: true),
             icon: const Icon(Icons.add),
-            label: const Text('Depósito'),
+            label: Text(s.depositAction),
           ),
           FloatingActionButton.extended(
             onPressed: () => _addTxn(deposit: false),
             icon: const Icon(Icons.remove),
-            label: const Text('Retiro'),
+            label: Text(s.withdrawalAction),
           ),
         ],
       ),
@@ -215,21 +260,30 @@ class _SavingsGoalDetailScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(name, style: Theme.of(context).textTheme.titleLarge),
+                        Text(name,
+                            style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 8),
                         LinearProgressIndicator(
-                          value: target > 0 ? (saved / target).clamp(0, 1).toDouble() : 0,
+                          value: target > 0
+                              ? (saved / target).clamp(0, 1).toDouble()
+                              : 0,
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${saved.toStringAsFixed(2)} / ${target.toStringAsFixed(2)}  (${pct.clamp(0, 100).toStringAsFixed(0)}%)',
+                          s.progressTriple(
+                            _fmtNumber(context, saved),
+                            _fmtNumber(context, target),
+                            _fmtNumber(context, pct, min: 0, max: 0),
+                          ),
                         ),
                         if (deadline != null) ...[
                           const SizedBox(height: 6),
                           Text(
-                            'Fecha límite: ${deadline.toLocal()}',
+                            s.deadlineLabel(_fmtDate(context, deadline)),
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -238,10 +292,12 @@ class _SavingsGoalDetailScreenState
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text('Movimientos de ahorro',
-                    style: TextStyle(fontWeight: FontWeight.w600)),
+                Text(
+                  s.savingsMovementsTitle,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
                 const SizedBox(height: 8),
-                if (_txns.isEmpty) const Text('Aún no hay transacciones.'),
+                if (_txns.isEmpty) Text(s.noSavingsTransactions),
                 ..._txns.map((t) {
                   final isDep = t['type'] == 'DEPOSIT';
                   final amt = _asDouble(t['amount']);
@@ -249,22 +305,25 @@ class _SavingsGoalDetailScreenState
                   final raw = t['occursAt'];
                   if (raw is String) dt = DateTime.tryParse(raw);
                   if (raw is DateTime) dt = raw;
-                  final when = dt != null
-                      ? '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}'
-                      : '';
+                  final when =
+                      dt != null ? _fmtDate(context, dt.toLocal()) : '';
 
                   return Card(
                     child: ListTile(
                       leading: CircleAvatar(
-                        child: Icon(isDep ? Icons.trending_up : Icons.trending_down),
+                        child: Icon(
+                          isDep ? Icons.trending_up : Icons.trending_down,
+                        ),
                       ),
-                      title: Text(isDep ? 'Depósito' : 'Retiro'),
+                      title: Text(isDep ? s.depositAction : s.withdrawalAction),
                       subtitle: Text([
                         when,
-                        if ((t['note'] ?? '').toString().isNotEmpty) t['note'].toString()
+                        if ((t['note'] ?? '').toString().isNotEmpty)
+                          t['note'].toString(),
                       ].join('  •  ')),
                       trailing: Text(
-                        (isDep ? '+' : '-') + amt.toStringAsFixed(2),
+                        (isDep ? '+' : '-') +
+                            _fmtNumber(context, amt, min: 2, max: 2),
                         style: TextStyle(
                           color: isDep ? Colors.teal : Colors.red,
                           fontWeight: FontWeight.bold,

@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../api/dio.dart';
 
 class JoinHouseholdScreen extends ConsumerStatefulWidget {
@@ -30,17 +32,19 @@ class _JoinHouseholdScreenState extends ConsumerState<JoinHouseholdScreen> {
     return b.toString();
   }
 
-  String _extractError(Object e) {
+  String _extractError(BuildContext context, Object e) {
+    final s = S.of(context);
     if (e is DioException) {
       final d = e.response?.data;
       if (d is Map && d['message'] != null) return d['message'].toString();
       if (d is String && d.isNotEmpty) return d;
-      return e.message ?? 'Error de red';
+      return e.message ?? s.networkError;
     }
     return e.toString();
   }
 
   Future<void> _join() async {
+    final s = S.of(context);
     setState(() {
       _loading = true;
       _error = null;
@@ -52,7 +56,7 @@ class _JoinHouseholdScreenState extends ConsumerState<JoinHouseholdScreen> {
       final normalized = _normalize(_ctrl.text);
 
       if (normalized.length != 8) {
-        throw Exception('El código debe tener 8 caracteres.');
+        throw Exception(s.codeMustBe8);
       }
 
       final res = await dio.post('/households/join-by-code', data: {
@@ -68,20 +72,19 @@ class _JoinHouseholdScreenState extends ConsumerState<JoinHouseholdScreen> {
       if (status == 'PENDING') {
         await showDialog(
           context: context,
-          builder: (_) => const AlertDialog(
-            title: Text('Solicitud enviada'),
-            content: Text(
-                'Quedó pendiente de validación. Te avisaremos al aprobarla.'),
+          builder: (_) => AlertDialog(
+            title: Text(s.requestSentTitle),
+            content: Text(s.requestSentBody),
           ),
         );
         Navigator.pop(context, true);
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('¡Unido a la casa!')));
+            .showSnackBar(SnackBar(content: Text(s.joinedToast)));
         Navigator.pop(context, true);
       }
     } catch (e) {
-      setState(() => _error = _extractError(e));
+      setState(() => _error = _extractError(context, e));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -113,8 +116,10 @@ class _JoinHouseholdScreenState extends ConsumerState<JoinHouseholdScreen> {
   @override
   Widget build(BuildContext context) {
     ref.watch(dioProvider);
+    final s = S.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Unirse a una casa')),
+      appBar: AppBar(title: Text(s.joinByCodeTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -125,10 +130,10 @@ class _JoinHouseholdScreenState extends ConsumerState<JoinHouseholdScreen> {
                 FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9\-]')),
               ],
               textCapitalization: TextCapitalization.characters,
-              decoration: const InputDecoration(
-                labelText: 'Código (ej. 6YQ9-DA8B)',
-                hintText: 'XXXX-XXXX',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: s.codeFieldLabel(s.codeExample),
+                hintText: s.codeFieldHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
@@ -138,14 +143,15 @@ class _JoinHouseholdScreenState extends ConsumerState<JoinHouseholdScreen> {
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Icon(Icons.login),
-              label: const Text('Unirme'),
+              label: Text(s.joinAction),
             ),
             if (_status != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
-                child: Text('Estado: $_status'),
+                child: Text(s.statusLabel(_status!)),
               ),
             if (_error != null)
               Padding(

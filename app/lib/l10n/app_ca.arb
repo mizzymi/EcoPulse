@@ -14,6 +14,10 @@
       }
     }
   },
+  "openHousehold": "Obrir",
+  "householdCarouselError": "Error en carregar els comptes",
+  "householdCarouselEmpty": "Encara no tens cap compte. Crea'n un o uneix-t'hi.",
+  "householdMembersCount": "{count, plural, one {1 membre} other {{count} membres}}",
   "logout": "Tanca sessió",
   "loading": "Carregant…",
   "cancel": "Cancel·lar",
@@ -265,7 +269,7 @@
   },
   "noMembers": "Encara no hi ha membres",
   "userGeneric": "Usuari",
-   "noSavingsGoalsTitle": "Sense metes d'estalvi",
+  "noSavingsGoalsTitle": "Sense metes d'estalvi",
   "createGoalFirstMsg": "Crea primer una meta per poder registrar dipòsits.",
   "quickSavingsDepositTitle": "Ingrés a l'estalvi",
   "goalLabel": "Meta",
@@ -301,5 +305,15 @@
   "newPasswordLabel": "Nova contrasenya",
   "changeAction": "Canviar",
   "resetPasswordFailed": "No s'ha pogut restablir",
-  "passwordUpdatedToast": "Contrasenya actualitzada. Inicia sessió."
+  "passwordUpdatedToast": "Contrasenya actualitzada. Inicia sessió.",
+  "createOrJoinTitle": "Afegir compte",
+  "createOrJoinSubtitle": "Crea un compte o uneix-t’hi amb codi",
+  "openCta": "Obrir",
+  "deleteHouseholdTitle": "Esborrar compte",
+  "deleteHouseholdBody": "Segur que vols esborrar aquest compte i totes les seves dades? Aquesta acció no es pot desfer.",
+  "deleteHouseholdTooltip": "Esborrar compte",
+  "deletedOkToast": "Compte esborrat",
+  "deleteFailedToast": "No s'ha pogut esborrar el compte",
+  "delete": "Esborrar",
+  "cancel": "Cancel·lar"
 }

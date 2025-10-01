@@ -131,6 +131,30 @@ abstract class S {
   /// **'Account created: {name}'**
   String createdAccount(String name);
 
+  /// No description provided for @openHousehold.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openHousehold;
+
+  /// No description provided for @householdCarouselError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading accounts'**
+  String get householdCarouselError;
+
+  /// No description provided for @householdCarouselEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have any accounts yet. Create or join one.'**
+  String get householdCarouselEmpty;
+
+  /// No description provided for @householdMembersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one {1 member} other {{count} members}}'**
+  String householdMembersCount(num count);
+
   /// No description provided for @logout.
   ///
   /// In en, this message translates to:
@@ -374,7 +398,7 @@ abstract class S {
   /// No description provided for @deleteFailedToast.
   ///
   /// In en, this message translates to:
-  /// **'Could not delete'**
+  /// **'Failed to delete account'**
   String get deleteFailedToast;
 
   /// No description provided for @accountGenericLower.
@@ -1300,6 +1324,48 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Password updated. Sign in.'**
   String get passwordUpdatedToast;
+
+  /// No description provided for @createOrJoinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add household'**
+  String get createOrJoinTitle;
+
+  /// No description provided for @createOrJoinSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a household or join with a code'**
+  String get createOrJoinSubtitle;
+
+  /// No description provided for @openCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get openCta;
+
+  /// No description provided for @deleteHouseholdTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteHouseholdTitle;
+
+  /// No description provided for @deleteHouseholdBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this account and all its data? This action cannot be undone.'**
+  String get deleteHouseholdBody;
+
+  /// No description provided for @deleteHouseholdTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteHouseholdTooltip;
+
+  /// No description provided for @deletedOkToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted'**
+  String get deletedOkToast;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

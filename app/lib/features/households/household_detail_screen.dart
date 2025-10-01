@@ -38,7 +38,6 @@ import 'generate_invite_screen.dart';
 import 'savings/savings_goals_screen.dart';
 
 // UI extraídas a widgets/dialogs propios
-import 'widgets/month_nav_row.dart';
 import 'widgets/actions_row.dart';
 import 'widgets/summary_card.dart';
 import 'widgets/movements_list.dart';
@@ -73,6 +72,50 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
   // Vista “Todos los meses”
   bool _viewAllMonths = false;
+
+  bool _deleting = false;
+
+  Future<void> _confirmAndDelete() async {
+    final s = S.of(context);
+    final dio = ref.read(dioProvider);
+
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(s.deleteHouseholdTitle), // “Borrar cuenta”
+        content: Text(s
+            .deleteHouseholdBody), // “¿Seguro? Esta acción no se puede deshacer…”
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(s.cancel)),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(s.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (sure != true || _deleting) return;
+
+    setState(() => _deleting = true);
+    try {
+      await dio.delete('/households/${widget.householdId}');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.deletedOkToast)), // “Cuenta borrada”
+      );
+      Navigator.of(context).pop(true); // vuelve al listado
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.deleteFailedToast)), // “No se pudo borrar…”
+      );
+    } finally {
+      if (mounted) setState(() => _deleting = false);
+    }
+  }
 
   // Resúmenes de todos los meses (solo cuando _viewAllMonths = true)
   List<Map<String, dynamic>> _allSummaries = [];
@@ -196,7 +239,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
           );
           return Map<String, dynamic>.from(r.data as Map);
         } catch (_) {
-          return null; // ignora errores aislados
+          return null;
         }
       }).toList();
 
@@ -242,9 +285,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       if (!mounted) return;
 
       final s = S.of(context);
-      final txt = (res['type'] == 'INCOME')
-          ? s.incomeSavedToast
-          : s.expenseSavedToast;
+      final txt =
+          (res['type'] == 'INCOME') ? s.incomeSavedToast : s.expenseSavedToast;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(txt)));
     }
   }
@@ -301,24 +343,19 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
-
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(88),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                MonthNavRow(
+                HouseholdHeaderMenu(
                   viewAllMonths: _viewAllMonths,
                   monthStr: _monthStr,
                   isAtCurrentMonth: isAtCurrentMonth,
-                  onPrev: _prevMonth,
-                  onNext: _nextMonth,
+                  onPrevMonth: _prevMonth,
+                  onNextMonth: _nextMonth,
                   onToggleViewAll: _toggleViewAll,
-                ),
-                const SizedBox(height: 8),
-                ActionsRow(
                   householdId: widget.householdId,
                   householdName: name,
                   onOpenSavingsGoals: () {
@@ -360,6 +397,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     }
                   },
                   onRefresh: _viewAllMonths ? _loadAllMonths : _refresh,
+                  onDeleteHousehold: _confirmAndDelete,
                 ),
               ],
             ),
@@ -418,8 +456,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     const SizedBox(height: 12),
                     Text(
                       s.monthMovementsTitle,
-                      style:
-                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 8),
                     MovementsList(

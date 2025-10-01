@@ -14,6 +14,10 @@
       }
     }
   },
+  "openHousehold": "Abrir",
+  "householdCarouselError": "Error al cargar cuentas",
+  "householdCarouselEmpty": "Aún no tienes cuentas. Crea o únete a una.",
+  "householdMembersCount": "{count, plural, one {1 miembro} other {{count} miembros}}",
   "logout": "Cerrar sesión",
   "login": "Iniciar sesión",
   "loading": "Cargando…",
@@ -302,5 +306,16 @@
   "newPasswordLabel": "Nueva contraseña",
   "changeAction": "Cambiar",
   "resetPasswordFailed": "No se pudo restablecer",
-  "passwordUpdatedToast": "Contraseña actualizada. Inicia sesión."
+  "passwordUpdatedToast": "Contraseña actualizada. Inicia sesión.",
+  "createOrJoinTitle": "Añadir cuenta",
+  "createOrJoinSubtitle": "Crea una casa o únete por código",
+  "openCta": "Abrir",
+  "deleteHouseholdTitle": "Borrar cuenta",
+  "deleteHouseholdBody": "¿Seguro que quieres borrar esta cuenta y todos sus datos? Esta acción no se puede deshacer.",
+  "deleteHouseholdTooltip": "Borrar cuenta",
+  "deletedOkToast": "Cuenta borrada",
+  "deleteFailedToast": "No se pudo borrar la cuenta",
+  "delete": "Borrar",
+  "cancel": "Cancelar"
+
 }

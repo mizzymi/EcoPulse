@@ -26,6 +26,27 @@ class SGl extends S {
   }
 
   @override
+  String get openHousehold => 'Abrir';
+
+  @override
+  String get householdCarouselError => 'Erro ao cargar as contas';
+
+  @override
+  String get householdCarouselEmpty =>
+      'Aínda non tes contas. Crea unha ou únete a unha.';
+
+  @override
+  String householdMembersCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count membros',
+      one: '1 membro',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get logout => 'Pechar sesión';
 
   @override
@@ -41,7 +62,7 @@ class SGl extends S {
   String get save => 'Gardar';
 
   @override
-  String get delete => 'Eliminar';
+  String get delete => 'Borrar';
 
   @override
   String get settings => 'Axustes';
@@ -155,7 +176,7 @@ class SGl extends S {
   String get monthMovementsTitle => 'Movementos do mes';
 
   @override
-  String get deleteFailedToast => 'Non se puido eliminar';
+  String get deleteFailedToast => 'Non se puido borrar a conta';
 
   @override
   String get accountGenericLower => 'conta';
@@ -659,4 +680,26 @@ class SGl extends S {
 
   @override
   String get passwordUpdatedToast => 'Contrasinal actualizado. Inicia sesión.';
+
+  @override
+  String get createOrJoinTitle => 'Engadir conta';
+
+  @override
+  String get createOrJoinSubtitle => 'Crea unha conta ou únete cun código';
+
+  @override
+  String get openCta => 'Abrir';
+
+  @override
+  String get deleteHouseholdTitle => 'Borrar conta';
+
+  @override
+  String get deleteHouseholdBody =>
+      'Seguro que queres borrar esta conta e todos os seus datos? Esta acción non se pode desfacer.';
+
+  @override
+  String get deleteHouseholdTooltip => 'Borrar conta';
+
+  @override
+  String get deletedOkToast => 'Conta borrada';
 }

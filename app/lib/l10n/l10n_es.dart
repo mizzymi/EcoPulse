@@ -26,6 +26,27 @@ class SEs extends S {
   }
 
   @override
+  String get openHousehold => 'Abrir';
+
+  @override
+  String get householdCarouselError => 'Error al cargar cuentas';
+
+  @override
+  String get householdCarouselEmpty =>
+      'Aún no tienes cuentas. Crea o únete a una.';
+
+  @override
+  String householdMembersCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count miembros',
+      one: '1 miembro',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get logout => 'Cerrar sesión';
 
   @override
@@ -41,7 +62,7 @@ class SEs extends S {
   String get save => 'Guardar';
 
   @override
-  String get delete => 'Eliminar';
+  String get delete => 'Borrar';
 
   @override
   String get settings => 'Ajustes';
@@ -155,7 +176,7 @@ class SEs extends S {
   String get monthMovementsTitle => 'Movimientos del mes';
 
   @override
-  String get deleteFailedToast => 'No se pudo eliminar';
+  String get deleteFailedToast => 'No se pudo borrar la cuenta';
 
   @override
   String get accountGenericLower => 'cuenta';
@@ -660,4 +681,26 @@ class SEs extends S {
 
   @override
   String get passwordUpdatedToast => 'Contraseña actualizada. Inicia sesión.';
+
+  @override
+  String get createOrJoinTitle => 'Añadir cuenta';
+
+  @override
+  String get createOrJoinSubtitle => 'Crea una casa o únete por código';
+
+  @override
+  String get openCta => 'Abrir';
+
+  @override
+  String get deleteHouseholdTitle => 'Borrar cuenta';
+
+  @override
+  String get deleteHouseholdBody =>
+      '¿Seguro que quieres borrar esta cuenta y todos sus datos? Esta acción no se puede deshacer.';
+
+  @override
+  String get deleteHouseholdTooltip => 'Borrar cuenta';
+
+  @override
+  String get deletedOkToast => 'Cuenta borrada';
 }

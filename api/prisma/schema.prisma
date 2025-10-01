@@ -63,7 +63,7 @@ model DeviceToken {
   createdAt DateTime @default(now())
   lastSeen  DateTime @default(now())
   revoked   Boolean  @default(false)
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([userId])
 }
@@ -74,15 +74,11 @@ model Household {
   currency  String   @default("EUR")
   createdAt DateTime @default(now())
 
-  invites  HouseholdInvite[]
-  joinReqs HouseholdJoinRequest[]
-  members  HouseholdMember[]
-
-  // Ledger (lado opuesto)
+  invites       HouseholdInvite[]
+  joinReqs      HouseholdJoinRequest[]
+  members       HouseholdMember[]
   ledgerEntries LedgerEntry[] @relation("HouseholdLedgerEntries")
-
-  // Ahorros (lado opuesto)
-  savingsGoals SavingsGoal[] @relation("HouseholdSavingsGoals")
+  savingsGoals  SavingsGoal[] @relation("HouseholdSavingsGoals")
 }
 
 model HouseholdMember {
@@ -90,7 +86,7 @@ model HouseholdMember {
   userId      String
   role        HouseholdRole @default(MEMBER)
   joinedAt    DateTime      @default(now())
-  household   Household     @relation(fields: [householdId], references: [id])
+  household   Household     @relation(fields: [householdId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user        User          @relation(fields: [userId], references: [id])
 
   @@id([householdId, userId])
@@ -107,7 +103,7 @@ model HouseholdInvite {
   createdBy       String
   usedAt          DateTime?
   revokedAt       DateTime?
-  household       Household              @relation(fields: [householdId], references: [id])
+  household       Household              @relation(fields: [householdId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   joinRequests    HouseholdJoinRequest[] @relation("InviteJoinRequests")
 
   @@index([householdId])
@@ -122,8 +118,8 @@ model HouseholdJoinRequest {
   createdAt   DateTime        @default(now())
   decidedAt   DateTime?
   decidedBy   String?
-  household   Household       @relation(fields: [householdId], references: [id])
-  invite      HouseholdInvite @relation("InviteJoinRequests", fields: [inviteId], references: [id])
+  household   Household       @relation(fields: [householdId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  invite      HouseholdInvite @relation("InviteJoinRequests", fields: [inviteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user        User            @relation(fields: [userId], references: [id])
 
   @@unique([householdId, userId, status])
@@ -144,7 +140,7 @@ model LedgerEntry {
   occursAt    DateTime  @default(now())
   createdAt   DateTime  @default(now())
 
-  household Household @relation("HouseholdLedgerEntries", fields: [householdId], references: [id])
+  household Household @relation("HouseholdLedgerEntries", fields: [householdId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user      User      @relation("UserLedgerEntries", fields: [userId], references: [id])
 
   @@index([householdId, occursAt])
@@ -163,7 +159,7 @@ model SavingsGoal {
   createdAt   DateTime  @default(now())
   createdBy   String
 
-  household     Household    @relation("HouseholdSavingsGoals", fields: [householdId], references: [id])
+  household     Household    @relation("HouseholdSavingsGoals", fields: [householdId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdByUser User         @relation("UserCreatedSavingsGoals", fields: [createdBy], references: [id])
   txns          SavingsTxn[] @relation("GoalTxns")
 
@@ -180,7 +176,7 @@ model SavingsTxn {
   occursAt  DateTime       @default(now())
   createdAt DateTime       @default(now())
 
-  goal SavingsGoal @relation("GoalTxns", fields: [goalId], references: [id])
+  goal SavingsGoal @relation("GoalTxns", fields: [goalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user User        @relation("UserSavingsTxns", fields: [userId], references: [id])
 
   @@index([goalId, occursAt])

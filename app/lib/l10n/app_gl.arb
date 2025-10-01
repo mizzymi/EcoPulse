@@ -14,6 +14,10 @@
       }
     }
   },
+  "openHousehold": "Abrir",
+  "householdCarouselError": "Erro ao cargar as contas",
+  "householdCarouselEmpty": "Aínda non tes contas. Crea unha ou únete a unha.",
+  "householdMembersCount": "{count, plural, one {1 membro} other {{count} membros}}",
   "logout": "Pechar sesión",
   "login": "Iniciar sesión",
   "loading": "Cargando…",
@@ -302,5 +306,15 @@
   "newPasswordLabel": "Novo contrasinal",
   "changeAction": "Cambiar",
   "resetPasswordFailed": "Non se puido restablecer",
-  "passwordUpdatedToast": "Contrasinal actualizado. Inicia sesión."
+  "passwordUpdatedToast": "Contrasinal actualizado. Inicia sesión.",
+  "createOrJoinTitle": "Engadir conta",
+  "createOrJoinSubtitle": "Crea unha conta ou únete cun código",
+  "openCta": "Abrir",
+  "deleteHouseholdTitle": "Borrar conta",
+  "deleteHouseholdBody": "Seguro que queres borrar esta conta e todos os seus datos? Esta acción non se pode desfacer.",
+  "deleteHouseholdTooltip": "Borrar conta",
+  "deletedOkToast": "Conta borrada",
+  "deleteFailedToast": "Non se puido borrar a conta",
+  "delete": "Borrar",
+  "cancel": "Cancelar"
 }

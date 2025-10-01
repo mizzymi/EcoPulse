@@ -26,6 +26,27 @@ class SCa extends S {
   }
 
   @override
+  String get openHousehold => 'Obrir';
+
+  @override
+  String get householdCarouselError => 'Error en carregar els comptes';
+
+  @override
+  String get householdCarouselEmpty =>
+      'Encara no tens cap compte. Crea\'n un o uneix-t\'hi.';
+
+  @override
+  String householdMembersCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count membres',
+      one: '1 membre',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get logout => 'Tanca sessió';
 
   @override
@@ -41,7 +62,7 @@ class SCa extends S {
   String get save => 'Desar';
 
   @override
-  String get delete => 'Eliminar';
+  String get delete => 'Esborrar';
 
   @override
   String get settings => 'Ajustos';
@@ -155,7 +176,7 @@ class SCa extends S {
   String get monthMovementsTitle => 'Moviments del mes';
 
   @override
-  String get deleteFailedToast => 'No s\'ha pogut eliminar';
+  String get deleteFailedToast => 'No s\'ha pogut esborrar el compte';
 
   @override
   String get accountGenericLower => 'compte';
@@ -660,4 +681,26 @@ class SCa extends S {
 
   @override
   String get passwordUpdatedToast => 'Contrasenya actualitzada. Inicia sessió.';
+
+  @override
+  String get createOrJoinTitle => 'Afegir compte';
+
+  @override
+  String get createOrJoinSubtitle => 'Crea un compte o uneix-t’hi amb codi';
+
+  @override
+  String get openCta => 'Obrir';
+
+  @override
+  String get deleteHouseholdTitle => 'Esborrar compte';
+
+  @override
+  String get deleteHouseholdBody =>
+      'Segur que vols esborrar aquest compte i totes les seves dades? Aquesta acció no es pot desfer.';
+
+  @override
+  String get deleteHouseholdTooltip => 'Esborrar compte';
+
+  @override
+  String get deletedOkToast => 'Compte esborrat';
 }

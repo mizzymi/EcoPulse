@@ -44,14 +44,6 @@ final wsNotificationsProvider = Provider<Stream<String>>((ref) {
     return controller.stream;
   }
 
-  void notify(dynamic data) {
-    if (data is String) {
-      controller.add(data);
-    } else if (data is Map && data['message'] is String) {
-      controller.add(data['message'] as String);
-    }
-  }
-
   // Example server events
   s.on('join_request_new', (data) {
     final email = (data is Map && data['requesterEmail'] is String)

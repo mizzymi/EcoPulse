@@ -26,6 +26,27 @@ class SEn extends S {
   }
 
   @override
+  String get openHousehold => 'Open';
+
+  @override
+  String get householdCarouselError => 'Error loading accounts';
+
+  @override
+  String get householdCarouselEmpty =>
+      'You don\'t have any accounts yet. Create or join one.';
+
+  @override
+  String householdMembersCount(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count members',
+      one: '1 member',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get logout => 'Log out';
 
   @override
@@ -155,7 +176,7 @@ class SEn extends S {
   String get monthMovementsTitle => 'Movements of the month';
 
   @override
-  String get deleteFailedToast => 'Could not delete';
+  String get deleteFailedToast => 'Failed to delete account';
 
   @override
   String get accountGenericLower => 'account';
@@ -660,4 +681,29 @@ class SEn extends S {
 
   @override
   String get passwordUpdatedToast => 'Password updated. Sign in.';
+
+  @override
+  String get createOrJoinTitle => 'Add household';
+
+  @override
+  String get createOrJoinSubtitle => 'Create a household or join with a code';
+
+  @override
+  String get openCta => 'Open';
+
+  @override
+  String get deleteHouseholdTitle => 'Delete account';
+
+  @override
+  String get deleteHouseholdBody =>
+      'Are you sure you want to delete this account and all its data? This action cannot be undone.';
+
+  @override
+  String get deleteHouseholdTooltip => 'Delete account';
+
+  @override
+  String get deletedOkToast => 'Account deleted';
+
+  @override
+  String get changeLanguageTooltip => 'Change language';
 }

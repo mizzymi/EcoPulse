@@ -25,6 +25,12 @@ export class HouseholdsController {
     return this.service.myHouseholds(req.user.id);
   }
 
+  /* ===== Borrar cuenta ===== */
+  @Delete(':id')
+  deleteHousehold(@Req() req: any, @Param('id') householdId: string) {
+    return this.service.deleteHousehold(req.user.id, householdId);
+  }
+  
   /* ===== Crear cuenta ===== */
   @Post()
   create(@Req() req: any, @Body() dto: { name: string; currency?: string }) {

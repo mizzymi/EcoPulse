@@ -62,6 +62,29 @@ export class HouseholdsService {
     return h;
   }
 
+  async deleteHousehold(userId: string, householdId: string) {
+    // existe
+    const household = await this.prisma.household.findUnique({
+      where: { id: householdId },
+      select: { id: true },
+    });
+    if (!household) throw new NotFoundException('Household not found');
+
+    // es OWNER
+    const membership = await this.prisma.householdMember.findFirst({
+      where: { householdId, userId },
+      select: { role: true },
+    });
+    if (!membership) throw new ForbiddenException('Not a member of this household');
+    if (membership.role !== 'OWNER') {
+      throw new ForbiddenException('Only the owner can delete this household');
+    }
+
+    // hard delete: ya en cascada por FK
+    await this.prisma.household.delete({ where: { id: householdId } });
+    return { ok: true };
+  }
+
   async myHouseholds(userId: string) {
     const ms = await this.prisma.householdMember.findMany({
       where: { userId },

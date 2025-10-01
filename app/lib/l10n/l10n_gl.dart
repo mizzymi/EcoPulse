@@ -702,4 +702,7 @@ class SGl extends S {
 
   @override
   String get deletedOkToast => 'Conta borrada';
+
+  @override
+  String get changeLanguageTooltip => 'Cambiar idioma';
 }

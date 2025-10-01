@@ -1366,6 +1366,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Account deleted'**
   String get deletedOkToast;
+
+  /// No description provided for @changeLanguageTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Change language'**
+  String get changeLanguageTooltip;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -316,5 +316,6 @@
   "deletedOkToast": "Conta borrada",
   "deleteFailedToast": "Non se puido borrar a conta",
   "delete": "Borrar",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "changeLanguageTooltip": "Cambiar idioma"
 }

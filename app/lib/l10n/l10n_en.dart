@@ -703,4 +703,7 @@ class SEn extends S {
 
   @override
   String get deletedOkToast => 'Account deleted';
+
+  @override
+  String get changeLanguageTooltip => 'Change language';
 }

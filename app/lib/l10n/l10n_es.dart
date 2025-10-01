@@ -703,4 +703,7 @@ class SEs extends S {
 
   @override
   String get deletedOkToast => 'Cuenta borrada';
+
+  @override
+  String get changeLanguageTooltip => 'Cambiar idioma';
 }

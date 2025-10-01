@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 class SummaryCard extends StatelessWidget {
   final String month;
   final double opening, income, expense, net, closing;
-  final VoidCallback? onTap; // Callback opcional al tocar la tarjeta
+  final VoidCallback? onTap; 
 
   const SummaryCard({
     super.key,

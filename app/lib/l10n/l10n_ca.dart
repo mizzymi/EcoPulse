@@ -703,4 +703,7 @@ class SCa extends S {
 
   @override
   String get deletedOkToast => 'Compte esborrat';
+
+  @override
+  String get changeLanguageTooltip => 'Canvia l\'idioma';
 }

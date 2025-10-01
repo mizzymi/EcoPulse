@@ -315,5 +315,6 @@
   "deletedOkToast": "Compte esborrat",
   "deleteFailedToast": "No s'ha pogut esborrar el compte",
   "delete": "Esborrar",
-  "cancel": "Cancel·lar"
+  "cancel": "Cancel·lar",
+  "changeLanguageTooltip": "Canvia l'idioma"
 }

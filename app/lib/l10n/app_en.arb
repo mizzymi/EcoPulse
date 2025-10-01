@@ -316,5 +316,6 @@
   "deletedOkToast": "Account deleted",
   "deleteFailedToast": "Failed to delete account",
   "delete": "Delete",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "changeLanguageTooltip": "Change language"
 }

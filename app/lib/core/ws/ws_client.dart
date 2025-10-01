@@ -18,12 +18,8 @@ final wsProvider = Provider<IO.Socket?>((ref) {
         .build(),
   );
 
-  // Basic lifecycle
-  socket.onConnect((_) {
-    // Connected
+  socket.onDisconnect((_) {
   });
-  socket.onReconnectAttempt((_) {});
-  socket.onDisconnect((_) {});
 
   ref.onDispose(() {
     if (socket.connected) {
@@ -64,4 +60,3 @@ final wsNotificationsProvider = Provider<Stream<String>>((ref) {
   ref.onDispose(() => controller.close());
   return controller.stream;
 });
-

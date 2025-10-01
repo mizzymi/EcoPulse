@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../api/dio.dart';
 import '../../providers/auth_token_provider.dart';
 
@@ -42,28 +42,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       });
 
       final token = res.data['accessToken']?.toString();
-      if (token == null) throw Exception(s.missingTokenResponse);
+      if (token == null || token.isEmpty)
+        throw Exception(s.missingTokenResponse);
 
-      // guarda token en estado y almacenamiento
-      ref.read(authTokenProvider.notifier).state = token;
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('authToken', token);
+      await ref.read(authTokenControllerProvider).set(token);
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_isLogin ? s.loginSuccess : s.registerSuccess),
-          ),
-        );
-        // Opcional: Navigator.pop(context);
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_isLogin ? s.loginSuccess : s.registerSuccess)),
+      );
     } on DioException catch (e) {
       final msg = e.response?.data is Map &&
               (e.response!.data as Map)['message'] != null
           ? (e.response!.data as Map)['message'].toString()
           : (e.message ?? s.authErrorGeneric);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(msg)));
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -193,7 +188,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               onPressed: saving
                   ? null
                   : () async {
-                      final token = codeCtrl.text.trim();
+                      final tokenOrCode = codeCtrl.text.trim();
                       final newPass = passCtrl.text;
                       if (newPass.length < 6) {
                         if (context.mounted) {
@@ -206,7 +201,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       setStateDialog(() => saving = true);
                       try {
                         await dio.post('/auth/reset-password', data: {
-                          'token': token,
+                          'token': tokenOrCode,
                           'password': newPass,
                         });
                         if (context.mounted) Navigator.pop(ctx, true);
@@ -303,9 +298,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   ),
                   const SizedBox(height: 8),
                   TextButton(
-                    onPressed:
-                        _loading ? null : () => setState(() => _isLogin = !_isLogin),
-                    child: Text(_isLogin ? s.noAccountCta : s.alreadyAccountCta),
+                    onPressed: _loading
+                        ? null
+                        : () => setState(() => _isLogin = !_isLogin),
+                    child:
+                        Text(_isLogin ? s.noAccountCta : s.alreadyAccountCta),
                   ),
                   const SizedBox(height: 8),
                   TextButton(

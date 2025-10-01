@@ -89,7 +89,7 @@ Future<void> openAddHouseholdSheet(BuildContext ctx, WidgetRef ref) async {
                 ref.invalidate(householdPreviewsProvider);
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 70),
           ],
         ),
       );

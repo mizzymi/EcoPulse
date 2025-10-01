@@ -1,13 +1,3 @@
-/// bootstrap.dart
-/// --------------------------------------------
-/// Punto de entrada de la app. Se encarga de:
-/// - Inicializar Flutter y Riverpod.
-/// - Cargar idioma y token persistidos.
-/// - Lanzar la app con un `ProviderContainer` prehidratado.
-///
-/// Mantiene la inicialización fuera del árbol de widgets para que `main.dart`
-/// quede limpio.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';

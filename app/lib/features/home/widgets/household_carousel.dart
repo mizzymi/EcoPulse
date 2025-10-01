@@ -27,77 +27,79 @@ class _HouseholdCarouselState extends ConsumerState<HouseholdCarousel> {
     final data = ref.watch(householdPreviewsProvider);
 
     return data.when(
-        loading: () => SizedBox(
+      loading: () => SizedBox(
+        height: 180,
+        child: PageView.builder(
+          controller: _controller,
+          itemBuilder: (_, __) => _skeletonCard(context),
+          itemCount: 3,
+        ),
+      ),
+      error: (e, st) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text('${S.of(context).householdCarouselError}: $e'),
+      ),
+      data: (list) {
+        if (list.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(S.of(context).householdCarouselEmpty),
+          );
+        }
+
+        String membersLabel(BuildContext ctx, int n) {
+          return S.of(ctx).householdMembersCount(n);
+        }
+
+        String fmt(BuildContext ctx, double v, String currency) {
+          final locale = Localizations.localeOf(ctx).toLanguageTag();
+          final f = NumberFormat.simpleCurrency(locale: locale, name: currency);
+          return f.format(v);
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
               height: 180,
               child: PageView.builder(
                 controller: _controller,
-                itemBuilder: (_, __) => _skeletonCard(context),
-                itemCount: 3,
+                onPageChanged: (i) => setState(() => _index = i),
+                itemCount: list.length,
+                itemBuilder: (context, i) {
+                  final h = list[i];
+                  final members = membersLabel(context, h.memberCount);
+                  final amountStr = fmt(context, h.closingBalance, h.currency);
+                  final isNegative = h.closingBalance < 0;
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: HouseholdCard(
+                      title: h.name,
+                      subtitle: members,
+                      amount: amountStr,
+                      danger: isNegative, 
+                      onOpen: () async {
+                        await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => HouseholdDetailScreen(
+                            householdId: h.id,
+                            householdName: h.name,
+                          ),
+                        ));
+                        if (!mounted) return;
+                        ref.invalidate(householdPreviewsProvider);
+                      },
+                    ),
+                  );
+                },
               ),
             ),
-        error: (e, st) => Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text('${S.of(context).householdCarouselError}: $e'),
-            ),
-        data: (list) {
-          if (list.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(S.of(context).householdCarouselEmpty),
-            );
-          }
-
-          String membersLabel(BuildContext ctx, int n) {
-            return S.of(ctx).householdMembersCount(n);
-          }
-
-          String fmt(BuildContext ctx, double v, String currency) {
-            final locale = Localizations.localeOf(ctx).toLanguageTag();
-            final f =
-                NumberFormat.simpleCurrency(locale: locale, name: currency);
-            return f.format(v);
-          }
-
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 180,
-                child: PageView.builder(
-                  controller: _controller,
-                  onPageChanged: (i) => setState(() => _index = i),
-                  itemCount: list.length,
-                  itemBuilder: (context, i) {
-                    final h = list[i];
-                    final members = membersLabel(context, h.memberCount);
-                    final amount = fmt(context, h.closingBalance, h.currency);
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: HouseholdCard(
-                        title: h.name,
-                        subtitle: members,
-                        amount: amount,
-                        onOpen: () async {
-                          await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => HouseholdDetailScreen(
-                              householdId: h.id,
-                              householdName: h.name,
-                            ),
-                          ));
-                          if (!mounted) return;
-                          ref.invalidate(householdPreviewsProvider);
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 8),
-              _Dots(count: list.length, index: _index),
-            ],
-          );
-        });
+            const SizedBox(height: 8),
+            _Dots(count: list.length, index: _index),
+          ],
+        );
+      },
+    );
   }
 
   Widget _skeletonCard(BuildContext context) {

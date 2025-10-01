@@ -161,12 +161,6 @@ build/
 .svn/
 .swiftpm/
 migrate_working_dir/
-app/android/
-app/ios/
-app/linux/
-app/windows/
-app/macos/
-app/web/
 
 # IntelliJ related
 *.iml

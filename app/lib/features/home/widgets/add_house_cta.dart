@@ -1,5 +1,6 @@
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import '../../../ui/theme/app_theme.dart';
 
 class AddHouseCta extends StatelessWidget {
   final VoidCallback onTap;
@@ -7,15 +8,13 @@ class AddHouseCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(30),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [cs.primary, cs.tertiary.withOpacity(.9)],
+          colors: [T.cPrimary, T.cSecondary],
         ),
         boxShadow: [
           BoxShadow(
@@ -51,7 +50,7 @@ class AddHouseCta extends StatelessWidget {
                 child: Text(
                   S.of(context).openCta,
                   style: TextStyle(
-                    color: cs.primary,
+                    color: T.cPrimary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

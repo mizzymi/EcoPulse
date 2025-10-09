@@ -21,6 +21,7 @@ Future<void> bootstrap() async {
 
   runApp(UncontrolledProviderScope(
     container: container,
+
     child: const EcoPulseApp(),
   ));
 }

@@ -1,6 +1,8 @@
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 class HouseholdCard extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -23,7 +25,7 @@ class HouseholdCard extends StatelessWidget {
 
     final gradientColors = danger
         ? <Color>[cs.error, cs.error.withOpacity(.9)]
-        : <Color>[cs.primary, cs.tertiary.withOpacity(.9)];
+        : <Color>[T.cPrimary, T.cSecondary.withOpacity(.9)];
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),

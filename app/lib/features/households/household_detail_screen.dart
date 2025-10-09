@@ -34,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/dio.dart';
+import '../../ui/theme/app_theme.dart';
 import 'generate_invite_screen.dart';
 import 'savings/savings_goals_screen.dart';
 
@@ -344,7 +345,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       appBar: AppBar(
         title: Text(name),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(88),
+          preferredSize: const Size.fromHeight(50),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
             child: Column(
@@ -411,6 +412,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         onPressed: () => _openAddEntry(),
         icon: const Icon(Icons.add),
         label: Text(s.addEntryFab),
+        backgroundColor: T.cPrimary,
+        foregroundColor: Colors.white,
       ),
 
       // Cuerpo

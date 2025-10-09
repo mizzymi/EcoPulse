@@ -242,11 +242,11 @@ class _HouseholdMovementsChartScreenState
   }
 
   Widget _buildCumulativeLine(BuildContext context) {
-    final s = S.of(context);
-    final spots = <FlSpot>[];
-    for (var i = 0; i < _agg.length; i++) {
-      spots.add(FlSpot(i.toDouble(), _agg[i].cumulative));
-    }
+    final c = Colors.green.shade900; // o Theme.of(context).colorScheme.primary
+
+    final spots = <FlSpot>[
+      for (var i = 0; i < _agg.length; i++) FlSpot(i.toDouble(), _agg[i].cumulative),
+    ];
 
     final allY = spots.map((s) => s.y).toList();
     final minY = allY.isEmpty ? 0 : allY.reduce((a, b) => a < b ? a : b);
@@ -265,56 +265,68 @@ class _HouseholdMovementsChartScreenState
           LineChartBarData(
             isCurved: true,
             barWidth: 2,
+            color: c,                  // <<--- color de la línea
+            // Si tu versión usa la API antigua, usa: colors: [c],
+            belowBarData: BarAreaData(
+              show: true,
+              color: c.withOpacity(0.12), // <<--- relleno opcional bajo la curva
+            ),
             dotData: const FlDotData(show: false),
             spots: spots,
           ),
         ],
-        titlesData: const FlTitlesData(
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 44,
-            ),
-          ),
-          rightTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 44,
-            ),
-          ),
-          topTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-        ),
+        // (opcional) colores de tooltip / grid / borde
         gridData: const FlGridData(show: true),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(
-            color: Theme.of(context).dividerColor.withOpacity(0.4),
-          ),
+          border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.4)),
         ),
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
-            getTooltipItems: (ts) {
-              return ts
-                  .map((t) {
-                    final i = t.x.toInt();
-                    if (i < 0 || i >= _agg.length) return null;
-                    final a = _agg[i];
-                    final label = _labelFor(context, a.when);
-                    final amount = _fmtNumber(context, a.cumulative);
-                    return LineTooltipItem(
-                      '$label\n${s.balanceLabel(amount)}',
-                      Theme.of(context).textTheme.bodyMedium!,
-                    );
-                  })
-                  .whereType<LineTooltipItem>()
-                  .toList();
+            getTooltipColor: (touchedSpot) =>
+                Theme.of(context).colorScheme.surface.withOpacity(0.9),
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map((t) {
+                final i = t.x.toInt();
+                if (i < 0 || i >= _agg.length) return null;
+                final a = _agg[i];
+                final label = _labelFor(context, a.when);
+                final amount = _fmtNumber(context, a.cumulative);
+                return LineTooltipItem(
+                  '$label\n${S.of(context).balanceLabel(amount)}',
+                  Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Colors.green.shade900),
+                );
+              }).whereType<LineTooltipItem>().toList();
             },
           ),
+        ),
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, meta) {
+                final locale = Localizations.localeOf(context).toString();
+                final txt = NumberFormat.compact(locale: locale).format(value); // 1200 -> 1.2K
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  space: 8,
+                  child: Text(
+                    txt,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                );
+              },
+            ),
+          ),
+          rightTitles: const AxisTitles(
+            sideTitles: SideTitles(showTitles: false),
+          ),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
       ),
     );

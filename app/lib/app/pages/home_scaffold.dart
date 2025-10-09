@@ -13,6 +13,7 @@ import '../../../l10n/l10n.dart';
 import '../../../features/home/widgets/add_house_cta.dart';
 import '../../../features/home/widgets/household_carousel.dart';
 import '../../../providers/auth_token_provider.dart';
+import '../../ui/theme/app_theme.dart';
 import '../sheets/add_household_sheet.dart';
 import '../widgets/app_topbar.dart';
 
@@ -39,11 +40,12 @@ class HomeScaffold extends ConsumerWidget {
               const HouseholdCarousel(),
               const SizedBox(height: 12),
               TextButton.icon(
-                onPressed: () async {
-                  await ref.read(authTokenControllerProvider).clear();
-                },
+                onPressed: () async { await ref.read(authTokenControllerProvider).clear(); },
                 icon: const Icon(Icons.logout),
                 label: Text(s.logout),
+                style: TextButton.styleFrom(
+                  foregroundColor: T.cPrimary,
+                ),
               ),
             ],
           ),

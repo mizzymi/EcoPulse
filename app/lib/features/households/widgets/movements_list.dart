@@ -52,7 +52,11 @@ class MovementsList extends StatelessWidget {
         return Card(
           child: ListTile(
             leading: CircleAvatar(
-              child: Icon(isIncome ? Icons.trending_up : Icons.trending_down),
+              backgroundColor: (isIncome ? Colors.green[200] : Colors.red[200]),
+              child: Icon(
+                isIncome ? Icons.trending_up : Icons.trending_down,
+                color: isIncome ? Colors.green[900] : Colors.red[900],
+              ),
             ),
             title: Text(
               e['category']?.toString() ??
@@ -63,9 +67,9 @@ class MovementsList extends StatelessWidget {
               if ((e['note'] ?? '').toString().isNotEmpty) e['note'].toString(),
             ].join('  •  ')),
             trailing: Text(
-              isIncome ? amount : amount, // amount ya lleva el signo
+              isIncome ? amount : amount,
               style: TextStyle(
-                color: isIncome ? Colors.teal : Colors.red,
+                color: isIncome ? Colors.green[900] : Colors.red[900],
                 fontWeight: FontWeight.bold,
               ),
             ),

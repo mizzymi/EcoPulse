@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../widgets/glass_shell.dart';
+import '../../ui/theme/app_theme.dart';
 import '../../../l10n/l10n.dart';
 import '../../../features/settings/language_picker.dart';
 
@@ -27,17 +27,14 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
       bottom: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-        child: GlassShell(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          radius: 16,
-          child: Row(
+        child: Row(
             children: [
               SvgPicture.asset(
                 'lib/assets/app_icon.svg',
-                width: 24,
-                height: 24,
+                width: 30,
+                height: 30,
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.primary,
+                  T.cPrimary,
                   BlendMode.srcIn,
                 ),
               ),
@@ -61,7 +58,6 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

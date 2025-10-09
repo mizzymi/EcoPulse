@@ -65,7 +65,7 @@ class SummaryCard extends StatelessWidget {
                             .textTheme
                             .headlineSmall
                             ?.copyWith(
-                              color: closing >= 0 ? Colors.teal : Colors.red,
+                              color: closing >= 0 ? Colors.green[900] : Colors.red[900],
                               fontWeight: FontWeight.bold,
                             ),
                       ),

@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ecopulse/ui/widgets/household_card.dart';
 import 'package:intl/intl.dart';
 
+import '../../../ui/theme/app_theme.dart';
+
 class HouseholdCarousel extends ConsumerStatefulWidget {
   const HouseholdCarousel({super.key});
   @override
@@ -123,7 +125,6 @@ class _Dots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(count, (i) {
@@ -134,7 +135,7 @@ class _Dots extends StatelessWidget {
           height: 8,
           width: active ? 22 : 8,
           decoration: BoxDecoration(
-            color: active ? cs.primary : cs.primary.withOpacity(.25),
+            color: active ? T.cPrimary : T.cPrimary.withOpacity(.25),
             borderRadius: BorderRadius.circular(99),
           ),
         );

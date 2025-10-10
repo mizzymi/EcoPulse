@@ -706,4 +706,122 @@ class SCa extends S {
 
   @override
   String get changeLanguageTooltip => 'Canvia l\'idioma';
+
+  @override
+  String get welcomeTitle => 'Benvinguda';
+
+  @override
+  String get welcomeSubtitle =>
+      'Inicia sessió al teu compte o crea’n un de nou';
+
+  @override
+  String get enterYourPassword => 'Introdueix la teva contrasenya';
+
+  @override
+  String get orLabel => 'O';
+
+  @override
+  String get legalPrefix => 'En continuar, acceptes els nostres ';
+
+  @override
+  String get termsOfService => 'Termes del servei';
+
+  @override
+  String get privacyPolicy => 'Política de privacitat';
+
+  @override
+  String get andLabel => 'i';
+
+  @override
+  String get forecastIncludeLabel => 'Incloure previstos i fixos';
+
+  @override
+  String get plannedTitle => 'Despeses previstes (mes)';
+
+  @override
+  String get plannedEmpty => 'Sense previstos';
+
+  @override
+  String get plannedAdd => 'Afegir previst';
+
+  @override
+  String get plannedSettle => 'Marcar com a pagat';
+
+  @override
+  String get fixedTitle => 'Despeses fixes';
+
+  @override
+  String get fixedEmpty => 'Sense fixos';
+
+  @override
+  String get fixedAdd => 'Afegir despesa fixa';
+
+  @override
+  String get fixedPostInstance => 'Generar moviment del mes';
+
+  @override
+  String get actionFailed => 'No s\'ha pogut completar';
+
+  @override
+  String get editPlannedTitle => 'Editar previst';
+
+  @override
+  String get addPlannedTitle => 'Afegir previst';
+
+  @override
+  String get concept => 'Concepte';
+
+  @override
+  String get amount => 'Import';
+
+  @override
+  String get type => 'Tipus';
+
+  @override
+  String get date => 'Data';
+
+  @override
+  String get selectDate => 'Seleccionar';
+
+  @override
+  String get note => 'Nota';
+
+  @override
+  String get invalidAmount => 'Import no vàlid';
+
+  @override
+  String get add => 'Afegir';
+
+  @override
+  String get requiredField => 'Camp obligatori';
+
+  @override
+  String get editFixedTitle => 'Editar despesa fixa';
+
+  @override
+  String get addFixedTitle => 'Afegir despesa fixa';
+
+  @override
+  String get recurrence => 'Recurrència';
+
+  @override
+  String get monthlyByDay => 'Mensual per dia';
+
+  @override
+  String get advancedRrule => 'RRULE avançada';
+
+  @override
+  String get dayOfMonth => 'Dia del mes';
+
+  @override
+  String get rrule => 'RRULE (iCal)';
+
+  @override
+  String get fixedDeleteTitle => 'Eliminar despesa fixa';
+
+  @override
+  String get fixedDeleteBody => 'Segur? Aquesta acció no es pot desfer.';
+
+  @override
+  String get fixedDelete => 'Eliminar despesa fixa';
 }

@@ -1,45 +1,46 @@
 // -----------------------------------------------------------------------------
 // Pantalla principal de detalle de la cuenta (Household).
 //
-// Muestra:
-//   • Resumen del mes actual o “Todos los meses” (vista agregada)
-//   • Lista de movimientos del mes actual
-//   • Acciones rápidas: metas de ahorro, ingreso a ahorro, invitar, renombrar, refrescar
+// Incluye:
+//   • Gastos previstos (planned) y Gastos fijos (recurring)
+//   • Switch para incluir previstos+fijos en el resumen (forecast)
+//   • Acciones para “asentar” (settle/post), editar y borrar previstos/fijos
+//   • Navegación a meses futuros (con resumen sintético si el BE no devuelve datos)
+//   • EXPANSIÓN LOCAL de fijos por mes cuando el BE devuelve solo definiciones
 //
-// Estructura (separada por archivos para mantener este widget liviano):
-//   - widgets/month_nav_row.dart        → barra para navegar entre meses y alternar vista
-//   - widgets/actions_row.dart          → fila de acciones (ahorro, ingreso, QR, config, refresh)
-//   - widgets/summary_card.dart         → tarjeta de resumen mensual
-//   - widgets/movements_list.dart       → lista de movimientos con edición/borrado
-//   - widgets/add_entry_sheet.dart      → bottom sheet para crear/editar movimiento
-//   - dialogs/rename_household_dialog.dart → diálogo para renombrar la cuenta
-//   - dialogs/savings_deposit_dialog.dart  → diálogo rápido de ingreso a ahorro
-//
-// Backend esperado (ajusta si tus rutas difieren):
+// Backend esperado:
 //   GET  /households/:id/entries
 //   GET  /households/:id/summary?month=YYYY-MM
-//   GET  /households/:id/savings-goals
-//   POST /households/:id/savings-goals/:goalId/txns
-//   PATCH /households/:id                     (renombrar)
-//
-// Notas de rendimiento:
-//   _loadAllMonths() obtiene todas las entries para deducir meses y luego pide
-//   summary de cada uno. Para grandes volúmenes conviene un endpoint agregado
-//   que devuelva directamente los resúmenes por mes en una sola llamada.
+//   GET  /households/:id/planned?month=YYYY-MM
+//   GET  /households/:id/recurring?month=YYYY-MM   (si vacío, hacemos fallback a GET /recurring)
+//   POST /households/:id/planned
+//   PATCH /households/:id/planned/:plannedId
+//   DELETE /households/:id/planned/:plannedId
+//   POST /households/:id/planned/:plannedId/settle
+//   POST /households/:id/recurring
+//   PATCH /households/:id/recurring/:recurringId
+//   DELETE /households/:id/recurring/:recurringId
+//   POST /households/:id/recurring/:recurringId/post
 // -----------------------------------------------------------------------------
 
 import 'package:dio/dio.dart';
+import 'package:ecopulse/features/households/widgets/actions_row.dart';
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/dio.dart';
 import '../../ui/theme/app_theme.dart';
+
+// Sheets
+import '../../ui/widgets/add_fixed_expense_sheet.dart';
+import '../../ui/widgets/add_planned_expense_sheet.dart';
+
+// Pantallas relacionadas
 import 'generate_invite_screen.dart';
 import 'savings/savings_goals_screen.dart';
 
 // UI extraídas a widgets/dialogs propios
-import 'widgets/actions_row.dart';
 import 'widgets/summary_card.dart';
 import 'widgets/movements_list.dart';
 import 'widgets/add_entry_sheet.dart';
@@ -62,19 +63,258 @@ class HouseholdDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
-  // Estado de carga (spinner)
   bool _loading = true;
 
-  // Entradas (gastos/ingresos) del mes actual
   List<dynamic> _entries = [];
-
-  // Resumen del mes actual (opening, income, expense, net, closing)
   Map<String, dynamic>? _summary;
 
-  // Vista “Todos los meses”
   bool _viewAllMonths = false;
-
   bool _deleting = false;
+
+  // Previstos / Fijos
+  List<dynamic> _planned = [];
+  List<dynamic> _fixedRaw = []; // puede traer instancias del mes o definiciones
+  bool _includeForecast = true;
+
+  // Todos los meses
+  List<Map<String, dynamic>> _allSummaries = [];
+
+  String? _householdNameState;
+
+  DateTime _month = DateTime(DateTime.now().year, DateTime.now().month);
+
+  @override
+  void initState() {
+    super.initState();
+    _householdNameState = widget.householdName;
+    _refresh();
+  }
+
+  String get _monthStr =>
+      '${_month.year.toString().padLeft(4, '0')}-${_month.month.toString().padLeft(2, '0')}';
+
+  (DateTime from, DateTime to) _rangeOfMonth(DateTime d) {
+    final from = DateTime(d.year, d.month, 1, 0, 0, 0);
+    final to = DateTime(d.year, d.month + 1, 0, 23, 59, 59, 999);
+    return (from, to);
+  }
+
+  // ==== Utilidades meses futuros y resumen vacío ====
+  bool _isFutureMonth(DateTime m) {
+    final now = DateTime(DateTime.now().year, DateTime.now().month);
+    final cand = DateTime(m.year, m.month);
+    return cand.isAfter(now);
+  }
+
+  Map<String, dynamic> _emptySummaryFor(String ym) => {
+    'month': ym,
+    'openingBalance': 0,
+    'income': 0,
+    'expense': 0,
+    'net': 0,
+    'closingBalance': 0,
+    '_synthetic': true,
+  };
+
+  // ==== EXPANSIÓN LOCAL DE FIJOS (cuando el BE no los expande por mes) ====
+  // Detecta si el item es una instancia concreta (tiene occursAt en el mes)
+  bool _isInstanceForMonth(Map e, DateTime month) {
+    final occursAtStr = e['occursAt']?.toString();
+    if (occursAtStr == null || occursAtStr.isEmpty) return false;
+    final dt = DateTime.tryParse(occursAtStr);
+    if (dt == null) return false;
+    return dt.year == month.year && dt.month == month.month;
+  }
+
+  // Parse RRULE MUY SIMPLE: soporta "FREQ=MONTHLY;BYMONTHDAY=5"
+  int? _byMonthDayFromRRule(String rrule) {
+    final up = rrule.toUpperCase();
+    if (!up.contains('FREQ=MONTHLY')) return null;
+    final parts = up.split(';');
+    for (final p in parts) {
+      final kv = p.split('=');
+      if (kv.length == 2 && kv[0] == 'BYMONTHDAY') {
+        return int.tryParse(kv[1]);
+      }
+    }
+    return null;
+  }
+
+  int _daysInMonth(DateTime m) => DateTime(m.year, m.month + 1, 0).day;
+
+  // Devuelve una lista "expandida" de fijos que ocurren en el mes seleccionado.
+  // Si el backend ya trajo instancias del mes, las usa; si trajo definiciones,
+  // las convierte a una instancia sintética (una por mes).
+  List<Map<String, dynamic>> _fixedExpandedForMonth(
+      List<dynamic> raw, DateTime month) {
+    final List<Map<String, dynamic>> out = [];
+
+    for (final item in raw) {
+      final e = Map<String, dynamic>.from(item as Map);
+
+      // 1) Si ya es instancia del mes (occursAt en el mes), la usamos.
+      if (_isInstanceForMonth(e, month)) {
+        out.add(e);
+        continue;
+      }
+
+      // 2) Si es definición: dayOfMonth o rrule => generar instancia en este mes
+      final dynamic domDyn = e['dayOfMonth'];
+      final String? rrule = e['rrule']?.toString();
+
+      int? day;
+      if (domDyn != null) {
+        day = int.tryParse(domDyn.toString());
+      } else if (rrule != null && rrule.isNotEmpty) {
+        day = _byMonthDayFromRRule(rrule);
+      }
+
+      if (day != null) {
+        final dayClamped = day.clamp(1, _daysInMonth(month));
+        final occurs = DateTime(month.year, month.month, dayClamped);
+        out.add({
+          ...e,
+          'occursAt': occurs.toIso8601String(),
+        });
+      }
+      // Si no hay day/rrule, no podemos determinar ocurrencia -> lo ignoramos.
+    }
+
+    return out;
+  }
+
+  // ==== Totales de forecast (solo gastado, como estaba planteado) ====
+  double _sumAmount(Iterable it) =>
+      it.fold<double>(0, (acc, e) => acc + _asDouble(e['amount']));
+
+  double get _plannedExpenseTotal =>
+      _sumAmount(_planned.where((e) => (e['type'] ?? 'EXPENSE') == 'EXPENSE'));
+
+  double get _fixedExpenseTotal {
+    final expanded = _fixedExpandedForMonth(_fixedRaw, _month);
+    return _sumAmount(
+      expanded.where((e) => (e['type'] ?? 'EXPENSE') == 'EXPENSE'),
+    );
+  }
+
+  Map<String, dynamic>? get _effectiveSummary {
+    if (!_includeForecast || _summary == null) return _summary;
+
+    final base = _summary!;
+    final opening = _asDouble(base['openingBalance']);
+    final income = _asDouble(base['income']); // seguimos sin sumar ingresos previstos
+    final expense =
+        _asDouble(base['expense']) + _plannedExpenseTotal + _fixedExpenseTotal;
+    final net = income - expense;
+    final closing = opening + net;
+
+    return {
+      ...base,
+      'income': income,
+      'expense': expense,
+      'net': net,
+      'closingBalance': closing,
+    };
+  }
+
+  // ==== Borrados con confirmación ====
+  Future<void> plannedDelete(Map e) async {
+    final s = S.of(context);
+
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Eliminar previsto'),
+        content: const Text('¿Seguro? Esta acción no se puede deshacer.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(s.cancel),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(s.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (sure != true) return;
+
+    final dio = ref.read(dioProvider);
+    try {
+      await dio.delete('/households/${widget.householdId}/planned/${e['id']}');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.deletedOkToast)),
+      );
+      await _refresh();
+    } on DioException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.deleteFailedToast)),
+      );
+    }
+  }
+
+  Future<void> _confirmDeleteRecurring(Map e) async {
+    final s = S.of(context);
+    final title = s.fixedDeleteTitle ?? 'Eliminar gasto fijo';
+    final body =
+        s.fixedDeleteBody ?? '¿Seguro? Esta acción no se puede deshacer.';
+
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(s.cancel ?? 'Cancelar'),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(s.delete ?? 'Eliminar'),
+          ),
+        ],
+      ),
+    );
+
+    if (sure != true) return;
+
+    final dio = ref.read(dioProvider);
+    try {
+      await dio.delete(
+          '/households/${widget.householdId}/recurring/${e['id']}');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.deletedOkToast ?? 'Eliminado')),
+      );
+      await _refresh();
+    } on DioException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.deleteFailedToast ?? 'No se pudo eliminar')),
+      );
+    }
+  }
+
+  // ==== Cambios de mes ====
+  void _openMonthFromYm(String ym) {
+    final parts = ym.split('-');
+    if (parts.length >= 2) {
+      final year = int.tryParse(parts[0]) ?? DateTime.now().year;
+      final month = int.tryParse(parts[1]) ?? DateTime.now().month;
+      final next = DateTime(year, month);
+      setState(() {
+        _month = next;
+        _viewAllMonths = false;
+        _includeForecast = _isFutureMonth(next);
+      });
+      _refresh();
+    }
+  }
 
   Future<void> _confirmAndDelete() async {
     final s = S.of(context);
@@ -83,9 +323,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     final sure = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(s.deleteHouseholdTitle), // “Borrar cuenta”
-        content: Text(s
-            .deleteHouseholdBody), // “¿Seguro? Esta acción no se puede deshacer…”
+        title: Text(s.deleteHouseholdTitle),
+        content: Text(s.deleteHouseholdBody),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
@@ -105,63 +344,20 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       await dio.delete('/households/${widget.householdId}');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deletedOkToast)), // “Cuenta borrada”
+        SnackBar(content: Text(s.deletedOkToast)),
       );
-      Navigator.of(context).pop(true); // vuelve al listado
+      Navigator.of(context).pop(true);
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deleteFailedToast)), // “No se pudo borrar…”
+        SnackBar(content: Text(s.deleteFailedToast)),
       );
     } finally {
       if (mounted) setState(() => _deleting = false);
     }
   }
 
-  // Resúmenes de todos los meses (solo cuando _viewAllMonths = true)
-  List<Map<String, dynamic>> _allSummaries = [];
-
-  // Nombre editable para reflejar cambios en AppBar
-  String? _householdNameState;
-
-  // Mes en foco (YYYY-MM)
-  DateTime _month = DateTime(DateTime.now().year, DateTime.now().month);
-
-  @override
-  void initState() {
-    super.initState();
-    // Nombre inicial si vino por parámetro
-    _householdNameState = widget.householdName;
-    // Carga inicial del mes en foco
-    _refresh();
-  }
-
-  // Helper: “YYYY-MM” del mes en foco
-  String get _monthStr =>
-      '${_month.year.toString().padLeft(4, '0')}-${_month.month.toString().padLeft(2, '0')}';
-
-  // Rango exacto de un mes [from, to]
-  (DateTime from, DateTime to) _rangeOfMonth(DateTime d) {
-    final from = DateTime(d.year, d.month, 1, 0, 0, 0);
-    final to = DateTime(d.year, d.month + 1, 0, 23, 59, 59, 999);
-    return (from, to);
-  }
-
-  // Abre un mes (YYYY-MM) desde la vista “Todos los meses”
-  void _openMonthFromYm(String ym) {
-    final parts = ym.split('-');
-    if (parts.length >= 2) {
-      final year = int.tryParse(parts[0]) ?? DateTime.now().year;
-      final month = int.tryParse(parts[1]) ?? DateTime.now().month;
-      setState(() {
-        _month = DateTime(year, month);
-        _viewAllMonths = false;
-      });
-      _refresh();
-    }
-  }
-
-  // Carga movimientos y resumen del mes en foco
+  // ==== Carga de datos (con fallback para fijos) ====
   Future<void> _refresh() async {
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
@@ -180,15 +376,49 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         },
       );
 
-      // Resumen del mes en foco
-      final resSum = await dio.get(
-        '/households/${widget.householdId}/summary',
+      // Resumen del mes (puede no existir en meses futuros)
+      Map<String, dynamic>? summary;
+      try {
+        final resSum = await dio.get(
+          '/households/${widget.householdId}/summary',
+          queryParameters: {'month': _monthStr},
+        );
+        summary = Map<String, dynamic>.from(resSum.data as Map);
+      } on DioException {
+        summary = _emptySummaryFor(_monthStr);
+      }
+
+      if (_isFutureMonth(_month)) {
+        summary = _emptySummaryFor(_monthStr);
+      }
+
+      // Previstos de este mes
+      final resPlanned = await dio.get(
+        '/households/${widget.householdId}/planned',
         queryParameters: {'month': _monthStr},
       );
 
+      // Fijos: intentamos instancias del mes; si vacío -> traemos definiciones
+      final resFixedMonth = await dio.get(
+        '/households/${widget.householdId}/recurring',
+        queryParameters: {'month': _monthStr},
+      );
+      List fixedList = (resFixedMonth.data as List).toList();
+      if (fixedList.isEmpty) {
+        try {
+          final resFixedDefs =
+          await dio.get('/households/${widget.householdId}/recurring');
+          fixedList = (resFixedDefs.data as List).toList();
+        } catch (_) {
+          // si también falla, dejamos vacío y el total será 0
+        }
+      }
+
       setState(() {
         _entries = (resList.data as List).toList();
-        _summary = Map<String, dynamic>.from(resSum.data as Map);
+        _summary = summary;
+        _planned = (resPlanned.data as List).toList();
+        _fixedRaw = fixedList.cast<Map>();
       });
     } catch (_) {
       if (mounted) {
@@ -201,7 +431,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // Carga resúmenes de TODOS los meses con movimientos
+  // ==== Todos los meses (sin cambios) ====
   Future<void> _loadAllMonths() async {
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
@@ -248,8 +478,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
       final summaries = results.whereType<Map<String, dynamic>>().toList()
         ..sort((a, b) => (b['month'] ?? '').toString().compareTo(
-              (a['month'] ?? '').toString(),
-            ));
+          (a['month'] ?? '').toString(),
+        ));
 
       setState(() => _allSummaries = summaries);
     } finally {
@@ -257,7 +487,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // Alterna entre vista mensual y “Todos los meses”
   Future<void> _toggleViewAll() async {
     final newVal = !_viewAllMonths;
     setState(() => _viewAllMonths = newVal);
@@ -268,7 +497,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // Bottom sheet para crear/editar movimiento y refrescar al volver
+  // ==== Sheets ====
   Future<void> _openAddEntry({Map<String, dynamic>? existing}) async {
     final res = await showModalBottomSheet<Map<String, dynamic>?>(
       context: context,
@@ -287,12 +516,11 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
       final s = S.of(context);
       final txt =
-          (res['type'] == 'INCOME') ? s.incomeSavedToast : s.expenseSavedToast;
+      (res['type'] == 'INCOME') ? s.incomeSavedToast : s.expenseSavedToast;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(txt)));
     }
   }
 
-  // Diálogo rápido para ingreso a ahorro
   Future<void> _openQuickSavingsDeposit() async {
     final dio = ref.read(dioProvider);
     final s = S.of(context);
@@ -302,7 +530,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       dio: dio,
       householdId: widget.householdId,
       householdName:
-          _householdNameState ?? widget.householdName ?? s.accountGenericLower,
+      _householdNameState ?? widget.householdName ?? s.accountGenericLower,
     );
 
     if (ok == true) {
@@ -314,20 +542,45 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // Navegar al mes anterior
+  Future<void> _openAddPlanned({Map<String, dynamic>? existing}) async {
+    final res = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => AddPlannedExpenseSheet(
+        householdId: widget.householdId,
+        month: _monthStr,
+        existing: existing,
+      ),
+    );
+    if (res == true) await _refresh();
+  }
+
+  Future<void> _openAddFixed({Map<String, dynamic>? existing}) async {
+    final res = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => AddFixedExpenseSheet(
+        householdId: widget.householdId,
+        existing: existing,
+      ),
+    );
+    if (res == true) await _refresh();
+  }
+
+  // ==== Navegación mensual ====
   void _prevMonth() {
+    final next = DateTime(_month.year, _month.month - 1);
     setState(() {
-      _month = DateTime(_month.year, _month.month - 1);
+      _month = next;
     });
     _refresh();
   }
 
-  // Navegar al mes siguiente (no futuro)
   void _nextMonth() {
-    final now = DateTime(DateTime.now().year, DateTime.now().month);
-    final cand = DateTime(_month.year, _month.month + 1);
-    if (cand.isAfter(now)) return;
-    setState(() => _month = cand);
+    final next = DateTime(_month.year, _month.month + 1);
+    setState(() {
+      _month = next;
+    });
     _refresh();
   }
 
@@ -407,7 +660,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         actions: const [],
       ),
 
-      // FAB para crear movimientos
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openAddEntry(),
         icon: const Icon(Icons.add),
@@ -416,87 +668,257 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         foregroundColor: Colors.white,
       ),
 
-      // Cuerpo
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: _viewAllMonths ? _loadAllMonths : _refresh,
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  if (_viewAllMonths) ...[
-                    if (_allSummaries.isEmpty)
-                      Text(s.noMonthsWithMovements)
-                    else
-                      ..._allSummaries.map(
-                        (summary) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: SummaryCard(
-                            month: summary['month']?.toString() ?? '',
-                            opening: _asDouble(summary['openingBalance']),
-                            income: _asDouble(summary['income']),
-                            expense: _asDouble(summary['expense']),
-                            net: _asDouble(summary['net']),
-                            closing: _asDouble(summary['closingBalance']),
-                            onTap: () {
-                              final ym = summary['month']?.toString() ?? '';
-                              _openMonthFromYm(ym);
-                            },
-                          ),
-                        ),
-                      ),
-                    const SizedBox(height: 72),
-                  ] else ...[
-                    if (_summary != null)
-                      SummaryCard(
-                        month: _summary!['month']?.toString() ?? _monthStr,
-                        opening: _asDouble(_summary!['openingBalance']),
-                        income: _asDouble(_summary!['income']),
-                        expense: _asDouble(_summary!['expense']),
-                        net: _asDouble(_summary!['net']),
-                        closing: _asDouble(_summary!['closingBalance']),
-                      ),
-                    const SizedBox(height: 12),
-                    Text(
-                      s.monthMovementsTitle,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(height: 8),
-                    MovementsList(
-                      entries: _entries,
-                      onEdit: (e) => _openAddEntry(existing: e),
-                      onDelete: (id) async {
-                        final dio = ref.read(dioProvider);
-                        try {
-                          await dio.delete(
-                            '/households/${widget.householdId}/entries/$id',
-                          );
-                          if (_viewAllMonths) {
-                            await _loadAllMonths();
-                          } else {
-                            await _refresh();
-                          }
-                          return true;
-                        } on DioException {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(s.deleteFailedToast)),
-                            );
-                          }
-                          return false;
-                        }
+        onRefresh: _viewAllMonths ? _loadAllMonths : _refresh,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            if (_viewAllMonths) ...[
+              if (_allSummaries.isEmpty)
+                Text(s.noMonthsWithMovements)
+              else
+                ..._allSummaries.map(
+                      (summary) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: SummaryCard(
+                      month: summary['month']?.toString() ?? '',
+                      opening: _asDouble(summary['openingBalance']),
+                      income: _asDouble(summary['income']!),
+                      expense: _asDouble(summary['expense']!),
+                      net: _asDouble(summary['net']!),
+                      closing: _asDouble(summary['closingBalance']!),
+                      onTap: () {
+                        final ym = summary['month']?.toString() ?? '';
+                        _openMonthFromYm(ym);
                       },
                     ),
-                    const SizedBox(height: 72),
-                  ],
+                  ),
+                ),
+              const SizedBox(height: 72),
+            ] else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(S.of(context).forecastIncludeLabel ??
+                      'Incluir previstos y fijos'),
+                  Switch(
+                    value: _includeForecast,
+                    onChanged: (v) =>
+                        setState(() => _includeForecast = v),
+                  ),
                 ],
               ),
-            ),
+
+              if (_summary != null)
+                SummaryCard(
+                  month: (_effectiveSummary?['month'] ??
+                      _summary!['month'] ??
+                      _monthStr)
+                      .toString(),
+                  opening: _asDouble(_effectiveSummary?['openingBalance'] ??
+                      _summary!['openingBalance']),
+                  income: _asDouble(_effectiveSummary?['income'] ??
+                      _summary!['income']),
+                  expense: _asDouble(_effectiveSummary?['expense'] ??
+                      _summary!['expense']),
+                  net: _asDouble(
+                      _effectiveSummary?['net'] ?? _summary!['net']),
+                  closing: _asDouble(
+                      _effectiveSummary?['closingBalance'] ??
+                          _summary!['closingBalance']),
+                ),
+              const SizedBox(height: 12),
+
+              // ---- PREVISTOS ---------------------------------------------------------
+              ExpansionTile(
+                initiallyExpanded: _planned.isNotEmpty,
+                title: Text(S.of(context).plannedTitle ??
+                    'Gastos previstos (mes)'),
+                subtitle: Text(
+                    '${_planned.length} • Total: ${_plannedExpenseTotal.toStringAsFixed(2)}'),
+                children: [
+                  if (_planned.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(S.of(context).plannedEmpty ??
+                          'Sin previstos'),
+                    )
+                  else
+                    ..._planned.map((e) {
+                      final concept =
+                      (e['concept'] ?? e['title'] ?? '').toString();
+                      final amount = _asDouble(e['amount']);
+                      final due =
+                      (e['dueDate'] ?? e['occursAt'] ?? '').toString();
+                      return ListTile(
+                        dense: true,
+                        title: Text(concept),
+                        subtitle: Text(
+                            '${due.isEmpty ? '' : '$due • '}${amount.toStringAsFixed(2)}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon:
+                              const Icon(Icons.check_circle_outline),
+                              tooltip: S.of(context).plannedSettle ??
+                                  'Marcar como pagado',
+                              onPressed: () async {
+                                try {
+                                  final dio = ref.read(dioProvider);
+                                  await dio.post(
+                                    '/households/${widget.householdId}/planned/${e['id']}/settle',
+                                    data: {'month': _monthStr},
+                                  );
+                                  await _refresh();
+                                } catch (_) {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                        content: Text(S
+                                            .of(context)
+                                            .actionFailed ??
+                                            'No se pudo completar')));
+                                  }
+                                }
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined),
+                              onPressed: () =>
+                                  _openAddPlanned(existing: e),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              tooltip: 'Eliminar previsto',
+                              onPressed: () => plannedDelete(e),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.add),
+                        label: Text(S.of(context).plannedAdd ??
+                            'Añadir previsto'),
+                        onPressed: () => _openAddPlanned(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // ---- FIJOS -------------------------------------------------------------
+              ExpansionTile(
+                initiallyExpanded: _fixedRaw.isNotEmpty,
+                title:
+                Text(S.of(context).fixedTitle ?? 'Gastos fijos'),
+                subtitle: Text(
+                    '${_fixedRaw.length} • Total (mes): ${_fixedExpenseTotal.toStringAsFixed(2)}'),
+                children: [
+                  if (_fixedRaw.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
+                          S.of(context).fixedEmpty ?? 'Sin fijos'),
+                    )
+                  else
+                    ..._fixedRaw.map((e) {
+                      final concept =
+                      (e['concept'] ?? e['title'] ?? '').toString();
+                      final amount = _asDouble(e['amount']);
+                      final rule =
+                      (e['rrule'] ?? e['dayOfMonth'] ?? '').toString();
+                      return ListTile(
+                        dense: true,
+                        title: Text(concept),
+                        subtitle: Text(
+                            '${rule.isEmpty ? 'Mensual' : rule} • ${amount.toStringAsFixed(2)}'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined),
+                              onPressed: () =>
+                                  _openAddFixed(existing: e),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              tooltip: S.of(context).fixedDelete ??
+                                  'Eliminar gasto fijo',
+                              onPressed: () =>
+                                  _confirmDeleteRecurring(e),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: OutlinedButton.icon(
+                        icon: const Icon(Icons.add),
+                        label: Text(S.of(context).fixedAdd ??
+                            'Añadir gasto fijo'),
+                        onPressed: () => _openAddFixed(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              Text(
+                s.monthMovementsTitle,
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+
+              MovementsList(
+                entries: _entries,
+                onEdit: (e) => _openAddEntry(existing: e),
+                onDelete: (id) async {
+                  final dio = ref.read(dioProvider);
+                  try {
+                    await dio.delete(
+                      '/households/${widget.householdId}/entries/$id',
+                    );
+                    if (_viewAllMonths) {
+                      await _loadAllMonths();
+                    } else {
+                      await _refresh();
+                    }
+                    return true;
+                  } on DioException {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(s.deleteFailedToast)),
+                      );
+                    }
+                    return false;
+                  }
+                },
+              ),
+
+              const SizedBox(height: 72),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
-  // Parse seguro a double para valores provenientes del backend.
   static double _asDouble(dynamic x) {
     if (x is num) return x.toDouble();
     return double.tryParse(x?.toString() ?? '0') ?? 0;

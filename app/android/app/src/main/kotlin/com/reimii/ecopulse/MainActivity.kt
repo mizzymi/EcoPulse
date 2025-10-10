@@ -1,4 +1,4 @@
-package com.example.ecopulse
+package com.reimii.ecopulse
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -21,12 +21,14 @@ export class AuthController {
   me(@Req() req: any) {
     return this.service.me(req.user.id);
   }
-  @Post('forgot-password')
 
+  @Post('forgot-password')
   async forgot(@Body() dto: { email: string }) {
-    await this.service.requestPasswordReset(dto.email);
+    const email = (dto.email ?? '').trim().toLowerCase();
+    await this.service.requestPasswordReset(email);
     return { ok: true };
   }
+
 
   @Post('reset-password')
   async reset(@Body() dto: { token: string; password: string }) {

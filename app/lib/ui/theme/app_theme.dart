@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class T {
   static const cPrimary = Colors.green;
   static const cSecondary = Colors.lightGreen;
-  static const cBg = Colors.white;
+  static const cBg = Color(0xFFEAF8E5);
   static const cText = Colors.black;
 
   static const header = LinearGradient(
@@ -17,9 +17,9 @@ class T {
     gradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Colors.white54, Colors.white24],
+      colors: [Color(0xFFEAF8E5), Color(0xFFEAF8E5)],
     ),
-    border: Border.all(color: Colors.white38),
+    border: Border.all(color: Colors.green),
   );
 }
 

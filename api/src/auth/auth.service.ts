@@ -45,13 +45,22 @@ export class AuthService {
   }
 
   async requestPasswordReset(email: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
-    if (!user) return;
+    const e = (email ?? '').trim().toLowerCase();
+    if (!e) return;
+
+    const user = await this.prisma.user.findUnique({ where: { email: e } });
+    if (!user) {
+      console.warn('[AUTH] forgot: email no encontrado:', e);
+      return; // seguimos sin revelar existencia
+    }
 
     const token = this.makeResetToken(user.id, user.passwordHash);
-    
-    await this.notifications.sendPasswordResetCode?.(user.email, token);
 
+    try {
+      await this.notifications.sendPasswordResetCode(user.email, token);
+    } catch (err) {
+      console.error('[AUTH] Error enviando reset email:', err);
+    }
   }
 
   async resetPassword(token: string, newPassword: string) {

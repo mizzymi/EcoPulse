@@ -8,7 +8,7 @@ class HouseholdHeaderMenu extends StatelessWidget {
   // ── Navegación de meses ──
   final String monthStr;
   final bool viewAllMonths;
-  final bool isAtCurrentMonth;
+  final bool isAtCurrentMonth; // ya no bloquea "siguiente", lo dejamos por compat
   final VoidCallback onPrevMonth;
   final VoidCallback onNextMonth;
   final VoidCallback onToggleViewAll;
@@ -56,7 +56,7 @@ class HouseholdHeaderMenu extends StatelessWidget {
           tooltip: s.appTitle,
           onSelected: (action) async {
             switch (action) {
-              // meses
+            // meses
               case _MenuAction.prevMonth:
                 onPrevMonth();
                 break;
@@ -66,7 +66,7 @@ class HouseholdHeaderMenu extends StatelessWidget {
               case _MenuAction.toggleAllMonths:
                 onToggleViewAll();
                 break;
-              // acciones
+            // acciones
               case _MenuAction.savingsGoals:
                 onOpenSavingsGoals();
                 break;
@@ -121,7 +121,7 @@ class HouseholdHeaderMenu extends StatelessWidget {
               ),
             ),
             PopupMenuItem(
-              enabled: !isAtCurrentMonth,
+              // ¡Ahora SIEMPRE habilitado para poder ir a meses futuros!
               value: _MenuAction.nextMonth,
               child: ListTile(
                 dense: true,

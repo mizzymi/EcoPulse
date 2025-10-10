@@ -706,4 +706,121 @@ class SEn extends S {
 
   @override
   String get changeLanguageTooltip => 'Change language';
+
+  @override
+  String get welcomeTitle => 'Welcome';
+
+  @override
+  String get welcomeSubtitle => 'Sign in to your account or create a new one';
+
+  @override
+  String get enterYourPassword => 'Enter your password';
+
+  @override
+  String get orLabel => 'OR';
+
+  @override
+  String get legalPrefix => 'By continuing, you agree to our ';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get andLabel => 'and';
+
+  @override
+  String get forecastIncludeLabel => 'Include planned & fixed';
+
+  @override
+  String get plannedTitle => 'Planned expenses (month)';
+
+  @override
+  String get plannedEmpty => 'No planned items';
+
+  @override
+  String get plannedAdd => 'Add planned';
+
+  @override
+  String get plannedSettle => 'Mark as paid';
+
+  @override
+  String get fixedTitle => 'Fixed expenses';
+
+  @override
+  String get fixedEmpty => 'No fixed items';
+
+  @override
+  String get fixedAdd => 'Add fixed expense';
+
+  @override
+  String get fixedPostInstance => 'Post this month\'s entry';
+
+  @override
+  String get actionFailed => 'Couldn\'t complete action';
+
+  @override
+  String get editPlannedTitle => 'Edit planned';
+
+  @override
+  String get addPlannedTitle => 'Add planned';
+
+  @override
+  String get concept => 'Concept';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get selectDate => 'Select';
+
+  @override
+  String get note => 'Note';
+
+  @override
+  String get invalidAmount => 'Invalid amount';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get requiredField => 'Required field';
+
+  @override
+  String get editFixedTitle => 'Edit fixed expense';
+
+  @override
+  String get addFixedTitle => 'Add fixed expense';
+
+  @override
+  String get recurrence => 'Recurrence';
+
+  @override
+  String get monthlyByDay => 'Monthly by day';
+
+  @override
+  String get advancedRrule => 'Advanced RRULE';
+
+  @override
+  String get dayOfMonth => 'Day of month';
+
+  @override
+  String get rrule => 'RRULE (iCal)';
+
+  @override
+  String get fixedDeleteTitle => 'Delete fixed expense';
+
+  @override
+  String get fixedDeleteBody => 'Are you sure? This action cannot be undone.';
+
+  @override
+  String get fixedDelete => 'Delete fixed expense';
 }

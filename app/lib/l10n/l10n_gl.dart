@@ -705,4 +705,122 @@ class SGl extends S {
 
   @override
   String get changeLanguageTooltip => 'Cambiar idioma';
+
+  @override
+  String get welcomeTitle => 'Benvida';
+
+  @override
+  String get welcomeSubtitle => 'Inicia sesión na túa conta ou crea unha nova';
+
+  @override
+  String get enterYourPassword => 'Introduce o teu contrasinal';
+
+  @override
+  String get orLabel => 'OU';
+
+  @override
+  String get legalPrefix => 'Ao continuar, aceptas os nosos ';
+
+  @override
+  String get termsOfService => 'Termos do servizo';
+
+  @override
+  String get privacyPolicy => 'Política de privacidade';
+
+  @override
+  String get andLabel => 'e';
+
+  @override
+  String get forecastIncludeLabel => 'Incluír previstos e fixos';
+
+  @override
+  String get plannedTitle => 'Gastos previstos (mes)';
+
+  @override
+  String get plannedEmpty => 'Sen previstos';
+
+  @override
+  String get plannedAdd => 'Engadir previsto';
+
+  @override
+  String get plannedSettle => 'Marcar como pagado';
+
+  @override
+  String get fixedTitle => 'Gastos fixos';
+
+  @override
+  String get fixedEmpty => 'Sen fixos';
+
+  @override
+  String get fixedAdd => 'Engadir gasto fixo';
+
+  @override
+  String get fixedPostInstance => 'Xerar movemento do mes';
+
+  @override
+  String get actionFailed => 'Non foi posible completar';
+
+  @override
+  String get editPlannedTitle => 'Editar previsto';
+
+  @override
+  String get addPlannedTitle => 'Engadir previsto';
+
+  @override
+  String get concept => 'Concepto';
+
+  @override
+  String get amount => 'Importe';
+
+  @override
+  String get type => 'Tipo';
+
+  @override
+  String get date => 'Data';
+
+  @override
+  String get selectDate => 'Seleccionar';
+
+  @override
+  String get note => 'Nota';
+
+  @override
+  String get invalidAmount => 'Importe non válido';
+
+  @override
+  String get add => 'Engadir';
+
+  @override
+  String get requiredField => 'Campo obrigatorio';
+
+  @override
+  String get editFixedTitle => 'Editar gasto fixo';
+
+  @override
+  String get addFixedTitle => 'Engadir gasto fixo';
+
+  @override
+  String get recurrence => 'Recorrencia';
+
+  @override
+  String get monthlyByDay => 'Mensual por día';
+
+  @override
+  String get advancedRrule => 'RRULE avanzada';
+
+  @override
+  String get dayOfMonth => 'Día do mes';
+
+  @override
+  String get rrule => 'RRULE (iCal)';
+
+  @override
+  String get fixedDeleteTitle => 'Eliminar gasto fixo';
+
+  @override
+  String get fixedDeleteBody =>
+      'Estás seguro/a? Esta acción non se pode desfacer.';
+
+  @override
+  String get fixedDelete => 'Eliminar gasto fixo';
 }

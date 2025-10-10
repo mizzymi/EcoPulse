@@ -24,7 +24,7 @@ class GlassShell extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: c.surface.withOpacity(.6),
+        color: c.primary.withOpacity(.6),
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: c.outline.withOpacity(.12)),
         boxShadow: [

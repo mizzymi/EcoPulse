@@ -1,5 +1,5 @@
 name: ecopulse
-description: EcoPulse client (Windows/Mobile)
+description: EcoPulse client Mobile
 version: 2.0.1+1
 license: MIT
 
@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.10
+  flutter_dotenv: ^5.2.1
   fl_chart: ^0.69.0
   intl: any
   flutter_riverpod: ^2.5.1
@@ -31,6 +32,7 @@ flutter:
   assets:
     - lib/assets/app_icon.svg
     - lib/assets/EULA.txt
+    - .env
 
 flutter_launcher_icons:
   android: true

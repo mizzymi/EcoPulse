@@ -1372,6 +1372,240 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Change language'**
   String get changeLanguageTooltip;
+
+  /// No description provided for @welcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get welcomeTitle;
+
+  /// No description provided for @welcomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to your account or create a new one'**
+  String get welcomeSubtitle;
+
+  /// No description provided for @enterYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get enterYourPassword;
+
+  /// No description provided for @orLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get orLabel;
+
+  /// No description provided for @legalPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you agree to our '**
+  String get legalPrefix;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @andLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get andLabel;
+
+  /// No description provided for @forecastIncludeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Include planned & fixed'**
+  String get forecastIncludeLabel;
+
+  /// No description provided for @plannedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Planned expenses (month)'**
+  String get plannedTitle;
+
+  /// No description provided for @plannedEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No planned items'**
+  String get plannedEmpty;
+
+  /// No description provided for @plannedAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add planned'**
+  String get plannedAdd;
+
+  /// No description provided for @plannedSettle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as paid'**
+  String get plannedSettle;
+
+  /// No description provided for @fixedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed expenses'**
+  String get fixedTitle;
+
+  /// No description provided for @fixedEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No fixed items'**
+  String get fixedEmpty;
+
+  /// No description provided for @fixedAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add fixed expense'**
+  String get fixedAdd;
+
+  /// No description provided for @fixedPostInstance.
+  ///
+  /// In en, this message translates to:
+  /// **'Post this month\'s entry'**
+  String get fixedPostInstance;
+
+  /// No description provided for @actionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t complete action'**
+  String get actionFailed;
+
+  /// No description provided for @editPlannedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit planned'**
+  String get editPlannedTitle;
+
+  /// No description provided for @addPlannedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add planned'**
+  String get addPlannedTitle;
+
+  /// No description provided for @concept.
+  ///
+  /// In en, this message translates to:
+  /// **'Concept'**
+  String get concept;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get selectDate;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @invalidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid amount'**
+  String get invalidAmount;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get requiredField;
+
+  /// No description provided for @editFixedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit fixed expense'**
+  String get editFixedTitle;
+
+  /// No description provided for @addFixedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add fixed expense'**
+  String get addFixedTitle;
+
+  /// No description provided for @recurrence.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurrence'**
+  String get recurrence;
+
+  /// No description provided for @monthlyByDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly by day'**
+  String get monthlyByDay;
+
+  /// No description provided for @advancedRrule.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced RRULE'**
+  String get advancedRrule;
+
+  /// No description provided for @dayOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of month'**
+  String get dayOfMonth;
+
+  /// No description provided for @rrule.
+  ///
+  /// In en, this message translates to:
+  /// **'RRULE (iCal)'**
+  String get rrule;
+
+  /// No description provided for @fixedDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete fixed expense'**
+  String get fixedDeleteTitle;
+
+  /// No description provided for @fixedDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure? This action cannot be undone.'**
+  String get fixedDeleteBody;
+
+  /// No description provided for @fixedDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete fixed expense'**
+  String get fixedDelete;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

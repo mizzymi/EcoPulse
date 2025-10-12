@@ -53,6 +53,9 @@ model User {
   // Ahorros (lados opuestos)
   createdSavingsGoals SavingsGoal[] @relation("UserCreatedSavingsGoals")
   savingsTxns         SavingsTxn[]  @relation("UserSavingsTxns")
+
+  createdPlanned   HouseholdPlanned[]   @relation("UserCreatedPlanned")
+  createdRecurring HouseholdRecurring[] @relation("UserCreatedRecurring")
 }
 
 model DeviceToken {
@@ -77,8 +80,10 @@ model Household {
   invites       HouseholdInvite[]
   joinReqs      HouseholdJoinRequest[]
   members       HouseholdMember[]
-  ledgerEntries LedgerEntry[] @relation("HouseholdLedgerEntries")
-  savingsGoals  SavingsGoal[] @relation("HouseholdSavingsGoals")
+  ledgerEntries LedgerEntry[]          @relation("HouseholdLedgerEntries")
+  savingsGoals  SavingsGoal[]          @relation("HouseholdSavingsGoals")
+  planned       HouseholdPlanned[]     @relation("HouseholdPlanned")
+  recurring     HouseholdRecurring[]   @relation("HouseholdRecurring")
 }
 
 model HouseholdMember {
@@ -123,6 +128,54 @@ model HouseholdJoinRequest {
   user        User            @relation(fields: [userId], references: [id])
 
   @@unique([householdId, userId, status])
+}
+
+/// Gastos previstos (no asentados hasta que se "settle")
+model HouseholdPlanned {
+  id          String    @id @default(uuid())
+  householdId String
+  createdBy   String
+  concept     String
+  type        EntryType
+  amount      Decimal   @db.Decimal(14, 2)
+  dueDate     DateTime
+  month       String?
+  notes       String?
+  category    String?
+  settledAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relaciones
+  household     Household @relation("HouseholdPlanned", fields: [householdId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdByUser User      @relation("UserCreatedPlanned", fields: [createdBy], references: [id])
+
+  @@index([householdId, dueDate])
+  @@index([householdId, settledAt])
+  @@index([householdId, createdAt])
+}
+
+/// Gastos fijos / reglas recurrentes (se "posteán" como entry real con /post)
+model HouseholdRecurring {
+  id          String    @id @default(uuid())
+  householdId String
+  createdBy   String
+  active      Boolean   @default(true)
+  concept     String
+  type        EntryType
+  amount      Decimal   @db.Decimal(14, 2)
+  dayOfMonth  Int?
+  rrule       String?
+  notes       String?
+  category    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relaciones
+  household     Household @relation("HouseholdRecurring", fields: [householdId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdByUser User      @relation("UserCreatedRecurring", fields: [createdBy], references: [id])
+
+  @@index([householdId, active, createdAt])
 }
 
 /**

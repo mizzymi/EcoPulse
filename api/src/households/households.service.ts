@@ -21,6 +21,53 @@ function makeHumanCode(len = 8) {
   return out;
 }
 
+/* ===== Helpers nuevos para PLANNED/RECURRING ===== */
+
+function parseMonthStrict(ym?: string) {
+  if (!ym) return null;
+  if (!/^\d{4}-\d{2}$/.test(ym)) return null;
+  const [y, m] = ym.split('-').map(Number);
+  return { y, m };
+}
+
+function monthRangeUtc(ym: string) {
+  const mm = parseMonthStrict(ym);
+  if (!mm) throw new BadRequestException('month debe ser YYYY-MM');
+  const from = new Date(Date.UTC(mm.y, mm.m - 1, 1, 0, 0, 0));
+  const to = new Date(Date.UTC(mm.y, mm.m, 0, 23, 59, 59, 999));
+  return { from, to, ...mm };
+}
+
+function coercePositiveAmount(val: number | string | undefined) {
+  const n = typeof val === 'string' ? Number(val) : val;
+  if (!Number.isFinite(n) || (n as number) <= 0) {
+    throw new BadRequestException('amount > 0');
+  }
+  return n as number;
+}
+
+function coerceType(t?: string): EntryKind {
+  const U = (t || '').toUpperCase();
+  if (U !== 'INCOME' && U !== 'EXPENSE') {
+    throw new BadRequestException('type debe ser INCOME o EXPENSE');
+  }
+  return U as EntryKind;
+}
+
+function daysInMonth(y: number, m1to12: number) {
+  return new Date(Date.UTC(y, m1to12, 0)).getUTCDate();
+}
+
+/** parsea BYMONTHDAY=N de una RRULE muy básica (FREQ=MONTHLY;BYMONTHDAY=N) */
+function parseByMonthDay(rrule?: string): number | null {
+  if (!rrule) return null;
+  const m = /BYMONTHDAY\s*=\s*(-?\d+)/i.exec(rrule);
+  if (!m) return null;
+  const v = Number(m[1]);
+  if (!Number.isFinite(v)) return null;
+  return Math.trunc(v);
+}
+
 @Injectable()
 export class HouseholdsService {
   constructor(
@@ -207,8 +254,7 @@ export class HouseholdsService {
       }
       try {
         await this.notifications.notifyNewJoinRequest(invite.householdId, userId);
-      } catch (e) {
-      }
+      } catch (e) { }
       return { status: 'PENDING', householdId: invite.householdId };
     }
 
@@ -262,22 +308,15 @@ export class HouseholdsService {
   ) {
     await this.assertMember(userId, householdId);
 
-    const t = (dto.type || '').toUpperCase();
-    if (t !== 'INCOME' && t !== 'EXPENSE')
-      throw new BadRequestException('type debe ser INCOME o EXPENSE');
-
-    const amountNum =
-      typeof dto.amount === 'string' ? Number(dto.amount) : dto.amount;
-    if (!Number.isFinite(amountNum) || amountNum <= 0)
-      throw new BadRequestException('amount > 0');
-
+    const t = coerceType(dto.type);
+    const amountNum = coercePositiveAmount(dto.amount);
     const occursAt = dto.occursAt ? new Date(dto.occursAt) : new Date();
 
     return this.prisma.ledgerEntry.create({
       data: {
         householdId,
         userId,
-        type: t as EntryKind,
+        type: t,
         amount: amountNum,
         category: dto.category?.trim() || null,
         note: dto.note?.trim() || null,
@@ -379,18 +418,8 @@ export class HouseholdsService {
     if (entry.userId !== userId && !isAdmin) throw new ForbiddenException();
 
     const data: any = {};
-    if (dto.type) {
-      const t = dto.type.toUpperCase();
-      if (t !== 'INCOME' && t !== 'EXPENSE')
-        throw new BadRequestException('type inválido');
-      data.type = t;
-    }
-    if (dto.amount !== undefined) {
-      const n = typeof dto.amount === 'string' ? Number(dto.amount) : dto.amount;
-      if (!Number.isFinite(n) || n <= 0)
-        throw new BadRequestException('amount > 0');
-      data.amount = n;
-    }
+    if (dto.type) data.type = coerceType(dto.type);
+    if (dto.amount !== undefined) data.amount = coercePositiveAmount(dto.amount);
     if (dto.category !== undefined) data.category = dto.category?.trim() || null;
     if (dto.note !== undefined) data.note = dto.note?.trim() || null;
     if (dto.occursAt !== undefined) {
@@ -428,11 +457,9 @@ export class HouseholdsService {
     dto: { name: string; target: number | string; deadline?: string | Date },
   ) {
     await this.assertAdmin(userId, householdId);
-    const target =
-      typeof dto.target === 'string' ? Number(dto.target) : dto.target;
+    const target = coercePositiveAmount(dto.target);
+
     if (!dto.name?.trim()) throw new BadRequestException('name requerido');
-    if (!Number.isFinite(target) || target <= 0)
-      throw new BadRequestException('target > 0');
 
     return this.prisma.savingsGoal.create({
       data: {
@@ -492,10 +519,7 @@ export class HouseholdsService {
       data.name = dto.name.trim();
     }
     if (dto.target !== undefined) {
-      const n = typeof dto.target === 'string' ? Number(dto.target) : dto.target;
-      if (!Number.isFinite(n) || n <= 0)
-        throw new BadRequestException('target > 0');
-      data.target = n;
+      data.target = coercePositiveAmount(dto.target);
     }
     if (dto.deadline !== undefined) {
       data.deadline = dto.deadline === null ? null : new Date(dto.deadline as any);
@@ -600,8 +624,7 @@ export class HouseholdsService {
         where: {
           householdId,
           category: 'Ahorros',
-          // Marcados con la etiqueta en la nota:
-          note: { contains: `[AHORRO:${goalId}]` },
+          note: { contains: `[AHORRO: ${goal.name}]` },
         },
       });
       await tx.savingsGoal.delete({ where: { id: goalId } });
@@ -626,14 +649,11 @@ export class HouseholdsService {
     if (t !== 'DEPOSIT' && t !== 'WITHDRAW')
       throw new BadRequestException('type inválido');
 
-    const amt = typeof dto.amount === 'string' ? Number(dto.amount) : dto.amount;
-    if (!Number.isFinite(amt) || amt <= 0)
-      throw new BadRequestException('amount > 0');
-
+    const amt = coercePositiveAmount(dto.amount);
     const when = dto.occursAt ? new Date(dto.occursAt) : new Date();
     const cleanNote = dto.note?.trim() || null;
 
-    // IMPORTANTE: si es DEPOSIT, también crear un gasto en Ledger (categoría "Ahorros") del mismo importe/fecha
+    // Si es DEPOSIT, también crear un gasto en Ledger (categoría "Ahorros")
     return this.prisma.$transaction(async (tx) => {
       const savedTxn = await tx.savingsTxn.create({
         data: {
@@ -647,8 +667,7 @@ export class HouseholdsService {
       });
 
       if (t === 'DEPOSIT') {
-        // Etiquetamos la nota para poder limpiar si se borra la meta
-        const marker = `[AHORRO:${goalId}]`;
+        const marker = `[AHORRO: ${goal.name}]`;
         await tx.ledgerEntry.create({
           data: {
             householdId,
@@ -656,7 +675,7 @@ export class HouseholdsService {
             type: 'EXPENSE',
             amount: amt,
             category: 'Ahorros',
-            note: `${marker} Depósito ahorro: "${goal.name}"${cleanNote ? ` — ${cleanNote}` : ''}`,
+            note: `${marker} ${cleanNote ? ` — ${cleanNote}` : ''}`,
             occursAt: when,
           },
         });
@@ -704,5 +723,389 @@ export class HouseholdsService {
       progress,
       remaining: Math.max(0, target - saved),
     };
+  }
+
+  /* =======================================================================
+   *                      NUEVO: PLANNED y RECURRING
+   * ======================================================================= */
+
+  /* -------------------- PLANNED (gastos previstos) -------------------- */
+
+  async listPlanned(
+    userId: string,
+    householdId: string,
+    q: { month?: string },
+  ) {
+    await this.assertMember(userId, householdId);
+
+    const where: any = { householdId, settledAt: null }; // solo los no asentados para forecast
+    if (q.month) {
+      const { from, to } = monthRangeUtc(q.month);
+      where.dueDate = { gte: from, lte: to };
+    }
+
+    return this.prisma.householdPlanned.findMany({
+      where,
+      orderBy: [{ dueDate: 'asc' }, { createdAt: 'asc' }],
+      take: 500,
+    });
+  }
+
+  async createPlanned(
+    userId: string,
+    householdId: string,
+    dto: {
+      concept: string;
+      amount: number | string;
+      type: 'INCOME' | 'EXPENSE';
+      dueDate: string; // YYYY-MM-DD
+      month?: string;
+      notes?: string;
+      category?: string;
+    },
+  ) {
+    await this.assertMember(userId, householdId);
+
+    if (!dto.concept?.trim()) throw new BadRequestException('concept requerido');
+    const type = coerceType(dto.type);
+    const amount = coercePositiveAmount(dto.amount);
+    const dueDate = new Date(dto.dueDate);
+    if (isNaN(+dueDate)) throw new BadRequestException('dueDate inválida');
+
+    return this.prisma.householdPlanned.create({
+      data: {
+        householdId,
+        createdBy: userId,
+        concept: dto.concept.trim(),
+        type,
+        amount,
+        dueDate,
+        month: dto.month?.trim() || null, // opcional, informativo
+        notes: dto.notes?.trim() || null,
+        category: dto.category?.trim() || null,
+        settledAt: null,
+      },
+    });
+  }
+
+  async updatePlanned(
+    userId: string,
+    householdId: string,
+    plannedId: string,
+    dto: {
+      concept?: string;
+      amount?: number | string;
+      type?: 'INCOME' | 'EXPENSE';
+      dueDate?: string;
+      month?: string | null;
+      notes?: string | null;
+      category?: string | null;
+    },
+  ) {
+    await this.assertMember(userId, householdId);
+
+    const planned = await this.prisma.householdPlanned.findUnique({ where: { id: plannedId } });
+    if (!planned || planned.householdId !== householdId)
+      throw new NotFoundException('Previsto no encontrado');
+
+    // permiso: autor o admin
+    const m = await this.getMembership(userId, householdId);
+    const isAdmin = m && (m.role === 'OWNER' || m.role === 'ADMIN');
+    if (planned.createdBy !== userId && !isAdmin) throw new ForbiddenException();
+
+    const data: any = {};
+    if (dto.concept !== undefined) {
+      if (!dto.concept.trim()) throw new BadRequestException('concept vacío');
+      data.concept = dto.concept.trim();
+    }
+    if (dto.amount !== undefined) data.amount = coercePositiveAmount(dto.amount);
+    if (dto.type !== undefined) data.type = coerceType(dto.type);
+    if (dto.dueDate !== undefined) {
+      const d = new Date(dto.dueDate);
+      if (isNaN(+d)) throw new BadRequestException('dueDate inválida');
+      data.dueDate = d;
+    }
+    if (dto.month !== undefined) data.month = dto.month ? dto.month.trim() : null;
+    if (dto.notes !== undefined) data.notes = dto.notes?.trim() || null;
+    if (dto.category !== undefined) data.category = dto.category?.trim() || null;
+
+    return this.prisma.householdPlanned.update({ where: { id: plannedId }, data });
+  }
+
+  async deletePlanned(userId: string, householdId: string, plannedId: string) {
+    await this.assertMember(userId, householdId);
+
+    const planned = await this.prisma.householdPlanned.findUnique({ where: { id: plannedId } });
+    if (!planned || planned.householdId !== householdId)
+      throw new NotFoundException('Previsto no encontrado');
+
+    const m = await this.getMembership(userId, householdId);
+    const isAdmin = m && (m.role === 'OWNER' || m.role === 'ADMIN');
+    if (planned.createdBy !== userId && !isAdmin) throw new ForbiddenException();
+
+    await this.prisma.householdPlanned.delete({ where: { id: plannedId } });
+    return { ok: true };
+  }
+
+  // Crea entry real y marca previsto como settled
+  async settlePlanned(
+    userId: string,
+    householdId: string,
+    plannedId: string,
+    month?: string, // opcional para backfill (se ignora si quieres usar dueDate original)
+  ) {
+    await this.assertMember(userId, householdId);
+
+    const planned = await this.prisma.householdPlanned.findUnique({ where: { id: plannedId } });
+    if (!planned || planned.householdId !== householdId)
+      throw new NotFoundException('Previsto no encontrado');
+    if (planned.settledAt) {
+      return { ok: true, alreadySettled: true };
+    }
+
+    const occursAt = planned.dueDate; // usamos la dueDate original
+    const entryType: EntryKind = planned.type as EntryKind;
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.ledgerEntry.create({
+        data: {
+          householdId,
+          userId,
+          type: entryType,
+          amount: Number(planned.amount),
+          category: planned.category,
+          note: planned.notes ? `[PLANNED:${planned.concept}] ${planned.notes}` : `[PLANNED:${planned.concept}]`,
+          occursAt,
+        },
+      });
+
+      await tx.householdPlanned.update({
+        where: { id: planned.id },
+        data: { settledAt: new Date() },
+      });
+    });
+
+    return { ok: true };
+  }
+
+  /* -------------------- RECURRING (gastos fijos) -------------------- */
+
+  async listRecurring(
+    userId: string,
+    householdId: string,
+    q: { month?: string },
+  ) {
+    await this.assertMember(userId, householdId);
+
+    const defs = await this.prisma.householdRecurring.findMany({
+      where: { householdId, active: true },
+      orderBy: { createdAt: 'desc' },
+      take: 500,
+    });
+
+    if (!q.month) return defs;
+
+    const { y, m } = monthRangeUtc(q.month);
+    const dim = daysInMonth(y, m);
+    return defs.map((d) => {
+      let dom: number | null = null;
+      const bymd = parseByMonthDay(d.rrule || undefined);
+      if (bymd !== null) dom = bymd;
+      else if (typeof d.dayOfMonth === 'number') dom = d.dayOfMonth;
+
+      if (!dom) dom = 1;
+      let day = dom > 0 ? dom : dim + dom + 1;
+      day = Math.max(1, Math.min(dim, day));
+
+      const occursAt = new Date(Date.UTC(y, m - 1, day, 12, 0, 0));
+      return {
+        ...d,
+        occursAt,
+        amount: Number(d.amount),
+      };
+    });
+  }
+
+  async createRecurring(
+    userId: string,
+    householdId: string,
+    dto: {
+      concept: string;
+      amount: number | string;
+      type: 'INCOME' | 'EXPENSE';
+      dayOfMonth?: number;
+      rrule?: string;
+      notes?: string;
+      category?: string;
+    },
+  ) {
+    await this.assertAdmin(userId, householdId);
+
+    if (!dto.concept?.trim()) throw new BadRequestException('concept requerido');
+    const type = coerceType(dto.type);
+    const amount = coercePositiveAmount(dto.amount);
+
+    let dayOfMonth: number | null = null;
+    let rrule: string | null = null;
+
+    if (dto.rrule && dto.rrule.trim().length) {
+      rrule = dto.rrule.trim();
+    } else if (dto.dayOfMonth !== undefined && dto.dayOfMonth !== null) {
+      const d = Number(dto.dayOfMonth);
+      if (!Number.isInteger(d)) throw new BadRequestException('dayOfMonth inválido');
+      dayOfMonth = Math.max(1, Math.min(31, d));
+    } else {
+      dayOfMonth = 1;
+    }
+
+    return this.prisma.householdRecurring.create({
+      data: {
+        householdId,
+        createdBy: userId,
+        active: true,
+        concept: dto.concept.trim(),
+        type,
+        amount,
+        dayOfMonth,
+        rrule,
+        notes: dto.notes?.trim() || null,
+        category: dto.category?.trim() || null,
+      },
+    });
+  }
+
+  async updateRecurring(
+    userId: string,
+    householdId: string,
+    recurringId: string,
+    dto: {
+      concept?: string;
+      amount?: number | string;
+      type?: 'INCOME' | 'EXPENSE';
+      dayOfMonth?: number | null;
+      rrule?: string | null;
+      notes?: string | null;
+      category?: string | null;
+    },
+  ) {
+    await this.assertAdmin(userId, householdId);
+
+    const rec = await this.prisma.householdRecurring.findUnique({ where: { id: recurringId } });
+    if (!rec || rec.householdId !== householdId)
+      throw new NotFoundException('Gasto fijo no encontrado');
+
+    const data: any = {};
+    if (dto.concept !== undefined) {
+      if (!dto.concept.trim()) throw new BadRequestException('concept vacío');
+      data.concept = dto.concept.trim();
+    }
+    if (dto.amount !== undefined) data.amount = coercePositiveAmount(dto.amount);
+    if (dto.type !== undefined) data.type = coerceType(dto.type);
+
+    if (dto.rrule !== undefined || dto.dayOfMonth !== undefined) {
+      if (dto.rrule !== undefined) {
+        data.rrule = dto.rrule ? dto.rrule.trim() : null;
+        data.dayOfMonth = null;
+      } else {
+        if (dto.dayOfMonth === null) {
+          data.dayOfMonth = null; data.rrule = null;
+        } else {
+          const d = Number(dto.dayOfMonth);
+          if (!Number.isInteger(d)) throw new BadRequestException('dayOfMonth inválido');
+          data.dayOfMonth = Math.max(1, Math.min(31, d));
+          data.rrule = null;
+        }
+      }
+    }
+
+    if (dto.notes !== undefined) data.notes = dto.notes?.trim() || null;
+    if (dto.category !== undefined) data.category = dto.category?.trim() || null;
+
+    return this.prisma.householdRecurring.update({ where: { id: recurringId }, data });
+  }
+
+  async deleteRecurring(userId: string, householdId: string, recurringId: string) {
+    await this.assertAdmin(userId, householdId);
+
+    const rec = await this.prisma.householdRecurring.findUnique({ where: { id: recurringId } });
+    if (!rec || rec.householdId !== householdId)
+      throw new NotFoundException('Gasto fijo no encontrado');
+
+    await this.prisma.householdRecurring.delete({ where: { id: recurringId } });
+    return { ok: true };
+  }
+
+  async postRecurringInstance(
+    userId: string,
+    householdId: string,
+    recurringId: string,
+    dto?: { month?: string; occursAt?: string | Date },
+  ) {
+    await this.assertMember(userId, householdId);
+
+    const rec = await this.prisma.householdRecurring.findUnique({ where: { id: recurringId } });
+    if (!rec || rec.householdId !== householdId)
+      throw new NotFoundException('Gasto fijo no encontrado');
+    if (!rec.active) throw new BadRequestException('La regla no está activa');
+
+    let occursAt: Date;
+    if (dto?.occursAt) {
+      const d = new Date(dto.occursAt as any);
+      if (isNaN(+d)) throw new BadRequestException('occursAt inválido');
+      occursAt = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 12, 0, 0, 0));
+    } else {
+      const target = dto?.month
+        ? parseMonthStrict(dto.month)
+        : parseMonthStrict(`${new Date().getUTCFullYear()}-${String(new Date().getUTCMonth() + 1).padStart(2, '0')}`);
+      if (!target) throw new BadRequestException('month debe ser YYYY-MM');
+
+      const dim = daysInMonth(target.y, target.m);
+      let dom: number | null = null;
+      const bymd = parseByMonthDay(rec.rrule || undefined);
+      if (bymd !== null) dom = bymd;
+      else if (typeof rec.dayOfMonth === 'number') dom = rec.dayOfMonth;
+      if (!dom) dom = 1;
+      let day = dom > 0 ? dom : dim + dom + 1;
+      day = Math.max(1, Math.min(dim, day));
+
+      occursAt = new Date(Date.UTC(target.y, target.m - 1, day, 12, 0, 0, 0));
+    }
+
+    const dayStart = new Date(Date.UTC(
+      occursAt.getUTCFullYear(), occursAt.getUTCMonth(), occursAt.getUTCDate(), 0, 0, 0, 0,
+    ));
+    const dayEnd = new Date(Date.UTC(
+      occursAt.getUTCFullYear(), occursAt.getUTCMonth(), occursAt.getUTCDate(), 23, 59, 59, 999,
+    ));
+
+    // Marcadores (legacy y nuevo)
+    const canonicalText = `[RECURRING: ${rec.concept}]`;
+
+    // Idempotencia SOLO por marker legacy en NOTE (mismo día)
+    const existing = await this.prisma.ledgerEntry.findFirst({
+      where: {
+        householdId,
+        occursAt: { gte: dayStart, lte: dayEnd },
+        note: { contains: canonicalText },
+      },
+    });
+    if (existing) return { ok: true, already: true, entry: existing };
+
+    // Crear asiento: meter ambos textos en NOTE
+    const entry = await this.prisma.ledgerEntry.create({
+      data: {
+        householdId,
+        userId,
+        type: rec.type as EntryKind,
+        amount: Number(rec.amount),
+        category: rec.category,
+        note: rec.notes
+          ? `${canonicalText} ${rec.notes}`
+          : `${canonicalText}`,
+        occursAt,
+      },
+    });
+
+    return { ok: true, entry };
   }
 }

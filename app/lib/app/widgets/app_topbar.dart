@@ -1,25 +1,27 @@
+// app_topbar.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../l10n/l10n.dart';
+import '../../core/app_reloader.dart';
 import '../../ui/theme/app_theme.dart';
 import '../../../features/settings/language_picker.dart';
+import '../../../providers/app_reload_provider.dart'; // <--- NUEVO
 
 class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
   const AppTopBar({super.key});
 
-  // Alto un poco mayor para que respire como en el mock
+  // Un poco más alto para encajar la segunda fila
   @override
-  Size get preferredSize => const Size.fromHeight(72);
+  Size get preferredSize => const Size.fromHeight(96); // <--- CAMBIO
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    // Colores (usa los tuyos si los tienes en el theme)
-    const hero = Color(0xFFCFEBC7); // fondo barra
-    final primary = T.cPrimary;     // verde de marca
+    const hero = Color(0xFFCFEBC7);
+    final primary = T.cPrimary;
 
     final langName = _currentLanguageLabel(context);
 
@@ -28,53 +30,69 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
         child: Container(
-          height: 80,
+          height: 102,
           decoration: BoxDecoration(
             color: hero,
             borderRadius: BorderRadius.circular(12),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Logo SVG
-              SvgPicture.asset(
-                'lib/assets/app_icon.svg', // si lo moviste: 'assets/app_icon.svg'
-                width: 28,
-                height: 28,
-                colorFilter: ColorFilter.mode(primary, BlendMode.srcIn),
-              ),
-              const SizedBox(width: 8),
-
-              // Título
-              Text(
-                s.appTitle, // "EcoPulse"
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: primary,
-                  letterSpacing: 0.2,
-                ),
-              ),
-              const Spacer(),
-
-              // Selector de idioma como texto + chevron
-              InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: () => showLanguagePicker(context, ref),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  child: Row(
-                    children: [
-                      Text(
-                        langName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.expand_more, size: 18, color: Colors.black87),
-                    ],
+              // ---- Fila superior (igual que antes) ----
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    'lib/assets/app_icon.svg',
+                    width: 28,
+                    height: 28,
+                    colorFilter: ColorFilter.mode(primary, BlendMode.srcIn),
                   ),
-                ),
+                  const Spacer(),
+                  Text(
+                    s.appTitle,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: primary,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: 'Reload',
+                    icon: const Icon(Icons.refresh),
+                    color: primary,
+                    onPressed: () => AppReloader.restart(context),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              Row(
+                children: [
+                  const Spacer(),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () => showLanguagePicker(context, ref),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      child: Row(
+                        children: [
+                          Text(
+                            langName,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.expand_more, size: 18, color: Colors.black87),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Spacer()
+                ],
               ),
             ],
           ),
@@ -83,7 +101,6 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  // Nombre legible del idioma según locale actual
   String _currentLanguageLabel(BuildContext context) {
     final code = Localizations.localeOf(context).languageCode;
     switch (code) {

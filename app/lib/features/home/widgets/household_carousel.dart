@@ -4,7 +4,6 @@ import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ecopulse/ui/widgets/household_card.dart';
-import 'package:intl/intl.dart';
 
 import '../../../ui/theme/app_theme.dart';
 
@@ -53,12 +52,6 @@ class _HouseholdCarouselState extends ConsumerState<HouseholdCarousel> {
           return S.of(ctx).householdMembersCount(n);
         }
 
-        String fmt(BuildContext ctx, double v, String currency) {
-          final locale = Localizations.localeOf(ctx).toLanguageTag();
-          final f = NumberFormat.simpleCurrency(locale: locale, name: currency);
-          return f.format(v);
-        }
-
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -71,7 +64,6 @@ class _HouseholdCarouselState extends ConsumerState<HouseholdCarousel> {
                 itemBuilder: (context, i) {
                   final h = list[i];
                   final members = membersLabel(context, h.memberCount);
-                  final amountStr = fmt(context, h.closingBalance, h.currency);
                   final isNegative = h.closingBalance < 0;
 
                   return Padding(
@@ -79,8 +71,8 @@ class _HouseholdCarouselState extends ConsumerState<HouseholdCarousel> {
                     child: HouseholdCard(
                       title: h.name,
                       subtitle: members,
-                      amount: amountStr,
-                      danger: isNegative, 
+                      amount: h.closingBalance, // <- pasamos double
+                      danger: isNegative,
                       onOpen: () async {
                         await Navigator.of(context).push(MaterialPageRoute(
                           builder: (_) => HouseholdDetailScreen(

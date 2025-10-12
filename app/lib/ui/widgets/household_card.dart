@@ -1,12 +1,13 @@
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../theme/app_theme.dart';
 
 class HouseholdCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final String amount;
+  final double amount;      // <- ahora es double
   final VoidCallback onOpen;
   final bool danger;
 
@@ -18,6 +19,52 @@ class HouseholdCard extends StatelessWidget {
     required this.onOpen,
     this.danger = false,
   });
+
+  // Pinta la cantidad usando el locale actual, con céntimos pequeños
+  Widget _localizedRichAmount(BuildContext context, double value) {
+    final locale = Intl.canonicalizedLocale(Localizations.localeOf(context).toString());
+    final nf = NumberFormat.decimalPattern(locale)
+      ..minimumFractionDigits = 2
+      ..maximumFractionDigits = 2;
+
+    final s = nf.format(value.abs());
+    final decimalSep = nf.symbols.DECIMAL_SEP; // coma en ES, punto en US, etc.
+    final minus = nf.symbols.MINUS_SIGN;
+
+    final i = s.lastIndexOf(decimalSep);
+    final intPart = i == -1 ? s : s.substring(0, i);
+    final decPart = i == -1 ? '00' : s.substring(i + 1);
+
+    const big = TextStyle(
+      color: Colors.white,
+      fontSize: 28,
+      fontWeight: FontWeight.w800,
+      height: 1.05,
+    );
+    const small = TextStyle(
+      color: Colors.white,
+      fontSize: 13,
+      fontWeight: FontWeight.w800,
+      height: 1,
+    );
+
+    return RichText(
+      overflow: TextOverflow.ellipsis,
+      text: TextSpan(
+        style: big,
+        children: [
+          if (value < 0) TextSpan(text: minus),
+          TextSpan(text: intPart),
+          TextSpan(text: decimalSep),
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: Text(decPart, style: small),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +93,7 @@ class HouseholdCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Burbujas decorativas (como antes)
+          // Burbujas decorativas
           Positioned(
             top: -20,
             right: -10,
@@ -84,17 +131,7 @@ class HouseholdCard extends StatelessWidget {
                 const SizedBox(height: 22),
                 Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        amount,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
+                    Expanded(child: _localizedRichAmount(context, amount)),
                     FilledButton(
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -121,11 +158,11 @@ class HouseholdCard extends StatelessWidget {
   }
 
   Widget _bubble(double size, Color color) => Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
-      );
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: color,
+    ),
+  );
 }

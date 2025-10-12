@@ -14,7 +14,7 @@ class T {
 
   static BoxDecoration glass({double r = 20}) => BoxDecoration(
     borderRadius: BorderRadius.circular(r),
-    gradient: LinearGradient(
+    gradient: const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [Color(0xFFEAF8E5), Color(0xFFEAF8E5)],
@@ -37,14 +37,18 @@ class AppTheme {
       onPrimary: Colors.white,
       onSecondary: Colors.black,
       onTertiary: Colors.black,
-      surface: Colors.white,
-      onSurface: Colors.black,
+      surface: Colors.green[50],
+      onSurface: Colors.black, // Texto principal oscuro
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: T.cBg,
+
+      // Colores fuertes en iconos por defecto
+      iconTheme: IconThemeData(color: scheme.primary),
+
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.green[900],
@@ -58,11 +62,13 @@ class AppTheme {
         ),
         surfaceTintColor: Colors.transparent,
       ),
+
       textTheme: const TextTheme(
         titleLarge: TextStyle(fontWeight: FontWeight.w700, letterSpacing: .2),
         labelLarge: TextStyle(fontWeight: FontWeight.w600),
         bodyMedium: TextStyle(letterSpacing: .15),
       ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white.withOpacity(.9),
@@ -72,6 +78,7 @@ class AppTheme {
           borderSide: BorderSide.none,
         ),
       ),
+
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: scheme.primary,
@@ -103,6 +110,27 @@ class AppTheme {
         foregroundColor: scheme.onPrimary,
         extendedTextStyle: const TextStyle(fontWeight: FontWeight.w700),
       ),
+
+      listTileTheme: ListTileThemeData(
+        textColor: scheme.onSurface,
+        iconColor: scheme.onSurface,
+      ),
+
+      expansionTileTheme: ExpansionTileThemeData(
+        textColor: scheme.onSurface,
+        iconColor: scheme.primary,
+        collapsedTextColor: scheme.onSurface,
+        collapsedIconColor: scheme.primary,
+      ),
+
+      popupMenuTheme: PopupMenuThemeData(
+        textStyle: TextStyle(color: scheme.onSurface, fontWeight: FontWeight.w600),
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        elevation: 6,
+      ),
+
+      // Quita el tinte “material” en superficies para no apagar colores
       cardTheme: const CardThemeData(surfaceTintColor: Colors.transparent),
       dialogTheme: const DialogThemeData(surfaceTintColor: Colors.transparent),
       bottomSheetTheme: const BottomSheetThemeData(

@@ -1,11 +1,4 @@
-/// home_scaffold.dart
-/// --------------------------------------------
-/// Estructura principal de la pantalla "home" autenticada:
-/// - AppBar reutilizable (`AppTopBar`).
-/// - Contenido centrado (CTA para crear/unirse y carrusel de hogares).
-/// - Botón de logout usando `authTokenControllerProvider`.
-/// - Abre el bottom sheet `AddHouseholdSheet`.
-
+// home_scaffold.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +6,7 @@ import '../../../l10n/l10n.dart';
 import '../../../features/home/widgets/add_house_cta.dart';
 import '../../../features/home/widgets/household_carousel.dart';
 import '../../../providers/auth_token_provider.dart';
+import '../../../providers/app_reload_provider.dart'; // <--- NUEVO
 import '../../ui/theme/app_theme.dart';
 import '../sheets/add_household_sheet.dart';
 import '../widgets/app_topbar.dart';
@@ -23,6 +17,9 @@ class HomeScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
+
+    // Al cambiar, toda esta pantalla hará rebuild.
+    ref.watch(appReloadTickProvider); // <--- NUEVO
 
     return Scaffold(
       appBar: const AppTopBar(),
@@ -40,7 +37,9 @@ class HomeScaffold extends ConsumerWidget {
               const HouseholdCarousel(),
               const SizedBox(height: 12),
               TextButton.icon(
-                onPressed: () async { await ref.read(authTokenControllerProvider).clear(); },
+                onPressed: () async {
+                  await ref.read(authTokenControllerProvider).clear();
+                },
                 icon: const Icon(Icons.logout),
                 label: Text(s.logout),
                 style: TextButton.styleFrom(

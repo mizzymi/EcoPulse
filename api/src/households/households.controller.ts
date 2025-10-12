@@ -30,7 +30,7 @@ export class HouseholdsController {
   deleteHousehold(@Req() req: any, @Param('id') householdId: string) {
     return this.service.deleteHousehold(req.user.id, householdId);
   }
-  
+
   /* ===== Crear cuenta ===== */
   @Post()
   create(@Req() req: any, @Body() dto: { name: string; currency?: string }) {
@@ -237,5 +237,143 @@ export class HouseholdsController {
     @Body() dto: UpdateHouseholdDto,
   ) {
     return this.service.updateHousehold(req.user.id, householdId, dto);
+  }
+
+  /* =======================================================================
+   *     NUEVO: GASTOS PREVISTOS (PLANNED) Y GASTOS FIJOS (RECURRING)
+   * ======================================================================= */
+
+  /* ---- PLANNED (gastos previstos del mes; no asientan hasta "settle") ---- */
+
+  @Get(':id/planned')
+  listPlanned(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Query('month') month?: string, // YYYY-MM
+  ) {
+    return this.service.listPlanned(req.user.id, id, { month });
+  }
+
+  @Post(':id/planned')
+  createPlanned(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Body()
+    dto: {
+      concept: string;
+      amount: number | string;
+      type: 'INCOME' | 'EXPENSE';
+      dueDate: string; // YYYY-MM-DD
+      month?: string;  // opcional
+      notes?: string;
+      category?: string;
+    },
+  ) {
+    return this.service.createPlanned(req.user.id, id, dto);
+  }
+
+  @Patch(':id/planned/:plannedId')
+  updatePlanned(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('plannedId') plannedId: string,
+    @Body()
+    dto: {
+      concept?: string;
+      amount?: number | string;
+      type?: 'INCOME' | 'EXPENSE';
+      dueDate?: string; // YYYY-MM-DD
+      month?: string | null;
+      notes?: string | null;
+      category?: string | null;
+    },
+  ) {
+    return this.service.updatePlanned(req.user.id, id, plannedId, dto);
+  }
+
+  @Delete(':id/planned/:plannedId')
+  deletePlanned(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('plannedId') plannedId: string,
+  ) {
+    return this.service.deletePlanned(req.user.id, id, plannedId);
+  }
+
+  @Post(':id/planned/:plannedId/settle')
+  settlePlanned(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('plannedId') plannedId: string,
+    @Body() dto: { month?: string },
+  ) {
+    return this.service.settlePlanned(req.user.id, id, plannedId, dto?.month);
+  }
+
+  /* ---- RECURRING (gastos fijos / reglas de recurrencia) ---- */
+
+  @Get(':id/recurring')
+  listRecurring(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Query('month') month?: string, // YYYY-MM
+  ) {
+    return this.service.listRecurring(req.user.id, id, { month });
+  }
+
+  @Post(':id/recurring')
+  createRecurring(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Body()
+    dto: {
+      concept: string;
+      amount: number | string;
+      type: 'INCOME' | 'EXPENSE';
+      dayOfMonth?: number;
+      rrule?: string;
+      notes?: string;
+      category?: string;
+    },
+  ) {
+    return this.service.createRecurring(req.user.id, id, dto);
+  }
+
+  @Patch(':id/recurring/:recurringId')
+  updateRecurring(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('recurringId') recurringId: string,
+    @Body()
+    dto: {
+      concept?: string;
+      amount?: number | string;
+      type?: 'INCOME' | 'EXPENSE';
+      dayOfMonth?: number | null;
+      rrule?: string | null;
+      notes?: string | null;
+      category?: string | null;
+    },
+  ) {
+    return this.service.updateRecurring(req.user.id, id, recurringId, dto);
+  }
+
+  @Delete(':id/recurring/:recurringId')
+  deleteRecurring(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('recurringId') recurringId: string,
+  ) {
+    return this.service.deleteRecurring(req.user.id, id, recurringId);
+  }
+
+  @Post(':id/recurring/:recurringId/post')
+  postRecurringInstance(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Param('recurringId') recurringId: string,
+    @Body() dto: { month?: string; occursAt?: string },
+  ) {
+    return this.service.postRecurringInstance(req.user.id, id, recurringId, dto);
   }
 }

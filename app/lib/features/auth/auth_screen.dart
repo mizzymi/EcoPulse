@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../api/dio.dart';
 import '../../providers/auth_token_provider.dart';
+import '../../ui/theme/app_theme.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -255,13 +256,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-
-    // Paleta (ajústala si quieres clavar otros tonos)
-    const bg = Color(0xFFEAF8E5);      // fondo general
-    const hero = Color(0xFFCFEBC7);    // banda superior
-    const card = Color(0xFFD9F2D4);    // panel del formulario
-    const green = Color(0xFF3FA357);   // CTA principal
-    const greenDark = Color(0xFF2E7D45);
+    const bg = T.cBg;
+    const hero =  Color.from(alpha: 1, red: 1, green: 5, blue: 15);    // banda superior
+    const card = Color.from(alpha: 1, red: 1, green: 5, blue: 15);    // panel del formulario
+    const green = T.cPrimary;
+    const greenDark = T.deepTeal;
 
     final primaryLabel = _isLogin ? s.loginAction : s.registerAction;
     final secondaryLabel = _isLogin ? s.registerAction : s.loginAction;

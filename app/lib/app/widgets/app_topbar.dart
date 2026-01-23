@@ -20,7 +20,7 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final s = S.of(context);
 
-    const hero = Color(0xFFCFEBC7);
+    const hero = T.cBg;
     final primary = T.cPrimary;
 
     final langName = _currentLanguageLabel(context);
@@ -42,27 +42,24 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
               // ---- Fila superior (igual que antes) ----
               Row(
                 children: [
-                  SvgPicture.asset(
-                    'lib/assets/app_icon.svg',
-                    width: 28,
+                  Image.asset(
+                    'lib/assets/ReimiiLogo.png',
                     height: 28,
-                    colorFilter: ColorFilter.mode(primary, BlendMode.srcIn),
+                    width: 70,
+                    fit: BoxFit.contain,
+                    filterQuality: FilterQuality.high,
+                    isAntiAlias: true,
+                    semanticLabel: 'Reimii',
                   ),
                   const Spacer(),
                   Text(
                     s.appTitle,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,
+                      fontFamily: 'Impact',
                       color: primary,
                       letterSpacing: 0.2,
                     ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    tooltip: 'Reload',
-                    icon: const Icon(Icons.refresh),
-                    color: primary,
-                    onPressed: () => AppReloader.restart(context),
                   ),
                 ],
               ),
@@ -72,11 +69,12 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
               Row(
                 children: [
                   const Spacer(),
+                  const Spacer(),
                   InkWell(
                     borderRadius: BorderRadius.circular(8),
                     onTap: () => showLanguagePicker(context, ref),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
                       child: Row(
                         children: [
                           Text(
@@ -91,7 +89,13 @@ class AppTopBar extends ConsumerWidget implements PreferredSizeWidget {
                       ),
                     ),
                   ),
-                  const Spacer()
+                  const Spacer(),
+                  IconButton(
+                    tooltip: 'Reload',
+                    icon: const Icon(Icons.refresh),
+                    color: primary,
+                    onPressed: () => AppReloader.restart(context),
+                  ),
                 ],
               ),
             ],

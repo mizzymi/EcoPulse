@@ -29,8 +29,20 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  fonts:
+    - family: Impact
+      fonts:
+        - asset: lib/assets/Impact.ttf
+          weight: 400
+
+    - family: Lucida Sans Unicode
+      fonts:
+        - asset: lib/assets/Lucida.ttf
+          weight: 400
+
   assets:
     - lib/assets/app_icon.svg
+    - lib/assets/ReimiiLogo.png
     - lib/assets/EULA.txt
     - .env
 

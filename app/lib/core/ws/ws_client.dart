@@ -15,19 +15,17 @@ final wsProvider = Provider<IO.Socket?>((ref) {
         .setPath('/realtime')
         .setExtraHeaders({'Authorization': 'Bearer $token'})
         .enableForceNew()
+        .disableAutoConnect()
         .build(),
   );
 
-  socket.onDisconnect((_) {
-  });
+  socket.onConnect((_) {});
+  socket.onConnectError((e) => print('ws connect_error: $e'));
+  socket.onError((e) => print('ws error: $e'));
 
-  ref.onDispose(() {
-    if (socket.connected) {
-      socket.dispose();
-    } else {
-      socket.close();
-    }
-  });
+  socket.connect();
+
+  ref.onDispose(() => socket.dispose());
   return socket;
 });
 

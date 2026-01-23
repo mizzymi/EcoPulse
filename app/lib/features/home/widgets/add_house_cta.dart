@@ -29,7 +29,7 @@ class AddHouseCta extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
           child: Row(
-            mainAxisSize: MainAxisSize.min, // 👈 evita ocupar todo el ancho
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 S.of(context).createOrJoinTitle,

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../api/dio.dart';
+import '../../core/app_reloader.dart';
 import '../../providers/auth_token_provider.dart';
 import '../../ui/theme/app_theme.dart';
 
@@ -50,6 +51,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         throw Exception(s.missingTokenResponse);
 
       await ref.read(authTokenControllerProvider).set(token);
+      AppReloader.restart(context);
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -66,6 +68,104 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       }
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  // ===== Reset password using code/token =====
+  Future<void> _resetPasswordWithCode() async {
+    final s = S.of(context);
+    final dio = ref.read(dioProvider);
+    final codeCtrl = TextEditingController();
+    final passCtrl = TextEditingController();
+    bool saving = false;
+
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setStateDialog) => AlertDialog(
+          title: Text(s.resetPasswordTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: codeCtrl,
+                decoration: InputDecoration(
+                  labelText: s.codeTokenLabel,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: passCtrl,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: s.newPasswordLabel,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: saving ? null : () => Navigator.pop(ctx, false),
+              child: Text(s.cancel),
+            ),
+            FilledButton(
+              onPressed: saving
+                  ? null
+                  : () async {
+                      final tokenOrCode = codeCtrl.text.trim();
+                      final newPass = passCtrl.text;
+
+                      if (newPass.length < 6) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(s.minPasswordLen)),
+                          );
+                        }
+                        return;
+                      }
+
+                      setStateDialog(() => saving = true);
+                      try {
+                        await dio.post('/auth/reset-password', data: {
+                          'token': tokenOrCode,
+                          'password': newPass,
+                        });
+                        if (context.mounted) Navigator.pop(ctx, true);
+                      } on DioException catch (e) {
+                        final msg = e.response?.data is Map &&
+                                (e.response!.data as Map)['message'] != null
+                            ? (e.response!.data as Map)['message'].toString()
+                            : (e.message ?? s.resetPasswordFailed);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(msg)),
+                          );
+                        }
+                      } finally {
+                        if (context.mounted) {
+                          setStateDialog(() => saving = false);
+                        }
+                      }
+                    },
+              child: saving
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(s.changeAction),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (ok == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s.passwordUpdatedToast)),
+      );
     }
   }
 
@@ -87,13 +187,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             decoration: InputDecoration(
               labelText: s.emailLabel,
               border: const OutlineInputBorder(),
-            ),
-          ),
-          icon: TextButton(
-            onPressed: _loading ? null : _resetPasswordWithCode,
-            child: Text(
-              s.haveCodeCta,
-              style: const TextStyle(color: Colors.black54),
             ),
           ),
           actions: [
@@ -156,109 +249,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     }
   }
 
-  // ===== Restablecer con código/token =====
-  Future<void> _resetPasswordWithCode() async {
-    final s = S.of(context);
-    final dio = ref.read(dioProvider);
-    final codeCtrl = TextEditingController();
-    final passCtrl = TextEditingController();
-    bool saving = false;
-
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (_) => StatefulBuilder(
-        builder: (ctx, setStateDialog) => AlertDialog(
-          title: Text(s.resetPasswordTitle),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: codeCtrl,
-                decoration: InputDecoration(
-                  labelText: s.codeTokenLabel,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: passCtrl,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: s.newPasswordLabel,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: saving ? null : () => Navigator.pop(ctx, false),
-              child: Text(s.cancel),
-            ),
-            FilledButton(
-              onPressed: saving
-                  ? null
-                  : () async {
-                      final tokenOrCode = codeCtrl.text.trim();
-                      final newPass = passCtrl.text;
-                      if (newPass.length < 6) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(s.minPasswordLen)),
-                          );
-                        }
-                        return;
-                      }
-                      setStateDialog(() => saving = true);
-                      try {
-                        await dio.post('/auth/reset-password', data: {
-                          'token': tokenOrCode,
-                          'password': newPass,
-                        });
-                        if (context.mounted) Navigator.pop(ctx, true);
-                      } on DioException catch (e) {
-                        final msg = e.response?.data is Map &&
-                                (e.response!.data as Map)['message'] != null
-                            ? (e.response!.data as Map)['message'].toString()
-                            : (e.message ?? s.resetPasswordFailed);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(msg)),
-                          );
-                        }
-                      } finally {
-                        if (context.mounted) {
-                          setStateDialog(() => saving = false);
-                        }
-                      }
-                    },
-              child: saving
-                  ? const SizedBox(
-                      height: 18,
-                      width: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(s.changeAction),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    if (ok == true && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.passwordUpdatedToast)),
-      );
-    }
-  }
-
   @override
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
     const bg = T.cBg;
-    const hero =  Color.from(alpha: 1, red: 1, green: 5, blue: 15);    // banda superior
-    const card = Color.from(alpha: 1, red: 1, green: 5, blue: 15);    // panel del formulario
+    const hero =
+        Color.from(alpha: 1, red: 1, green: 5, blue: 15); // banda superior
+    const card = Color.from(
+        alpha: 1, red: 1, green: 5, blue: 15); // panel del formulario
     const green = T.cPrimary;
     const greenDark = T.deepTeal;
 
@@ -294,10 +293,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         Text(
                           s.welcomeTitle, // p.ej. "Welcome"
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            color: Colors.black,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                              ),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -331,11 +333,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             controller: _emailCtrl,
                             decoration: InputDecoration(
                               labelText: s.emailLabel,
-                              hintText: s.enterYourEmail, // "Enter your email address"
+                              hintText: s
+                                  .enterYourEmail, // "Enter your email address"
                               filled: true,
                               fillColor: Colors.white,
-                              contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 14),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -345,7 +348,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             validator: (v) {
                               final t = (v ?? '').trim();
                               if (t.isEmpty) return s.enterYourEmail;
-                              if (!RegExp(r'.+@.+\..+').hasMatch(t)) return s.invalidEmail;
+                              if (!RegExp(r'.+@.+\..+').hasMatch(t))
+                                return s.invalidEmail;
                               return null;
                             },
                           ),
@@ -360,7 +364,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               filled: true,
                               fillColor: Colors.white,
                               suffixIcon: IconButton(
-                                onPressed: () => setState(() => _obscurePass = !_obscurePass),
+                                onPressed: () => setState(
+                                    () => _obscurePass = !_obscurePass),
                                 icon: Icon(
                                   _obscurePass
                                       ? Icons.visibility_off_outlined
@@ -369,14 +374,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                 ),
                                 tooltip: _obscurePass ? 'Mostrar' : 'Ocultar',
                               ),
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 14),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
                             obscureText: _obscurePass, // <— usa el flag
-                            validator: (v) => (v ?? '').length < 6 ? s.minPasswordLen : null,
+                            validator: (v) =>
+                                (v ?? '').length < 6 ? s.minPasswordLen : null,
                           ),
                           const SizedBox(height: 16),
 
@@ -396,19 +403,19 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               onPressed: _loading ? null : _submit,
                               child: _loading
                                   ? const SizedBox(
-                                height: 18,
-                                width: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
+                                      height: 18,
+                                      width: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
                                   : Text(
-                                primaryLabel, // login/register
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
+                                      primaryLabel, // login/register
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                             ),
                           ),
 
@@ -416,27 +423,40 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           if (_isLogin) ...[
                             const SizedBox(height: 12),
                             TextButton(
-                              onPressed: _loading ? null : _requestPasswordReset,
+                              onPressed:
+                                  _loading ? null : _requestPasswordReset,
                               child: Text(
                                 s.forgotPasswordCta,
                                 style: const TextStyle(color: Colors.black54),
                               ),
                             ),
                           ],
-
+                          if (_isLogin) ...[
+                            const SizedBox(height: 12),
+                            TextButton(
+                              onPressed:
+                                  _loading ? null : _resetPasswordWithCode,
+                              child: Text(
+                                s.haveCodeCta,
+                                style: const TextStyle(color: Colors.black54),
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Expanded(child: Divider(color: Colors.black26)),
+                              const Expanded(
+                                  child: Divider(color: Colors.black26)),
                               Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 12.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
                                 child: Text(
                                   s.orLabel, // "OR"
                                   style: const TextStyle(color: Colors.black45),
                                 ),
                               ),
-                              const Expanded(child: Divider(color: Colors.black26)),
+                              const Expanded(
+                                  child: Divider(color: Colors.black26)),
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -447,14 +467,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             height: 50,
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: green, width: 1.6),
+                                side:
+                                    const BorderSide(color: green, width: 1.6),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 foregroundColor: green,
                               ),
-                              onPressed:
-                              _loading ? null : () => setState(() => _isLogin = !_isLogin),
+                              onPressed: _loading
+                                  ? null
+                                  : () => setState(() => _isLogin = !_isLogin),
                               child: Text(
                                 secondaryLabel, // Create Account / Sign In
                                 style: const TextStyle(
@@ -475,8 +497,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text.rich(
                       TextSpan(
-                        text: s.legalPrefix, // "By continuing, you agree to our "
-                        style: const TextStyle(fontSize: 12, color: Colors.black54),
+                        text:
+                            s.legalPrefix, // "By continuing, you agree to our "
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.black54),
                         children: [
                           TextSpan(
                             text: s.termsOfService,

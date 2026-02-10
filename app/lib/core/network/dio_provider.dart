@@ -8,11 +8,20 @@ class AuthInterceptor extends Interceptor {
   final Ref _ref;
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  Future<void> onRequest(
+      RequestOptions options,
+      RequestInterceptorHandler handler,
+      ) async {
+    try {
+      await _ref.read(loadAuthTokenProvider.future);
+    } catch (_) {
+    }
+
     final token = _ref.read(authTokenProvider);
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
+
     handler.next(options);
   }
 
@@ -31,6 +40,8 @@ final dioProvider = Provider<Dio>((ref) {
       contentType: 'application/json',
     ),
   );
+
   dio.interceptors.add(AuthInterceptor(ref));
   return dio;
 });
+

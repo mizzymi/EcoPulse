@@ -7,6 +7,7 @@ import '../../../features/home/widgets/add_house_cta.dart';
 import '../../../features/home/widgets/household_carousel.dart';
 import '../../../providers/auth_token_provider.dart';
 import '../../../providers/app_reload_provider.dart'; // <--- NUEVO
+import '../../core/app_reloader.dart';
 import '../../ui/theme/app_theme.dart';
 import '../sheets/add_household_sheet.dart';
 import '../widgets/app_topbar.dart';
@@ -39,6 +40,7 @@ class HomeScaffold extends ConsumerWidget {
               TextButton.icon(
                 onPressed: () async {
                   await ref.read(authTokenControllerProvider).clear();
+                  AppReloader.restart(context);
                 },
                 icon: const Icon(Icons.logout),
                 label: Text(s.logout),

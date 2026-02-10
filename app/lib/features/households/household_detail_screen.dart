@@ -12,6 +12,11 @@
 //      la instancia real (traída por el BE) frente a la generada localmente.
 //   2) _autoPostDueFixedIfNeeded coloca el candado _autoPosting ANTES de calcular
 //      los vencidos y usa _postingKeys para evitar doble POST en paralelo por (id@occursAt).
+//
+// ✅ FIX carga inicial:
+//   - No llamamos a _refresh() en initState a ciegas.
+//   - Escuchamos el token con ref.listenManual (válido en initState).
+//   - Cuando token != null por primera vez, hacemos _refresh().
 // -----------------------------------------------------------------------------
 
 import 'package:dio/dio.dart';
@@ -21,6 +26,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/dio.dart';
 import '../../ui/theme/app_theme.dart';
+
+// ✅ FIX
+import '../../providers/auth_token_provider.dart';
 
 // Sheets
 import '../../ui/widgets/add_fixed_expense_sheet.dart';
@@ -85,11 +93,43 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   // Claves en vuelo para evitar doble POST en paralelo por (id@occursAt)
   final Set<String> _postingKeys = {};
 
+  // ✅ FIX: evitar doble carga inicial y cargar sólo cuando haya token
+  bool _didInitialLoad = false;
+
+  // ✅ FIX: suscripción manual (válida en initState)
+  ProviderSubscription<String?>? _tokenSub;
+
   @override
   void initState() {
     super.initState();
     _householdNameState = widget.householdName;
-    _refresh();
+
+    // ✅ FIX 1) Si ya hay token al primer frame, carga
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final token = ref.read(authTokenProvider);
+      if (!_didInitialLoad && token != null) {
+        _didInitialLoad = true;
+        _refresh();
+      }
+    });
+
+    // ✅ FIX 2) Si el token llega después, carga cuando aparezca
+    _tokenSub = ref.listenManual<String?>(
+      authTokenProvider,
+          (prev, next) {
+        if (!_didInitialLoad && next != null) {
+          _didInitialLoad = true;
+          _refresh();
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _tokenSub?.close(); // ✅ FIX
+    super.dispose();
   }
 
   String get _monthStr =>
@@ -163,8 +203,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
   int _daysInMonth(DateTime m) => DateTime(m.year, m.month + 1, 0).day;
 
-  // DEVUELVE lista EXPANDIDA y DESDUPLICADA por (id@occursAt).
-  // Si existe instancia real y generada para el mismo id/fecha, se queda la instancia real.
   List<Map<String, dynamic>> _fixedExpandedForMonth(
       List<Map<String, dynamic>> raw, DateTime month) {
     final Map<String, Map<String, dynamic>> byKey = {};
@@ -179,7 +217,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         occurs = DateTime.parse(e['occursAt'].toString());
         isRealInstance = true;
       } else {
-        // Definición: generar instancia del mes
         int? day;
         if (e['dayOfMonth'] != null) {
           day = int.tryParse(e['dayOfMonth'].toString());
@@ -205,9 +242,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       if (!byKey.containsKey(key)) {
         byKey[key] = candidate;
       } else {
-        // Prefiere instancia real si ya había una generada
-        final alreadyReal =
-        _isInstanceForMonth(byKey[key]!, month); // ya tiene occursAt real?
+        final alreadyReal = _isInstanceForMonth(byKey[key]!, month);
         if (!alreadyReal && isRealInstance) {
           byKey[key] = candidate;
         }
@@ -217,25 +252,20 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     return byKey.values.toList();
   }
 
-  // ---- Identificador único por nota de recurrentes ----
-  String _recurringMarkerFor(Map e) => (e['id'] ?? '').toString();
-
   bool _entryHasRecurringMarker(Map<String, dynamic> entry, String recurringId) {
     final note = entry['note']?.toString() ?? '';
     final concept = (entry['concept'] ?? entry['title'] ?? '').toString();
 
-    // Compat: marcador antiguo en NOTE
     if (note.contains('[RECURRING:$recurringId]')) return true;
 
-    // Nuevo: marcador en CONCEPT => [recurring: ... : <id>]
-    final re = RegExp(r'^\[recurring:\s*.+?:\s*([^\]]+)\]$', caseSensitive: false);
+    final re =
+    RegExp(r'^\[recurring:\s*.+?:\s*([^\]]+)\]$', caseSensitive: false);
     final m = re.firstMatch(concept);
     if (m != null && (m.group(1)?.trim() == recurringId)) return true;
 
     return false;
   }
 
-  // ¿Está asentada esta ocurrencia? (usa nota [RECURRING:<id>] o fallback día/importe)
   bool _occurrenceIsPosted(
       Map<String, dynamic> occ,
       List<Map<String, dynamic>> entries,
@@ -247,7 +277,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       }
     }
 
-    // Fallback
     final occDate = _parseDate(occ['occursAt']);
     if (occDate == null) return false;
     final targetAmt = _asDouble(occ['amount']);
@@ -266,7 +295,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     return false;
   }
 
-  // ==== Totales forecast (pendiente, sin duplicar lo asentado) ====
   double _sumAmount(Iterable it) =>
       it.fold<double>(0, (acc, e) => acc + _asDouble((e as Map)['amount']));
 
@@ -283,8 +311,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
   double get _fixedIncomePendingTotal {
     final expanded = _fixedExpandedForMonth(_fixedRaw, _month);
-    final pending = expanded.where((e) =>
-    (e['type'] ?? '') == 'INCOME' && !_occurrenceIsPosted(e, _entries));
+    final pending = expanded.where(
+            (e) => (e['type'] ?? '') == 'INCOME' && !_occurrenceIsPosted(e, _entries));
     return _sumAmount(pending);
   }
 
@@ -319,11 +347,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     };
   }
 
-  // ==== Auto-post de fijos vencidos (INCOME y EXPENSE) en mes actual ====
   Future<void> _autoPostDueFixedIfNeeded() async {
     if (!_isCurrentMonth(_month)) return;
-
-    // Candado GLOBAL (evita carreras entre instancias / hot-reloads)
     if (_RecurringAutopostGuard.busy) return;
     _RecurringAutopostGuard.busy = true;
 
@@ -331,7 +356,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       final now = DateTime.now();
       final expanded = _fixedExpandedForMonth(_fixedRaw, _month);
 
-      // Construye lote vencido, no asentado, DEDUP por (id@día)
       final Set<String> seen = {};
       final List<Map<String, dynamic>> dueUnique = [];
 
@@ -348,14 +372,12 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
         final key = '$idStr@${DateUtils.dateOnly(occursAt).toIso8601String()}';
 
-        // Evita duplicar dentro del mismo lote y también si otra instancia ya lo está posteando
         if (_RecurringAutopostGuard.inflightKeys.contains(key)) continue;
         if (seen.add(key)) dueUnique.add(f);
       }
 
       if (dueUnique.isEmpty) return;
 
-      // Marca claves en vuelo de forma global
       _RecurringAutopostGuard.inflightKeys.addAll(dueUnique.map((f) {
         final d = DateTime.parse((f['occursAt'] ?? '').toString());
         return '${f['id']}@${DateUtils.dateOnly(d).toIso8601String()}';
@@ -366,22 +388,19 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
       for (final f in dueUnique) {
         final occursAt = DateTime.parse((f['occursAt'] ?? '').toString());
-        final dayKey = '${f['id']}@${DateUtils.dateOnly(occursAt).toIso8601String()}';
+        final dayKey =
+            '${f['id']}@${DateUtils.dateOnly(occursAt).toIso8601String()}';
 
         try {
           await dio.post(
             '/households/${widget.householdId}/recurring/${f['id']}/post',
             data: {'occursAt': occursAt.toIso8601String()},
-            // Si el BE lo soporta, esta cabecera lo hace idempotente:
             options: Options(headers: {'Idempotency-Key': dayKey}),
           );
           okCount++;
-        } catch (_) {
-          // Si el BE ya lo creó, simplemente seguimos.
-        }
+        } catch (_) {}
       }
 
-      // Recarga ligera
       final (from, to) = _rangeOfMonth(_month);
       final resList = await dio.get(
         '/households/${widget.householdId}/entries',
@@ -391,6 +410,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
           'limit': 200,
         },
       );
+
       Map<String, dynamic>? summary;
       try {
         final resSum = await dio.get(
@@ -412,13 +432,11 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
             .showSnackBar(SnackBar(content: Text('$okCount OK')));
       }
     } finally {
-      // Libera el candado global y claves en vuelo
       _RecurringAutopostGuard.busy = false;
       _RecurringAutopostGuard.inflightKeys.clear();
     }
   }
 
-  // ==== Borrados con confirmación ====
   Future<void> plannedDelete(Map e) async {
     final s = S.of(context);
 
@@ -461,8 +479,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   Future<void> _confirmDeleteRecurring(Map e) async {
     final s = S.of(context);
     final title = s.fixedDeleteTitle ?? 'Eliminar gasto fijo';
-    final body =
-        s.fixedDeleteBody ?? '¿Seguro? Esta acción no se puede deshacer.';
+    final body = s.fixedDeleteBody ?? '¿Seguro? Esta acción no se puede deshacer.';
 
     final sure = await showDialog<bool>(
       context: context,
@@ -486,8 +503,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
     final dio = ref.read(dioProvider);
     try {
-      await dio.delete(
-          '/households/${widget.householdId}/recurring/${e['id']}');
+      await dio.delete('/households/${widget.householdId}/recurring/${e['id']}');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(s.deletedOkToast ?? 'Eliminado')),
@@ -501,7 +517,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // ==== Cambios de mes ====
   void _openMonthFromYm(String ym) {
     final parts = ym.split('-');
     if (parts.length >= 2) {
@@ -557,8 +572,14 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // ==== Carga de datos ====
   Future<void> _refresh() async {
+    // ✅ Guard: si no hay token, no dispares requests
+    final token = ref.read(authTokenProvider);
+    if (token == null) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
+
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
     final s = S.of(context);
@@ -566,7 +587,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     try {
       final (from, to) = _rangeOfMonth(_month);
 
-      // Movimientos del mes
       final resList = await dio.get(
         '/households/${widget.householdId}/entries',
         queryParameters: {
@@ -576,7 +596,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         },
       );
 
-      // Resumen del mes
       Map<String, dynamic>? summary;
       try {
         final resSum = await dio.get(
@@ -617,7 +636,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         _fixedRaw = fixedList;
       });
 
-      // Autopost de fijos vencidos (ingresos y gastos)
       await _autoPostDueFixedIfNeeded();
     } catch (_) {
       if (mounted) {
@@ -630,8 +648,13 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // ==== Todos los meses ====
   Future<void> _loadAllMonths() async {
+    final token = ref.read(authTokenProvider);
+    if (token == null) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
+
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
 
@@ -661,8 +684,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       }
 
       final months = monthsSet.toList()..sort();
-      final futures = months
-          .map((m) async {
+      final futures = months.map((m) async {
         try {
           final r = await dio.get(
             '/households/${widget.householdId}/summary',
@@ -672,8 +694,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         } catch (_) {
           return null;
         }
-      })
-          .toList();
+      }).toList();
 
       final results = await Future.wait(futures);
 
@@ -698,7 +719,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
-  // ==== Sheets ====
   Future<void> _openAddEntry({Map<String, dynamic>? existing}) async {
     final res = await showModalBottomSheet<Map<String, dynamic>?>(
       context: context,
@@ -768,20 +788,15 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     if (res == true) await _refresh();
   }
 
-  // ==== Navegación mensual ====
   void _prevMonth() {
     final next = DateTime(_month.year, _month.month - 1);
-    setState(() {
-      _month = next;
-    });
+    setState(() => _month = next);
     _refresh();
   }
 
   void _nextMonth() {
     final next = DateTime(_month.year, _month.month + 1);
-    setState(() {
-      _month = next;
-    });
+    setState(() => _month = next);
     _refresh();
   }
 
@@ -795,7 +810,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     final isAtCurrentMonth =
         _month.year == nowMonth.year && _month.month == nowMonth.month;
 
-    // Totales pendientes para subtítulos
     final fixedExpanded = _fixedExpandedForMonth(_fixedRaw, _month);
     final fixedPending = fixedExpanded
         .where((e) =>
@@ -901,15 +915,13 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: SummaryCard(
                       month: summary['month']?.toString() ?? '',
-                      opening:
-                      _asDouble(summary['openingBalance']),
+                      opening: _asDouble(summary['openingBalance']),
                       income: _asDouble(summary['income']!),
                       expense: _asDouble(summary['expense']!),
                       net: _asDouble(summary['net']!),
                       closing: _asDouble(summary['closingBalance']!),
                       onTap: () {
-                        final ym =
-                            summary['month']?.toString() ?? '';
+                        final ym = summary['month']?.toString() ?? '';
                         _openMonthFromYm(ym);
                       },
                     ),
@@ -939,12 +951,12 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                       .toString(),
                   opening: _asDouble(_effectiveSummary?['openingBalance'] ??
                       _summary!['openingBalance']),
-                  income: _asDouble(_effectiveSummary?['income'] ??
-                      _summary!['income']),
+                  income: _asDouble(
+                      _effectiveSummary?['income'] ?? _summary!['income']),
                   expense: _asDouble(_effectiveSummary?['expense'] ??
                       _summary!['expense']),
-                  net: _asDouble(_effectiveSummary?['net'] ??
-                      _summary!['net']),
+                  net: _asDouble(
+                      _effectiveSummary?['net'] ?? _summary!['net']),
                   closing: _asDouble(
                       _effectiveSummary?['closingBalance'] ??
                           _summary!['closingBalance']),
@@ -969,8 +981,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                       final concept =
                       (e['concept'] ?? e['title'] ?? '').toString();
                       final amount = _asDouble(e['amount']);
-                      final due = (e['dueDate'] ?? e['occursAt'] ?? '')
-                          .toString();
+                      final due =
+                      (e['dueDate'] ?? e['occursAt'] ?? '').toString();
                       return ListTile(
                         dense: true,
                         title: Text(concept),
@@ -982,7 +994,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                             IconButton(
                               icon: const Icon(
                                   Icons.check_circle_outline),
-                              tooltip: S.of(context).plannedSettle ??
+                              tooltip:
+                              S.of(context).plannedSettle ??
                                   'Marcar como pagado',
                               onPressed: () async {
                                 try {
@@ -996,10 +1009,10 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                                   if (mounted) {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
-                                        content: Text(S
-                                            .of(context)
-                                            .actionFailed ??
-                                            'No se pudo completar')));
+                                        content: Text(
+                                            S.of(context)
+                                                .actionFailed ??
+                                                'No se pudo completar')));
                                   }
                                 }
                               },
@@ -1036,8 +1049,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
               // ---- FIJOS (ingresos y gastos) -------------------------------------
               ExpansionTile(
-                title:
-                Text(S.of(context).fixedTitle ?? 'Gastos fijos'),
+                title: Text(S.of(context).fixedTitle ?? 'Gastos fijos'),
                 subtitle: Text(
                   '${fixedPending.length} • Neto pendiente (mes): ${fixedPendingNet.toStringAsFixed(2)}',
                 ),
@@ -1045,8 +1057,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                   if (_fixedRaw.isEmpty)
                     Padding(
                       padding: const EdgeInsets.all(12),
-                      child:
-                      Text(S.of(context).fixedEmpty ?? 'Sin fijos'),
+                      child: Text(S.of(context).fixedEmpty ?? 'Sin fijos'),
                     )
                   else
                     ...fixedExpanded.map((e) {
@@ -1054,13 +1065,10 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                       (e['concept'] ?? e['title'] ?? '').toString();
                       final amount = _asDouble(e['amount']);
                       final rule =
-                      (e['rrule'] ?? e['dayOfMonth'] ?? '')
-                          .toString();
-                      final occursAt =
-                      (e['occursAt'] ?? '').toString();
+                      (e['rrule'] ?? e['dayOfMonth'] ?? '').toString();
+                      final occursAt = (e['occursAt'] ?? '').toString();
                       final posted = _occurrenceIsPosted(e, _entries);
-                      final type =
-                      (e['type'] ?? 'EXPENSE').toString();
+                      final type = (e['type'] ?? 'EXPENSE').toString();
                       final sign = type == 'INCOME' ? '+' : '-';
                       return ListTile(
                         dense: true,
@@ -1075,15 +1083,13 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
                                   size: 20, color: Colors.green),
                             IconButton(
                               icon: const Icon(Icons.edit_outlined),
-                              onPressed: () =>
-                                  _openAddFixed(existing: e),
+                              onPressed: () => _openAddFixed(existing: e),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete_outline),
                               tooltip: S.of(context).fixedDelete ??
                                   'Eliminar gasto fijo',
-                              onPressed: () =>
-                                  _confirmDeleteRecurring(e),
+                              onPressed: () => _confirmDeleteRecurring(e),
                             ),
                           ],
                         ),

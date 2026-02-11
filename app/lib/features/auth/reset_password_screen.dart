@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/dio.dart';
@@ -39,7 +40,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   Future<void> _submit() async {
     final s = S.of(context);
-    final newPass = _passCtrl.text;
+    final newPass = _passCtrl.text.trim();
 
     if (newPass.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -58,6 +59,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       });
 
       if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(s.passwordUpdatedToast)),
       );
@@ -80,6 +82,22 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    const inputFill = Colors.white;
+
+    InputDecoration deco({
+      required String label,
+      String? hint,
+      Widget? suffixIcon,
+    }) {
+      return InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: const OutlineInputBorder(),
+        filled: true,
+        fillColor: inputFill,
+        suffixIcon: suffixIcon,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(s.resetPasswordTitle)),
@@ -87,21 +105,29 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                widget.email.isEmpty ? '' : widget.email,
-                style: Theme.of(context).textTheme.bodySmall,
+            if (widget.email.isNotEmpty)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.email,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ),
-            ),
             const SizedBox(height: 12),
-
-            TextFormField(
+            TextField(
               controller: _passCtrl,
               obscureText: _obscure,
-              decoration: InputDecoration(
-                labelText: s.newPasswordLabel,
-                border: const OutlineInputBorder(),
+              keyboardType: TextInputType.visiblePassword,
+              textInputAction: TextInputAction.done,
+              autofillHints: const [AutofillHints.newPassword],
+              enableSuggestions: false,
+              autocorrect: false,
+              inputFormatters: [LengthLimitingTextInputFormatter(64)],
+              onSubmitted: (_) => _saving ? null : _submit(),
+              style: const TextStyle(color: Colors.black87),
+              decoration: deco(
+                label: s.newPasswordLabel,
+                hint: s.enterYourPassword,
                 suffixIcon: IconButton(
                   onPressed: () => setState(() => _obscure = !_obscure),
                   icon:
@@ -110,7 +136,6 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
             SizedBox(
               width: double.infinity,
               height: 48,

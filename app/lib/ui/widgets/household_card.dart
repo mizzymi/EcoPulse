@@ -2,12 +2,10 @@ import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../theme/app_theme.dart';
-
 class HouseholdCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final double amount;      // <- ahora es double
+  final double amount;
   final VoidCallback onOpen;
   final bool danger;
 
@@ -20,29 +18,30 @@ class HouseholdCard extends StatelessWidget {
     this.danger = false,
   });
 
-  // Pinta la cantidad usando el locale actual, con céntimos pequeños
-  Widget _localizedRichAmount(BuildContext context, double value) {
-    final locale = Intl.canonicalizedLocale(Localizations.localeOf(context).toString());
+  Widget _localizedRichAmount(BuildContext context, double value,
+      {required Color color}) {
+    final locale =
+        Intl.canonicalizedLocale(Localizations.localeOf(context).toString());
     final nf = NumberFormat.decimalPattern(locale)
       ..minimumFractionDigits = 2
       ..maximumFractionDigits = 2;
 
     final s = nf.format(value.abs());
-    final decimalSep = nf.symbols.DECIMAL_SEP; // coma en ES, punto en US, etc.
+    final decimalSep = nf.symbols.DECIMAL_SEP;
     final minus = nf.symbols.MINUS_SIGN;
 
     final i = s.lastIndexOf(decimalSep);
     final intPart = i == -1 ? s : s.substring(0, i);
     final decPart = i == -1 ? '00' : s.substring(i + 1);
 
-    const big = TextStyle(
-      color: Colors.white,
+    final big = TextStyle(
+      color: color,
       fontSize: 28,
       fontWeight: FontWeight.w800,
       height: 1.05,
     );
-    const small = TextStyle(
-      color: Colors.white,
+    final small = TextStyle(
+      color: color,
       fontSize: 13,
       fontWeight: FontWeight.w800,
       height: 1,
@@ -68,101 +67,114 @@ class HouseholdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
-    final gradientColors = danger
-        ? <Color>[cs.error, cs.error.withOpacity(.9)]
-        : <Color>[T.cPrimary, T.cSecondary.withOpacity(.9)];
+    // 45/45/10: keep most elements neutral; use teal only in accents.
+    final accent = danger ? cs.error : cs.primary;
+    final surface =
+        danger ? cs.error.withOpacity(.65) : cs.primary.withOpacity(.65);
+    ;
+    final border = cs.outlineVariant;
+    final textMain = cs.onSurface;
+    final textSub = cs.onSurfaceVariant;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
+        color: surface,
         borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: gradientColors,
-        ),
+        border: Border.all(color: border, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.08),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(.06),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          // Burbujas decorativas
-          Positioned(
-            top: -20,
-            right: -10,
-            child: _bubble(110, Colors.white.withOpacity(.18)),
-          ),
-          Positioned(
-            bottom: -30,
-            left: -20,
-            child: _bubble(140, Colors.white.withOpacity(.12)),
-          ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          children: [
+            // Subtle bubbles but in neutral (avoid extra color)
+            Positioned(
+              top: -26,
+              right: -14,
+              child: _bubble(120, accent.withOpacity(.35)),
+            ),
+            Positioned(
+              bottom: -34,
+              left: 10, // avoid the accent bar
+              child: _bubble(150, accent.withOpacity(.35)),
+            ),
 
-          // Contenido
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 18, 18, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white70),
-                ),
-                const SizedBox(height: 22),
-                Row(
-                  children: [
-                    Expanded(child: _localizedRichAmount(context, amount)),
-                    FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: danger ? cs.error : cs.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 12,
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                  ),
+                  const SizedBox(height: 18),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _localizedRichAmount(
+                          context,
+                          amount,
+                          color: Colors.white,
                         ),
                       ),
-                      onPressed: onOpen,
-                      child: Text(S.of(context).openHousehold),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 12),
+
+                      // Use your theme FilledButton styling; override only if needed.
+                      FilledButton.icon(
+                        onPressed: onOpen,
+                        icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                        label: Text(S.of(context).openHousehold),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: accent,
+                          foregroundColor: cs.onPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          elevation: 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _bubble(double size, Color color) => Container(
-    width: size,
-    height: size,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: color,
-    ),
-  );
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color,
+        ),
+      );
 }

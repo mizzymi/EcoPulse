@@ -26,6 +26,71 @@ class SCa extends S {
   }
 
   @override
+  String get savedToast => 'Desat';
+
+  @override
+  String get removedToast => 'Membre expulsat';
+
+  @override
+  String get notAllowed => 'No tens permisos per fer això';
+
+  @override
+  String get roleLabel => 'Rol';
+
+  @override
+  String get changeRoleTitle => 'Canviar rol';
+
+  @override
+  String get kickMemberCta => 'Expulsar membre';
+
+  @override
+  String get confirmKickTitle => 'Expulsar membre?';
+
+  @override
+  String confirmKickBody(Object email) {
+    return 'Vols expulsar $email d’aquest compte?';
+  }
+
+  @override
+  String get conceptLabel => 'Concepte';
+
+  @override
+  String get conceptHint => 'p. ex. Supermercat';
+
+  @override
+  String get conceptRequiredToast => 'El concepte és obligatori';
+
+  @override
+  String get noteOptionalHint => 'Detalls opcionals';
+
+  @override
+  String get dueDateLabel => 'Data de venciment';
+
+  @override
+  String get dayOfMonthLabel => 'Dia del mes';
+
+  @override
+  String get dayOfMonthHint => '1..31';
+
+  @override
+  String get invalidDayOfMonthToast => 'Dia no vàlid (1..31)';
+
+  @override
+  String get newFixedTitle => 'Nova despesa fixa';
+
+  @override
+  String get newPlannedTitle => 'Nova despesa prevista';
+
+  @override
+  String get noPermissionMessage => 'No tens permís per fer això.';
+
+  @override
+  String get kickAction => 'Expulsar';
+
+  @override
+  String get manageMemberTooltip => 'Gestionar membre';
+
+  @override
   String get openHousehold => 'Obrir';
 
   @override

@@ -8,54 +8,72 @@ class AddHouseCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [T.cPrimary, T.cSecondary],
-        ),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(.08),
-              blurRadius: 16,
-              offset: const Offset(0, 8)),
-        ],
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(24),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                S.of(context).createOrJoinTitle,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Text(
-                  S.of(context).openCta,
-                  style: TextStyle(
-                    color: T.cPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    final accent = cs.primary;
+    final surface = cs.surface;
+    final border = cs.outlineVariant;
+
+    return Align(
+      alignment: Alignment.center, // or Alignment.centerLeft
+      child: ConstrainedBox(
+        constraints:
+            const BoxConstraints(maxWidth: 425), // 👈 adjust if you want
+        child: Container(
+          decoration: BoxDecoration(
+            color: surface,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: border, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(.18), // less heavy than .30
+                blurRadius: 16,
+                offset: const Offset(0, 8),
               ),
             ],
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: onTap,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 14, 14, 14),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min, // 👈 shrink-wrap horizontally
+                  children: [
+                    Flexible(
+                      child: Text(
+                        S.of(context).createOrJoinTitle,
+                        maxLines: 1, // 👈 makes it more compact
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 9),
+                      decoration: BoxDecoration(
+                        color: accent,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Text(
+                        S.of(context).openCta,
+                        style: TextStyle(
+                          color: cs.onPrimary,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),

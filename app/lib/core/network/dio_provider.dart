@@ -9,13 +9,12 @@ class AuthInterceptor extends Interceptor {
 
   @override
   Future<void> onRequest(
-      RequestOptions options,
-      RequestInterceptorHandler handler,
-      ) async {
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     try {
       await _ref.read(loadAuthTokenProvider.future);
-    } catch (_) {
-    }
+    } catch (_) {}
 
     final token = _ref.read(authTokenProvider);
     if (token != null && token.isNotEmpty) {
@@ -42,6 +41,22 @@ final dioProvider = Provider<Dio>((ref) {
   );
 
   dio.interceptors.add(AuthInterceptor(ref));
+
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onError: (DioException e, handler) {
+        final status = e.response?.statusCode;
+
+        if (status == 403) {
+          e = e.copyWith(
+            message: 'NO_PERMISSION',
+          );
+        }
+
+        handler.next(e);
+      },
+    ),
+  );
+
   return dio;
 });
-

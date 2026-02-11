@@ -39,7 +39,9 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
     if (_lastHandled == uri) return;
     _lastHandled = uri;
 
-    if (uri.host == 'ecopulse.reimii.com' && uri.path == '/reset-password') {
+    final isReset = uri.host == 'ecopulse.reimii.com' &&
+        uri.path.startsWith('/reset-password');
+    if (isReset) {
       final code = uri.queryParameters['code'] ?? '';
       final email = uri.queryParameters['email'] ?? '';
       if (code.isEmpty) return;

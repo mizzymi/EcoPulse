@@ -14,6 +14,32 @@
       }
     }
   },
+  "savedToast": "Saved",
+  "removedToast": "Member removed",
+  "notAllowed": "You don’t have permission to do that",
+  "roleLabel": "Role",
+  "changeRoleTitle": "Change role",
+  "kickMemberCta": "Remove member",
+  "confirmKickTitle": "Remove member?",
+  "confirmKickBody": "Do you want to remove {email} from this household?",
+  "@confirmKickBody": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "conceptLabel": "Concept",
+  "conceptHint": "e.g. Groceries",
+  "conceptRequiredToast": "Concept is required",
+  "noteOptionalHint": "Optional details",
+  "dueDateLabel": "Due date",
+  "dayOfMonthLabel": "Day of month",
+  "dayOfMonthHint": "1..31",
+  "invalidDayOfMonthToast": "Invalid day (1..31)",
+  "newFixedTitle": "New fixed expense",
+  "newPlannedTitle": "New planned expense",
+  "noPermissionMessage": "You don’t have permission to do this.",
+  "kickAction": "Remove",
+  "manageMemberTooltip": "Manage member",
   "openHousehold": "Open",
   "householdCarouselError": "Error loading accounts",
   "householdCarouselEmpty": "You don't have any accounts yet. Create or join one.",

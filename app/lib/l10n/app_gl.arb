@@ -14,6 +14,35 @@
       }
     }
   },
+  "savedToast": "Gardado",
+  "removedToast": "Membro expulsado",
+  "notAllowed": "Non tes permisos para facer iso",
+  "roleLabel": "Rol",
+  "changeRoleTitle": "Cambiar rol",
+  "kickMemberCta": "Expulsar membro",
+  "confirmKickTitle": "Expulsar membro?",
+  "confirmKickBody": "Queres expulsar a {email} desta conta?",
+  "@confirmKickBody": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "conceptLabel": "Concepto",
+  "conceptHint": "p. ex. Supermercado",
+  "conceptRequiredToast": "O concepto é obrigatorio",
+
+  "noteOptionalHint": "Detalles opcionais",
+
+  "dueDateLabel": "Data de vencemento",
+
+  "dayOfMonthLabel": "Día do mes",
+  "dayOfMonthHint": "1..31",
+  "invalidDayOfMonthToast": "Día non válido (1..31)",
+  "newFixedTitle": "Novo gasto fixo",
+  "newPlannedTitle": "Novo gasto previsto",
+  "noPermissionMessage": "Non tes permisos para facer iso.",
+  "kickAction": "Expulsar",
+  "manageMemberTooltip": "Xestionar membro",
   "openHousehold": "Abrir",
   "householdCarouselError": "Erro ao cargar as contas",
   "householdCarouselEmpty": "Aínda non tes contas. Crea unha ou únete a unha.",

@@ -14,6 +14,35 @@
       }
     }
   },
+  "savedToast": "Desat",
+  "removedToast": "Membre expulsat",
+  "notAllowed": "No tens permisos per fer això",
+  "roleLabel": "Rol",
+  "changeRoleTitle": "Canviar rol",
+  "kickMemberCta": "Expulsar membre",
+  "confirmKickTitle": "Expulsar membre?",
+  "confirmKickBody": "Vols expulsar {email} d’aquest compte?",
+  "@confirmKickBody": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "conceptLabel": "Concepte",
+  "conceptHint": "p. ex. Supermercat",
+  "conceptRequiredToast": "El concepte és obligatori",
+
+  "noteOptionalHint": "Detalls opcionals",
+
+  "dueDateLabel": "Data de venciment",
+
+  "dayOfMonthLabel": "Dia del mes",
+  "dayOfMonthHint": "1..31",
+  "invalidDayOfMonthToast": "Dia no vàlid (1..31)",
+  "newFixedTitle": "Nova despesa fixa",
+  "newPlannedTitle": "Nova despesa prevista",
+  "noPermissionMessage": "No tens permís per fer això.",
+  "kickAction": "Expulsar",
+  "manageMemberTooltip": "Gestionar membre",
   "openHousehold": "Obrir",
   "householdCarouselError": "Error en carregar els comptes",
   "householdCarouselEmpty": "Encara no tens cap compte. Crea'n un o uneix-t'hi.",

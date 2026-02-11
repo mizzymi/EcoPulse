@@ -1,36 +1,48 @@
-// BottomSheet for creating or editing a ledger entry.
+// BottomSheet for creating or editing a planned expense.
 // Reusable: if 'existing' is null -> create, else -> edit.
 //
+// UI: AddEntrySheet-like (outlined inputs + segmented buttons)
 // Added:
 // ✅ Money type selector: CASH / CARD / BANK
 // ✅ Sends 'accountType' in payload (adjust key if your backend expects another)
 
 import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
-import '../../../api/dio.dart';
+import '../../../core/network/dio_provider.dart';
 
-class AddEntrySheet extends ConsumerStatefulWidget {
+class AddPlannedExpenseSheet extends ConsumerStatefulWidget {
   final String householdId;
+  final String month; // YYYY-MM
   final Map<String, dynamic>? existing;
-  const AddEntrySheet({super.key, required this.householdId, this.existing});
+
+  const AddPlannedExpenseSheet({
+    super.key,
+    required this.householdId,
+    required this.month,
+    this.existing,
+  });
 
   @override
-  ConsumerState<AddEntrySheet> createState() => _AddEntrySheetState();
+  ConsumerState<AddPlannedExpenseSheet> createState() =>
+      _AddPlannedExpenseSheetState();
 }
 
-class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
-  late String _type; // 'INCOME' or 'EXPENSE'
-  late String _moneyType; // 'CASH' | 'CARD' | 'BANK'
-
+class _AddPlannedExpenseSheetState
+    extends ConsumerState<AddPlannedExpenseSheet> {
+  final _conceptCtrl = TextEditingController();
   final _amountCtrl = TextEditingController();
+  final _notesCtrl = TextEditingController();
   final _categoryCtrl = TextEditingController();
-  final _noteCtrl = TextEditingController();
-  late DateTime _date;
+
+  late DateTime _dueDate;
+  late String _type; // EXPENSE | INCOME
+  late String _moneyType; // CASH | CARD | BANK
+
   bool _loading = false;
 
   @override
@@ -50,33 +62,63 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
 
     _moneyType = (mt == 'CASH' || mt == 'CARD' || mt == 'BANK') ? mt! : 'CASH';
 
+    _conceptCtrl.text = (ex?['concept'] ?? ex?['title'] ?? '').toString();
+
     final amt = ex?['amount'];
     _amountCtrl.text = amt == null
         ? ''
         : (amt is num ? amt.toStringAsFixed(2) : amt.toString());
 
+    _notesCtrl.text = (ex?['notes'] ?? ex?['note'] ?? '').toString();
     _categoryCtrl.text =
         (ex?['category'] ?? ex?['categoryId'] ?? '').toString();
-    _noteCtrl.text = ex?['note']?.toString() ?? '';
-    _date =
-        DateTime.tryParse(ex?['occursAt']?.toString() ?? '') ?? DateTime.now();
+
+    _dueDate = DateTime.tryParse((ex?['dueDate'] ?? '').toString()) ??
+        DateTime.tryParse((ex?['occursAt'] ?? '').toString()) ??
+        DateTime.now();
   }
 
   @override
   void dispose() {
+    _conceptCtrl.dispose();
     _amountCtrl.dispose();
+    _notesCtrl.dispose();
     _categoryCtrl.dispose();
-    _noteCtrl.dispose();
     super.dispose();
   }
 
-  String _fmtDate(BuildContext context, DateTime d) {
-    final locale = Localizations.localeOf(context).toString();
-    return DateFormat.yMd(locale).format(d.toLocal());
+  String _extractApiMessage(dynamic data) {
+    if (data is Map) {
+      final err = data['error'];
+      if (err != null) return err.toString();
+      final msg = data['message'];
+      if (msg != null) return msg.toString();
+    }
+    return '';
+  }
+
+  InputDecoration _deco({
+    required String label,
+    String? hint,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      border: const OutlineInputBorder(),
+      filled: true,
+      fillColor: Colors.white,
+    );
   }
 
   Future<void> _submit() async {
     final s = S.of(context);
+
+    final concept = _conceptCtrl.text.trim();
+    if (concept.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(s.requiredField)));
+      return;
+    }
 
     final amount = double.tryParse(_amountCtrl.text.replaceAll(',', '.'));
     if (amount == null || amount <= 0) {
@@ -88,40 +130,39 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
     setState(() => _loading = true);
     final dio = ref.read(dioProvider);
 
-    final payload = <String, dynamic>{
-      'type': _type,
-      'amount': amount,
-      // Adjust key if your API expects categoryId instead of category
-      'category':
-          _categoryCtrl.text.trim().isEmpty ? null : _categoryCtrl.text.trim(),
-      'note': _noteCtrl.text.trim().isEmpty ? null : _noteCtrl.text.trim(),
-      'occursAt': _date.toIso8601String(),
-
-      // ✅ Money type field (adjust key if needed)
-      'accountType': _moneyType, // 'CASH' | 'CARD' | 'BANK'
-    };
-
     try {
+      final payload = <String, dynamic>{
+        'concept': concept,
+        'type': _type, // INCOME | EXPENSE
+        'amount': amount,
+        'dueDate': _dueDate.toIso8601String(),
+        'month': widget.month,
+        'notes': _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
+        'category': _categoryCtrl.text.trim().isEmpty
+            ? null
+            : _categoryCtrl.text.trim(),
+
+        // ✅ Money type field (adjust key if needed)
+        'accountType': _moneyType, // CASH | CARD | BANK
+      };
+
       if (widget.existing == null) {
-        final res = await dio.post(
-          '/households/${widget.householdId}/entries',
+        await dio.post(
+          '/households/${widget.householdId}/planned',
           data: payload,
         );
-        if (mounted) Navigator.pop(context, res.data);
+        if (mounted) Navigator.pop(context, true);
       } else {
         final id = widget.existing!['id'].toString();
-        final res = await dio.patch(
-          '/households/${widget.householdId}/entries/$id',
+        await dio.patch(
+          '/households/${widget.householdId}/planned/$id',
           data: payload,
         );
-        if (mounted) Navigator.pop(context, res.data);
+        if (mounted) Navigator.pop(context, true);
       }
     } on DioException catch (e) {
-      final msg = e.response?.data is Map &&
-              (e.response!.data as Map)['message'] != null
-          ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? s.errorSave);
-
+      final apiMsg = _extractApiMessage(e.response?.data);
+      final msg = apiMsg.isNotEmpty ? apiMsg : (e.message ?? s.errorSave);
       if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(msg)));
@@ -134,22 +175,29 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
   @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
-    final isEdit = widget.existing != null;
     final s = S.of(context);
+    final isEdit = widget.existing != null;
 
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    InputDecoration _deco({
-      required String label,
-      String? hint,
-    }) {
-      return InputDecoration(
-        labelText: label,
-        hintText: hint,
-        border: const OutlineInputBorder(),
-      );
-    }
+    ButtonStyle segmentedStyle() => ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return cs.primary.withOpacity(.14);
+            }
+            return cs.surface;
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) return cs.primary;
+            return cs.onSurfaceVariant;
+          }),
+          iconColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) return cs.primary;
+            return cs.onSurfaceVariant;
+          }),
+          side: WidgetStateProperty.all(BorderSide(color: cs.outlineVariant)),
+        );
 
     return Padding(
       padding: EdgeInsets.only(
@@ -161,11 +209,10 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header
           Row(
             children: [
               Text(
-                isEdit ? s.editMovementTitle : s.newMovementTitle,
+                isEdit ? s.editPlannedTitle : s.newPlannedTitle,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w800,
                 ),
@@ -173,9 +220,9 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
               const Spacer(),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
-          // Type (Expense/Income)
+          // Type selector
           Row(
             children: [
               Expanded(
@@ -193,37 +240,16 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
                     ),
                   ],
                   selected: {_type},
-                  onSelectionChanged: (selection) =>
-                      setState(() => _type = selection.first),
-                  style: ButtonStyle(
-                    // keep 45/45/10: neutral by default, teal when selected
-                    backgroundColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return cs.primary.withOpacity(.14);
-                      }
-                      return cs.surface;
-                    }),
-                    foregroundColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected))
-                        return cs.primary;
-                      return cs.onSurfaceVariant;
-                    }),
-                    iconColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected))
-                        return cs.primary;
-                      return cs.onSurfaceVariant;
-                    }),
-                    side: WidgetStateProperty.all(
-                      BorderSide(color: cs.outlineVariant),
-                    ),
-                  ),
+                  onSelectionChanged: (sel) =>
+                      setState(() => _type = sel.first),
+                  style: segmentedStyle(),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
 
-          // ✅ Money type (Cash/Card/Bank)
+          // ✅ Money type selector
           Row(
             children: [
               Expanded(
@@ -246,47 +272,36 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
                     ),
                   ],
                   selected: {_moneyType},
-                  onSelectionChanged: (selection) =>
-                      setState(() => _moneyType = selection.first),
-                  style: ButtonStyle(
-                    // keep 45/45/10: neutral by default, teal when selected
-                    backgroundColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return cs.primary.withOpacity(.14);
-                      }
-                      return cs.surface;
-                    }),
-                    foregroundColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected))
-                        return cs.primary;
-                      return cs.onSurfaceVariant;
-                    }),
-                    iconColor: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected))
-                        return cs.primary;
-                      return cs.onSurfaceVariant;
-                    }),
-                    side: WidgetStateProperty.all(
-                      BorderSide(color: cs.outlineVariant),
-                    ),
-                  ),
+                  onSelectionChanged: (sel) =>
+                      setState(() => _moneyType = sel.first),
+                  style: segmentedStyle(),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
 
-          // Amount
+          TextField(
+            controller: _conceptCtrl,
+            textInputAction: TextInputAction.next,
+            decoration: _deco(
+              label: s.concept,
+              hint: null,
+            ),
+          ),
+          const SizedBox(height: 12),
+
           TextField(
             controller: _amountCtrl,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.next,
             decoration: _deco(label: s.amountLabel, hint: s.amountHint),
           ),
           const SizedBox(height: 12),
 
-          // Category (optional)
           TextField(
             controller: _categoryCtrl,
+            textInputAction: TextInputAction.next,
             decoration: _deco(
               label: s.categoryOptionalLabel,
               hint: s.categoryOptionalHint,
@@ -294,21 +309,20 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
           ),
           const SizedBox(height: 12),
 
-          // Note (optional)
           TextField(
-            controller: _noteCtrl,
-            decoration: _deco(label: s.noteOptionalLabel),
+            controller: _notesCtrl,
+            minLines: 1,
+            maxLines: 3,
+            decoration: _deco(
+              label: s.noteOptionalLabel,
+              hint: s.noteOptionalHint,
+            ),
           ),
           const SizedBox(height: 12),
 
-          // Date picker
           Row(
             children: [
-              Text(
-                s.dateLabel(_fmtDate(context, _date)),
-                style:
-                    theme.textTheme.bodyMedium?.copyWith(color: cs.onSurface),
-              ),
+              Text(s.dateLabel(_dueDate.toLocal().toString().split(' ').first)),
               const Spacer(),
               TextButton.icon(
                 onPressed: () async {
@@ -316,15 +330,15 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
                     context: context,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    initialDate: _date,
+                    initialDate: _dueDate,
                   );
                   if (picked != null) {
-                    setState(() => _date = DateTime(
+                    setState(() => _dueDate = DateTime(
                           picked.year,
                           picked.month,
                           picked.day,
-                          _date.hour,
-                          _date.minute,
+                          _dueDate.hour,
+                          _dueDate.minute,
                         ));
                   }
                 },
@@ -335,7 +349,6 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
           ),
           const SizedBox(height: 16),
 
-          // Save
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
@@ -350,6 +363,7 @@ class _AddEntrySheetState extends ConsumerState<AddEntrySheet> {
               label: Text(isEdit ? s.saveChanges : s.save),
             ),
           ),
+
           const SizedBox(height: 80),
         ],
       ),

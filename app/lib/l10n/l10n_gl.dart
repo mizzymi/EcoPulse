@@ -26,6 +26,71 @@ class SGl extends S {
   }
 
   @override
+  String get savedToast => 'Gardado';
+
+  @override
+  String get removedToast => 'Membro expulsado';
+
+  @override
+  String get notAllowed => 'Non tes permisos para facer iso';
+
+  @override
+  String get roleLabel => 'Rol';
+
+  @override
+  String get changeRoleTitle => 'Cambiar rol';
+
+  @override
+  String get kickMemberCta => 'Expulsar membro';
+
+  @override
+  String get confirmKickTitle => 'Expulsar membro?';
+
+  @override
+  String confirmKickBody(Object email) {
+    return 'Queres expulsar a $email desta conta?';
+  }
+
+  @override
+  String get conceptLabel => 'Concepto';
+
+  @override
+  String get conceptHint => 'p. ex. Supermercado';
+
+  @override
+  String get conceptRequiredToast => 'O concepto é obrigatorio';
+
+  @override
+  String get noteOptionalHint => 'Detalles opcionais';
+
+  @override
+  String get dueDateLabel => 'Data de vencemento';
+
+  @override
+  String get dayOfMonthLabel => 'Día do mes';
+
+  @override
+  String get dayOfMonthHint => '1..31';
+
+  @override
+  String get invalidDayOfMonthToast => 'Día non válido (1..31)';
+
+  @override
+  String get newFixedTitle => 'Novo gasto fixo';
+
+  @override
+  String get newPlannedTitle => 'Novo gasto previsto';
+
+  @override
+  String get noPermissionMessage => 'Non tes permisos para facer iso.';
+
+  @override
+  String get kickAction => 'Expulsar';
+
+  @override
+  String get manageMemberTooltip => 'Xestionar membro';
+
+  @override
   String get openHousehold => 'Abrir';
 
   @override

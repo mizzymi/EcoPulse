@@ -64,15 +64,20 @@ class _GenerateInviteScreenState extends ConsumerState<GenerateInviteScreen> {
         _expiresAt = exp != null ? DateTime.tryParse(exp) : null;
       });
     } on DioException catch (e) {
-      final msg = e.response?.data is Map &&
-              (e.response!.data as Map)['message'] != null
-          ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? s.errorGenerateCode);
+      final s = S.of(context);
+
+      final msg = switch (e.message) {
+        'NO_PERMISSION' => s.noPermissionMessage,
+        _ => (e.response?.data is Map &&
+                (e.response!.data as Map)['message'] != null)
+            ? (e.response!.data as Map)['message'].toString()
+            : (e.message ?? s.errorGenerateCode),
+      };
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(msg)));
       }
-    } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 

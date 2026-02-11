@@ -1,24 +1,3 @@
-// -----------------------------------------------------------------------------
-// Pantalla principal de detalle de la cuenta (Household).
-//
-// Auto-post y forecast con INCOME/EXPENSE fijos:
-//   • Asienta automáticamente fijos (ingresos y gastos) cuando llega su fecha.
-//   • Forecast suma ingresos fijos pendientes a income y gastos fijos pendientes a expense.
-//   • Evita duplicar: lo ya asentado (según entries o nota [RECURRING:<id>]) no se vuelve a sumar.
-//   • En meses futuros: apertura/income/expense = 0 (resumen sintético).
-//
-// FIX anti-duplicados:
-//   1) _fixedExpandedForMonth ahora DESDUPLICA por (id@occursAt), prefiriendo
-//      la instancia real (traída por el BE) frente a la generada localmente.
-//   2) _autoPostDueFixedIfNeeded coloca el candado _autoPosting ANTES de calcular
-//      los vencidos y usa _postingKeys para evitar doble POST en paralelo por (id@occursAt).
-//
-// ✅ FIX carga inicial:
-//   - No llamamos a _refresh() en initState a ciegas.
-//   - Escuchamos el token con ref.listenManual (válido en initState).
-//   - Cuando token != null por primera vez, hacemos _refresh().
-// -----------------------------------------------------------------------------
-
 import 'package:dio/dio.dart';
 import 'package:ecopulse/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -26,19 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/dio.dart';
 import '../../ui/theme/app_theme.dart';
-
-// ✅ FIX
 import '../../providers/auth_token_provider.dart';
 
 // Sheets
-import '../../ui/widgets/add_fixed_expense_sheet.dart';
-import '../../ui/widgets/add_planned_expense_sheet.dart';
+import 'widgets/add_fixed_expense_sheet.dart';
+import 'widgets/add_planned_expense_sheet.dart';
 
 // Pantallas relacionadas
 import 'generate_invite_screen.dart';
 import 'savings/savings_goals_screen.dart';
 
-// UI extraídas a widgets/dialogs propios
+// Widgets extraídos
 import 'widgets/summary_card.dart';
 import 'widgets/movements_list.dart';
 import 'widgets/add_entry_sheet.dart';
@@ -50,6 +27,8 @@ class _RecurringAutopostGuard {
   static bool busy = false;
   static final Set<String> inflightKeys = <String>{};
 }
+
+enum MoneyType { all, cash, card, bank }
 
 class HouseholdDetailScreen extends ConsumerStatefulWidget {
   final String householdId;
@@ -84,27 +63,21 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   List<Map<String, dynamic>> _allSummaries = [];
 
   String? _householdNameState;
-
   DateTime _month = DateTime(DateTime.now().year, DateTime.now().month);
-
-  // Para evitar bucles durante autopost
-  bool _autoPosting = false;
-
-  // Claves en vuelo para evitar doble POST en paralelo por (id@occursAt)
-  final Set<String> _postingKeys = {};
 
   // ✅ FIX: evitar doble carga inicial y cargar sólo cuando haya token
   bool _didInitialLoad = false;
-
-  // ✅ FIX: suscripción manual (válida en initState)
   ProviderSubscription<String?>? _tokenSub;
+
+  // ✅ Filters
+  String? _categoryFilterId; // null = all
+  MoneyType _moneyTypeFilter = MoneyType.all;
 
   @override
   void initState() {
     super.initState();
     _householdNameState = widget.householdName;
 
-    // ✅ FIX 1) Si ya hay token al primer frame, carga
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final token = ref.read(authTokenProvider);
@@ -114,10 +87,9 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       }
     });
 
-    // ✅ FIX 2) Si el token llega después, carga cuando aparezca
     _tokenSub = ref.listenManual<String?>(
       authTokenProvider,
-          (prev, next) {
+      (prev, next) {
         if (!_didInitialLoad && next != null) {
           _didInitialLoad = true;
           _refresh();
@@ -128,7 +100,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
   @override
   void dispose() {
-    _tokenSub?.close(); // ✅ FIX
+    _tokenSub?.close();
     super.dispose();
   }
 
@@ -141,7 +113,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     return (from, to);
   }
 
-  // ==== Utilidades ====
   bool _isFutureMonth(DateTime m) {
     final now = DateTime(DateTime.now().year, DateTime.now().month);
     final cand = DateTime(m.year, m.month);
@@ -164,14 +135,14 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   }
 
   Map<String, dynamic> _emptySummaryFor(String ym) => {
-    'month': ym,
-    'openingBalance': 0,
-    'income': 0,
-    'expense': 0,
-    'net': 0,
-    'closingBalance': 0,
-    '_synthetic': true,
-  };
+        'month': ym,
+        'openingBalance': 0,
+        'income': 0,
+        'expense': 0,
+        'net': 0,
+        'closingBalance': 0,
+        '_synthetic': true,
+      };
 
   DateTime? _parseDate(dynamic v) =>
       v == null ? null : DateTime.tryParse(v.toString());
@@ -179,7 +150,87 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   bool _sameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
+  // ---------------------------------------------------------------------------
+  // Filters: Category + MoneyType mapping
+  // ---------------------------------------------------------------------------
+
+  /// Tries multiple common keys. Adjust if your backend differs.
+  String? _categoryIdFromAny(Map<String, dynamic> e) {
+    final v = e['categoryId'] ??
+        e['category'] ??
+        e['category_id'] ??
+        e['categoryID'] ??
+        e['catId'];
+    if (v == null) return null;
+    final s = v.toString().trim();
+    return s.isEmpty ? null : s;
+  }
+
+  /// Tries multiple common keys. Adjust if your backend differs.
+  MoneyType _moneyTypeFromEntry(Map<String, dynamic> e) {
+    final raw = (e['accountType'] ??
+            e['moneyType'] ??
+            e['account']?['type'] ??
+            e['account']?['kind'] ??
+            e['paymentType'])
+        ?.toString()
+        .toUpperCase()
+        .trim();
+
+    if (raw == null || raw.isEmpty) return MoneyType.all;
+
+    if (raw.contains('CASH') || raw.contains('EFECTIVO')) return MoneyType.cash;
+    if (raw.contains('CARD') ||
+        raw.contains('CREDIT') ||
+        raw.contains('TARJETA')) {
+      return MoneyType.card;
+    }
+    if (raw.contains('BANK') ||
+        raw.contains('ACCOUNT') ||
+        raw.contains('BANCO')) {
+      return MoneyType.bank;
+    }
+
+    return MoneyType.all;
+  }
+
+  bool _passesCategory(Map<String, dynamic> e) {
+    if (_categoryFilterId == null) return true;
+    return _categoryIdFromAny(e) == _categoryFilterId;
+  }
+
+  bool _passesMoneyType(Map<String, dynamic> e) {
+    if (_moneyTypeFilter == MoneyType.all) return true;
+    return _moneyTypeFromEntry(e) == _moneyTypeFilter;
+  }
+
+  List<Map<String, dynamic>> _applyFilters(List<Map<String, dynamic>> list) {
+    return list
+        .where((e) => _passesCategory(e) && _passesMoneyType(e))
+        .toList();
+  }
+
+  List<String> get _availableCategoryIds {
+    final set = <String>{};
+
+    void addFrom(List<Map<String, dynamic>> list) {
+      for (final e in list) {
+        final id = _categoryIdFromAny(e);
+        if (id != null) set.add(id);
+      }
+    }
+
+    addFrom(_entries);
+    addFrom(_planned);
+    addFrom(_fixedRaw);
+
+    final out = set.toList()..sort();
+    return out;
+  }
+
+  // ---------------------------------------------------------------------------
   // ==== EXPANSIÓN LOCAL DE FIJOS (si el BE no manda instancias por mes) ====
+  // ---------------------------------------------------------------------------
 
   bool _isInstanceForMonth(Map e, DateTime month) {
     final occursAtStr = e['occursAt']?.toString();
@@ -252,14 +303,15 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     return byKey.values.toList();
   }
 
-  bool _entryHasRecurringMarker(Map<String, dynamic> entry, String recurringId) {
+  bool _entryHasRecurringMarker(
+      Map<String, dynamic> entry, String recurringId) {
     final note = entry['note']?.toString() ?? '';
     final concept = (entry['concept'] ?? entry['title'] ?? '').toString();
 
     if (note.contains('[RECURRING:$recurringId]')) return true;
 
     final re =
-    RegExp(r'^\[recurring:\s*.+?:\s*([^\]]+)\]$', caseSensitive: false);
+        RegExp(r'^\[recurring:\s*.+?:\s*([^\]]+)\]$', caseSensitive: false);
     final m = re.firstMatch(concept);
     if (m != null && (m.group(1)?.trim() == recurringId)) return true;
 
@@ -267,9 +319,9 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   }
 
   bool _occurrenceIsPosted(
-      Map<String, dynamic> occ,
-      List<Map<String, dynamic>> entries,
-      ) {
+    Map<String, dynamic> occ,
+    List<Map<String, dynamic>> entries,
+  ) {
     final recurringId = occ['id']?.toString();
     if (recurringId != null && recurringId.isNotEmpty) {
       for (final en in entries) {
@@ -304,15 +356,15 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
   double get _fixedExpensePendingTotal {
     final expanded = _fixedExpandedForMonth(_fixedRaw, _month);
     final pending = expanded.where((e) =>
-    (e['type'] ?? 'EXPENSE') == 'EXPENSE' &&
+        (e['type'] ?? 'EXPENSE') == 'EXPENSE' &&
         !_occurrenceIsPosted(e, _entries));
     return _sumAmount(pending);
   }
 
   double get _fixedIncomePendingTotal {
     final expanded = _fixedExpandedForMonth(_fixedRaw, _month);
-    final pending = expanded.where(
-            (e) => (e['type'] ?? '') == 'INCOME' && !_occurrenceIsPosted(e, _entries));
+    final pending = expanded.where((e) =>
+        (e['type'] ?? '') == 'INCOME' && !_occurrenceIsPosted(e, _entries));
     return _sumAmount(pending);
   }
 
@@ -371,7 +423,6 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         if (idStr.isEmpty) continue;
 
         final key = '$idStr@${DateUtils.dateOnly(occursAt).toIso8601String()}';
-
         if (_RecurringAutopostGuard.inflightKeys.contains(key)) continue;
         if (seen.add(key)) dueUnique.add(f);
       }
@@ -422,6 +473,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         summary = _emptySummaryFor(_monthStr);
       }
 
+      if (!mounted) return;
       setState(() {
         _entries = _asListOfMap(resList.data);
         _summary = summary;
@@ -437,14 +489,54 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     }
   }
 
+  Future<void> _confirmDeleteRecurring(Map e) async {
+    final s = S.of(context);
+    final title = s.fixedDeleteTitle;
+    final body = s.fixedDeleteBody;
+
+    final sure = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(s.cancel),
+          ),
+          FilledButton.tonal(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(s.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (sure != true) return;
+
+    final dio = ref.read(dioProvider);
+    try {
+      await dio
+          .delete('/households/${widget.householdId}/recurring/${e['id']}');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(s.deletedOkToast)));
+      await _refresh();
+    } on DioException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(s.deleteFailedToast)));
+    }
+  }
+
   Future<void> plannedDelete(Map e) async {
     final s = S.of(context);
 
     final sure = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Eliminar previsto'),
-        content: const Text('¿Seguro? Esta acción no se puede deshacer.'),
+        title: Text(s.deleteMovementTitle),
+        content: Text(s.deleteMovementConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -464,56 +556,13 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     try {
       await dio.delete('/households/${widget.householdId}/planned/${e['id']}');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deletedOkToast)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(s.deletedOkToast)));
       await _refresh();
     } on DioException {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deleteFailedToast)),
-      );
-    }
-  }
-
-  Future<void> _confirmDeleteRecurring(Map e) async {
-    final s = S.of(context);
-    final title = s.fixedDeleteTitle ?? 'Eliminar gasto fijo';
-    final body = s.fixedDeleteBody ?? '¿Seguro? Esta acción no se puede deshacer.';
-
-    final sure = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(s.cancel ?? 'Cancelar'),
-          ),
-          FilledButton.tonal(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(s.delete ?? 'Eliminar'),
-          ),
-        ],
-      ),
-    );
-
-    if (sure != true) return;
-
-    final dio = ref.read(dioProvider);
-    try {
-      await dio.delete('/households/${widget.householdId}/recurring/${e['id']}');
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deletedOkToast ?? 'Eliminado')),
-      );
-      await _refresh();
-    } on DioException {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deleteFailedToast ?? 'No se pudo eliminar')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(s.deleteFailedToast)));
     }
   }
 
@@ -542,8 +591,9 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
         content: Text(s.deleteHouseholdBody),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(s.cancel)),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(s.cancel),
+          ),
           FilledButton.tonal(
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(s.delete),
@@ -558,22 +608,19 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     try {
       await dio.delete('/households/${widget.householdId}');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deletedOkToast)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(s.deletedOkToast)));
       Navigator.of(context).pop(true);
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.deleteFailedToast)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(s.deleteFailedToast)));
     } finally {
       if (mounted) setState(() => _deleting = false);
     }
   }
 
   Future<void> _refresh() async {
-    // ✅ Guard: si no hay token, no dispares requests
     final token = ref.read(authTokenProvider);
     if (token == null) {
       if (mounted) setState(() => _loading = false);
@@ -606,9 +653,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       } on DioException {
         summary = _emptySummaryFor(_monthStr);
       }
-      if (_isFutureMonth(_month)) {
-        summary = _emptySummaryFor(_monthStr);
-      }
+      if (_isFutureMonth(_month)) summary = _emptySummaryFor(_monthStr);
 
       final resPlanned = await dio.get(
         '/households/${widget.householdId}/planned',
@@ -624,11 +669,12 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       if (fixedList.isEmpty) {
         try {
           final resFixedDefs =
-          await dio.get('/households/${widget.householdId}/recurring');
+              await dio.get('/households/${widget.householdId}/recurring');
           fixedList = _asListOfMap(resFixedDefs.data);
         } catch (_) {}
       }
 
+      if (!mounted) return;
       setState(() {
         _entries = _asListOfMap(resList.data);
         _summary = summary;
@@ -639,9 +685,8 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       await _autoPostDueFixedIfNeeded();
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(s.errorLoadData)),
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(s.errorLoadData)));
       }
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -679,7 +724,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       }
 
       if (monthsSet.isEmpty) {
-        setState(() => _allSummaries = []);
+        if (mounted) setState(() => _allSummaries = []);
         return;
       }
 
@@ -703,7 +748,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
             .toString()
             .compareTo((a['month'] ?? '').toString()));
 
-      setState(() => _allSummaries = summaries);
+      if (mounted) setState(() => _allSummaries = summaries);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -737,7 +782,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
       final s = S.of(context);
       final txt =
-      (res['type'] == 'INCOME') ? s.incomeSavedToast : s.expenseSavedToast;
+          (res['type'] == 'INCOME') ? s.incomeSavedToast : s.expenseSavedToast;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(txt)));
     }
   }
@@ -751,7 +796,7 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       dio: dio,
       householdId: widget.householdId,
       householdName:
-      _householdNameState ?? widget.householdName ?? s.accountGenericLower,
+          _householdNameState ?? widget.householdName ?? s.accountGenericLower,
     );
 
     if (ok == true) {
@@ -810,11 +855,14 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
     final isAtCurrentMonth =
         _month.year == nowMonth.year && _month.month == nowMonth.month;
 
-    final fixedExpanded = _fixedExpandedForMonth(_fixedRaw, _month);
+    // Fixed expanded + pending info (FILTERED)
+    final fixedExpandedAll = _fixedExpandedForMonth(_fixedRaw, _month);
+    final fixedExpanded = _applyFilters(fixedExpandedAll);
+
     final fixedPending = fixedExpanded
         .where((e) =>
-    ((e['type'] ?? '') == 'INCOME' || (e['type'] ?? '') == 'EXPENSE') &&
-        !_occurrenceIsPosted(e, _entries))
+            ((e['type'] ?? '') == 'INCOME' || (e['type'] ?? '') == 'EXPENSE') &&
+            !_occurrenceIsPosted(e, _entries))
         .toList();
 
     final fixedPendingIncomeTotal = fixedPending
@@ -827,6 +875,15 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
 
     final fixedPendingNet = fixedPendingIncomeTotal - fixedPendingExpenseTotal;
 
+    // Planned (FILTERED)
+    final plannedFiltered = _applyFilters(_planned);
+    final plannedExpenseTotalFiltered = plannedFiltered
+        .where((e) => (e['type'] ?? 'EXPENSE') == 'EXPENSE')
+        .fold<double>(0, (a, b) => a + _asDouble(b['amount']));
+
+    // Entries (FILTERED)
+    final entriesFiltered = _applyFilters(_entries);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
@@ -834,59 +891,54 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
           preferredSize: const Size.fromHeight(50),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-            child: Column(
-              children: [
-                HouseholdHeaderMenu(
-                  viewAllMonths: _viewAllMonths,
-                  monthStr: _monthStr,
-                  isAtCurrentMonth: isAtCurrentMonth,
-                  onPrevMonth: _prevMonth,
-                  onNextMonth: _nextMonth,
-                  onToggleViewAll: _toggleViewAll,
-                  householdId: widget.householdId,
-                  householdName: name,
-                  onOpenSavingsGoals: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SavingsGoalsScreen(
-                          householdId: widget.householdId,
-                          householdName: name,
-                        ),
-                      ),
-                    );
-                  },
-                  onOpenQuickSavingsDeposit: _openQuickSavingsDeposit,
-                  onOpenInvite: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => GenerateInviteScreen(
-                          householdId: widget.householdId,
-                          householdName: name,
-                        ),
-                      ),
-                    );
-                  },
-                  onOpenSettings: () async {
-                    final dio = ref.read(dioProvider);
-                    final newName = await showRenameHouseholdDialog(
-                      context,
-                      dio,
-                      initialName: name,
+            child: HouseholdHeaderMenu(
+              viewAllMonths: _viewAllMonths,
+              monthStr: _monthStr,
+              isAtCurrentMonth: isAtCurrentMonth,
+              onPrevMonth: _prevMonth,
+              onNextMonth: _nextMonth,
+              onToggleViewAll: _toggleViewAll,
+              householdId: widget.householdId,
+              householdName: name,
+              onOpenSavingsGoals: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SavingsGoalsScreen(
                       householdId: widget.householdId,
-                    );
-                    if (newName != null && mounted) {
-                      setState(() => _householdNameState = newName);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(s.updatedNameToast)),
-                      );
-                    }
-                  },
-                  onRefresh: _viewAllMonths ? _loadAllMonths : _refresh,
-                  onDeleteHousehold: _confirmAndDelete,
-                ),
-              ],
+                      householdName: name,
+                    ),
+                  ),
+                );
+              },
+              onOpenQuickSavingsDeposit: _openQuickSavingsDeposit,
+              onOpenInvite: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => GenerateInviteScreen(
+                      householdId: widget.householdId,
+                      householdName: name,
+                    ),
+                  ),
+                );
+              },
+              onOpenSettings: () async {
+                final dio = ref.read(dioProvider);
+                final newName = await showRenameHouseholdDialog(
+                  context,
+                  dio,
+                  initialName: name,
+                  householdId: widget.householdId,
+                );
+                if (newName != null && mounted) {
+                  setState(() => _householdNameState = newName);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(s.updatedNameToast)));
+                }
+              },
+              onRefresh: _viewAllMonths ? _loadAllMonths : _refresh,
+              onDeleteHousehold: _confirmAndDelete,
             ),
           ),
         ),
@@ -902,255 +954,453 @@ class _HouseholdDetailScreenState extends ConsumerState<HouseholdDetailScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-        onRefresh: _viewAllMonths ? _loadAllMonths : _refresh,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            if (_viewAllMonths) ...[
-              if (_allSummaries.isEmpty)
-                Text(s.noMonthsWithMovements)
-              else
-                ..._allSummaries.map(
-                      (summary) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: SummaryCard(
-                      month: summary['month']?.toString() ?? '',
-                      opening: _asDouble(summary['openingBalance']),
-                      income: _asDouble(summary['income']!),
-                      expense: _asDouble(summary['expense']!),
-                      net: _asDouble(summary['net']!),
-                      closing: _asDouble(summary['closingBalance']!),
-                      onTap: () {
-                        final ym = summary['month']?.toString() ?? '';
-                        _openMonthFromYm(ym);
+              onRefresh: _viewAllMonths ? _loadAllMonths : _refresh,
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  if (_viewAllMonths) ...[
+                    if (_allSummaries.isEmpty)
+                      Text(s.noMonthsWithMovements)
+                    else
+                      ..._allSummaries.map(
+                        (summary) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: SummaryCard(
+                            month: summary['month']?.toString() ?? '',
+                            opening: _asDouble(summary['openingBalance']),
+                            income: _asDouble(summary['income']!),
+                            expense: _asDouble(summary['expense']!),
+                            net: _asDouble(summary['net']!),
+                            closing: _asDouble(summary['closingBalance']!),
+                            onTap: () => _openMonthFromYm(
+                              summary['month']?.toString() ?? '',
+                            ),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 72),
+                  ] else ...[
+                    // ✅ Filters Bar (category + money type)
+                    _FiltersBar(
+                      categoryIds: _availableCategoryIds,
+                      selectedCategoryId: _categoryFilterId,
+                      onCategoryChanged: (v) =>
+                          setState(() => _categoryFilterId = v),
+                      moneyType: _moneyTypeFilter,
+                      onMoneyTypeChanged: (t) =>
+                          setState(() => _moneyTypeFilter = t),
+                    ),
+                    const SizedBox(height: 12),
+
+                    _ForecastToggle(
+                      label: s.forecastIncludeLabel,
+                      value: _includeForecast,
+                      onChanged: (v) => setState(() => _includeForecast = v),
+                    ),
+                    if (_summary != null)
+                      SummaryCard(
+                        month: (_effectiveSummary?['month'] ??
+                                _summary!['month'] ??
+                                _monthStr)
+                            .toString(),
+                        opening: _asDouble(
+                            _effectiveSummary?['openingBalance'] ??
+                                _summary!['openingBalance']),
+                        income: _asDouble(_effectiveSummary?['income'] ??
+                            _summary!['income']),
+                        expense: _asDouble(_effectiveSummary?['expense'] ??
+                            _summary!['expense']),
+                        net: _asDouble(
+                            _effectiveSummary?['net'] ?? _summary!['net']),
+                        closing: _asDouble(
+                            _effectiveSummary?['closingBalance'] ??
+                                _summary!['closingBalance']),
+                      ),
+                    const SizedBox(height: 12),
+                    _PlannedSection(
+                      title: s.plannedTitle,
+                      emptyText: s.plannedEmpty,
+                      addLabel: s.plannedAdd,
+                      settleTooltip: s.plannedSettle,
+                      count: plannedFiltered.length,
+                      total: plannedExpenseTotalFiltered,
+                      planned: plannedFiltered,
+                      onAdd: () => _openAddPlanned(),
+                      onEdit: (e) => _openAddPlanned(existing: e),
+                      onDelete: (e) => plannedDelete(e),
+                      onSettle: (e) async {
+                        try {
+                          final dio = ref.read(dioProvider);
+                          await dio.post(
+                            '/households/${widget.householdId}/planned/${e['id']}/settle',
+                            data: {'month': _monthStr},
+                          );
+                          await _refresh();
+                        } catch (_) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(s.actionFailed)),
+                            );
+                          }
+                        }
                       },
                     ),
-                  ),
-                ),
-              const SizedBox(height: 72),
-            ] else ...[
-              // Switch forecast
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(S.of(context).forecastIncludeLabel ??
-                      'Incluir previstos y fijos'),
-                  Switch(
-                    value: _includeForecast,
-                    onChanged: (v) =>
-                        setState(() => _includeForecast = v),
-                  ),
-                ],
-              ),
-
-              if (_summary != null)
-                SummaryCard(
-                  month: (_effectiveSummary?['month'] ??
-                      _summary!['month'] ??
-                      _monthStr)
-                      .toString(),
-                  opening: _asDouble(_effectiveSummary?['openingBalance'] ??
-                      _summary!['openingBalance']),
-                  income: _asDouble(
-                      _effectiveSummary?['income'] ?? _summary!['income']),
-                  expense: _asDouble(_effectiveSummary?['expense'] ??
-                      _summary!['expense']),
-                  net: _asDouble(
-                      _effectiveSummary?['net'] ?? _summary!['net']),
-                  closing: _asDouble(
-                      _effectiveSummary?['closingBalance'] ??
-                          _summary!['closingBalance']),
-                ),
-              const SizedBox(height: 12),
-
-              // ---- PREVISTOS (solo gastos) --------------------------------------
-              ExpansionTile(
-                title: Text(S.of(context).plannedTitle ??
-                    'Gastos previstos (mes)'),
-                subtitle: Text(
-                    '${_planned.length} • Total: ${_plannedExpenseTotal.toStringAsFixed(2)}'),
-                children: [
-                  if (_planned.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(S.of(context).plannedEmpty ??
-                          'Sin previstos'),
-                    )
-                  else
-                    ..._planned.map((e) {
-                      final concept =
-                      (e['concept'] ?? e['title'] ?? '').toString();
-                      final amount = _asDouble(e['amount']);
-                      final due =
-                      (e['dueDate'] ?? e['occursAt'] ?? '').toString();
-                      return ListTile(
-                        dense: true,
-                        title: Text(concept),
-                        subtitle: Text(
-                            '${due.isEmpty ? '' : '$due • '}${amount.toStringAsFixed(2)}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                  Icons.check_circle_outline),
-                              tooltip:
-                              S.of(context).plannedSettle ??
-                                  'Marcar como pagado',
-                              onPressed: () async {
-                                try {
-                                  final dio = ref.read(dioProvider);
-                                  await dio.post(
-                                    '/households/${widget.householdId}/planned/${e['id']}/settle',
-                                    data: {'month': _monthStr},
-                                  );
-                                  await _refresh();
-                                } catch (_) {
-                                  if (mounted) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                        content: Text(
-                                            S.of(context)
-                                                .actionFailed ??
-                                                'No se pudo completar')));
-                                  }
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit_outlined),
-                              onPressed: () =>
-                                  _openAddPlanned(existing: e),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              tooltip: 'Eliminar previsto',
-                              onPressed: () => plannedDelete(e),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.add),
-                        label: Text(S.of(context).plannedAdd ??
-                            'Añadir previsto'),
-                        onPressed: () => _openAddPlanned(),
-                      ),
+                    _FixedSection(
+                      title: s.fixedTitle,
+                      emptyText: s.fixedEmpty,
+                      addLabel: s.fixedAdd,
+                      fixedExpanded: fixedExpanded,
+                      fixedPending: fixedPending,
+                      pendingNet: fixedPendingNet,
+                      isPosted: (e) => _occurrenceIsPosted(e, _entries),
+                      onAdd: () => _openAddFixed(),
+                      onEdit: (e) => _openAddFixed(existing: e),
+                      onDelete: (e) => _confirmDeleteRecurring(e),
                     ),
-                  ),
-                ],
-              ),
-
-              // ---- FIJOS (ingresos y gastos) -------------------------------------
-              ExpansionTile(
-                title: Text(S.of(context).fixedTitle ?? 'Gastos fijos'),
-                subtitle: Text(
-                  '${fixedPending.length} • Neto pendiente (mes): ${fixedPendingNet.toStringAsFixed(2)}',
-                ),
-                children: [
-                  if (_fixedRaw.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(S.of(context).fixedEmpty ?? 'Sin fijos'),
-                    )
-                  else
-                    ...fixedExpanded.map((e) {
-                      final concept =
-                      (e['concept'] ?? e['title'] ?? '').toString();
-                      final amount = _asDouble(e['amount']);
-                      final rule =
-                      (e['rrule'] ?? e['dayOfMonth'] ?? '').toString();
-                      final occursAt = (e['occursAt'] ?? '').toString();
-                      final posted = _occurrenceIsPosted(e, _entries);
-                      final type = (e['type'] ?? 'EXPENSE').toString();
-                      final sign = type == 'INCOME' ? '+' : '-';
-                      return ListTile(
-                        dense: true,
-                        title: Text(concept),
-                        subtitle: Text(
-                            '${occursAt.isEmpty ? (rule.isEmpty ? "Mensual" : rule) : occursAt} • $sign${amount.toStringAsFixed(2)}'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (posted)
-                              const Icon(Icons.check_circle,
-                                  size: 20, color: Colors.green),
-                            IconButton(
-                              icon: const Icon(Icons.edit_outlined),
-                              onPressed: () => _openAddFixed(existing: e),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              tooltip: S.of(context).fixedDelete ??
-                                  'Eliminar gasto fijo',
-                              onPressed: () => _confirmDeleteRecurring(e),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: OutlinedButton.icon(
-                        icon: const Icon(Icons.add),
-                        label: Text(S.of(context).fixedAdd ??
-                            'Añadir gasto fijo'),
-                        onPressed: () => _openAddFixed(),
-                      ),
+                    const SizedBox(height: 12),
+                    Text(
+                      s.monthMovementsTitle,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    MovementsList(
+                      entries: entriesFiltered,
+                      onEdit: (e) => _openAddEntry(existing: e),
+                      onDelete: (id) async {
+                        final dio = ref.read(dioProvider);
+                        try {
+                          await dio.delete(
+                            '/households/${widget.householdId}/entries/$id',
+                          );
+                          if (_viewAllMonths) {
+                            await _loadAllMonths();
+                          } else {
+                            await _refresh();
+                          }
+                          return true;
+                        } on DioException {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(s.deleteFailedToast)),
+                            );
+                          }
+                          return false;
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 72),
+                  ],
                 ],
               ),
+            ),
+    );
+  }
 
-              const SizedBox(height: 12),
+  static double _asDouble(dynamic x) {
+    if (x is num) return x.toDouble();
+    return double.tryParse(x?.toString() ?? '0') ?? 0;
+  }
+}
 
-              Text(
-                s.monthMovementsTitle,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
+/* ============================ NEW/EXTRACTED WIDGETS ============================ */
 
-              MovementsList(
-                entries: _entries,
-                onEdit: (e) => _openAddEntry(existing: e),
-                onDelete: (id) async {
-                  final dio = ref.read(dioProvider);
-                  try {
-                    await dio.delete(
-                      '/households/${widget.householdId}/entries/$id',
-                    );
-                    if (_viewAllMonths) {
-                      await _loadAllMonths();
-                    } else {
-                      await _refresh();
-                    }
-                    return true;
-                  } on DioException {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(s.deleteFailedToast)),
-                      );
-                    }
-                    return false;
-                  }
-                },
-              ),
+class _ForecastToggle extends StatelessWidget {
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
 
-              const SizedBox(height: 72),
-            ],
-          ],
-        ),
+  const _ForecastToggle({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Expanded(child: Text(label)),
+        Switch(value: value, onChanged: onChanged),
+      ],
+    );
+  }
+}
+
+class _FiltersBar extends StatelessWidget {
+  final List<String> categoryIds;
+  final String? selectedCategoryId;
+  final ValueChanged<String?> onCategoryChanged;
+
+  final MoneyType moneyType;
+  final ValueChanged<MoneyType> onMoneyTypeChanged;
+
+  const _FiltersBar({
+    required this.categoryIds,
+    required this.selectedCategoryId,
+    required this.onCategoryChanged,
+    required this.moneyType,
+    required this.onMoneyTypeChanged,
+  });
+
+  String _moneyLabel(MoneyType t) {
+    switch (t) {
+      case MoneyType.all:
+        return 'All';
+      case MoneyType.cash:
+        return 'Cash';
+      case MoneyType.card:
+        return 'Card';
+      case MoneyType.bank:
+        return 'Bank';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cs.outlineVariant),
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: MoneyType.values.map((t) {
+              final selected = t == moneyType;
+              return ChoiceChip(
+                selected: selected,
+                onSelected: (_) => onMoneyTypeChanged(t),
+                label: Text(_moneyLabel(t)),
+                selectedColor: cs.primary.withOpacity(.16),
+                labelStyle: TextStyle(
+                  color: selected ? cs.primary : cs.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+                side: BorderSide(color: cs.outlineVariant),
+                backgroundColor: cs.surfaceVariant,
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<String?>(
+            value: selectedCategoryId,
+            isExpanded: true,
+            decoration: const InputDecoration(
+              labelText: 'Category',
+            ),
+            items: [
+              const DropdownMenuItem<String?>(
+                value: null,
+                child: Text('All categories'),
+              ),
+              ...categoryIds.map(
+                (id) => DropdownMenuItem<String?>(
+                  value: id,
+                  child: Text(id, overflow: TextOverflow.ellipsis),
+                ),
+              ),
+            ],
+            onChanged: onCategoryChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlannedSection extends StatelessWidget {
+  final String title;
+  final String emptyText;
+  final String addLabel;
+  final String settleTooltip;
+
+  final int count;
+  final double total;
+
+  final List<Map<String, dynamic>> planned;
+
+  final VoidCallback onAdd;
+  final void Function(Map<String, dynamic> e) onEdit;
+  final void Function(Map<String, dynamic> e) onDelete;
+  final void Function(Map<String, dynamic> e) onSettle;
+
+  const _PlannedSection({
+    required this.title,
+    required this.emptyText,
+    required this.addLabel,
+    required this.settleTooltip,
+    required this.count,
+    required this.total,
+    required this.planned,
+    required this.onAdd,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onSettle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: Text(title),
+      subtitle: Text('$count • Total: ${total.toStringAsFixed(2)}'),
+      children: [
+        if (planned.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(emptyText),
+          )
+        else
+          ...planned.map((e) {
+            final concept = (e['concept'] ?? e['title'] ?? '').toString();
+            final amount = _asDouble(e['amount']);
+            final due = (e['dueDate'] ?? e['occursAt'] ?? '').toString();
+
+            return ListTile(
+              dense: true,
+              title: Text(concept),
+              subtitle: Text(
+                '${due.isEmpty ? '' : '$due • '}${amount.toStringAsFixed(2)}',
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.check_circle_outline),
+                    tooltip: settleTooltip,
+                    onPressed: () => onSettle(e),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit_outlined),
+                    onPressed: () => onEdit(e),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () => onDelete(e),
+                  ),
+                ],
+              ),
+            );
+          }),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.add),
+              label: Text(addLabel),
+              onPressed: onAdd,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static double _asDouble(dynamic x) {
+    if (x is num) return x.toDouble();
+    return double.tryParse(x?.toString() ?? '0') ?? 0;
+  }
+}
+
+class _FixedSection extends StatelessWidget {
+  final String title;
+  final String emptyText;
+  final String addLabel;
+
+  final List<Map<String, dynamic>> fixedExpanded;
+  final List<Map<String, dynamic>> fixedPending;
+  final double pendingNet;
+
+  final bool Function(Map<String, dynamic> e) isPosted;
+
+  final VoidCallback onAdd;
+  final void Function(Map<String, dynamic> e) onEdit;
+  final void Function(Map<String, dynamic> e) onDelete;
+
+  const _FixedSection({
+    required this.title,
+    required this.emptyText,
+    required this.addLabel,
+    required this.fixedExpanded,
+    required this.fixedPending,
+    required this.pendingNet,
+    required this.isPosted,
+    required this.onAdd,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: Text(title),
+      subtitle: Text(
+        '${fixedPending.length} • Neto pendiente (mes): ${pendingNet.toStringAsFixed(2)}',
+      ),
+      children: [
+        if (fixedExpanded.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(emptyText),
+          )
+        else
+          ...fixedExpanded.map((e) {
+            final concept = (e['concept'] ?? e['title'] ?? '').toString();
+            final amount = _asDouble(e['amount']);
+            final rule = (e['rrule'] ?? e['dayOfMonth'] ?? '').toString();
+            final occursAt = (e['occursAt'] ?? '').toString();
+            final posted = isPosted(e);
+            final type = (e['type'] ?? 'EXPENSE').toString();
+            final sign = type == 'INCOME' ? '+' : '-';
+
+            return ListTile(
+              dense: true,
+              title: Text(concept),
+              subtitle: Text(
+                '${occursAt.isEmpty ? (rule.isEmpty ? "Mensual" : rule) : occursAt} • $sign${amount.toStringAsFixed(2)}',
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (posted)
+                    const Icon(Icons.check_circle,
+                        size: 20, color: Colors.green),
+                  IconButton(
+                    icon: const Icon(Icons.edit_outlined),
+                    onPressed: () => onEdit(e),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () => onDelete(e),
+                  ),
+                ],
+              ),
+            );
+          }),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.add),
+              label: Text(addLabel),
+              onPressed: onAdd,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

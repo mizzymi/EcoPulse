@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:ecopulse/l10n/l10n.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/dio.dart';
 import '../../core/app_reloader.dart';
@@ -23,55 +25,126 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   bool _isLogin = true;
   bool _loading = false;
-
   bool _obscurePass = true;
+
+  late final TapGestureRecognizer _termsTap;
+  late final TapGestureRecognizer _privacyTap;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _termsTap = TapGestureRecognizer()
+      ..onTap = () => _openUrl('https://apps.reimii.com/terms/');
+
+    _privacyTap = TapGestureRecognizer()
+      ..onTap = () => _openUrl('https://apps.reimii.com');
+  }
 
   @override
   void dispose() {
+    _termsTap.dispose();
+    _privacyTap.dispose();
+
     _emailCtrl.dispose();
     _passCtrl.dispose();
     super.dispose();
   }
 
+  void _showTopToast(String text) {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+
+    final topPad = MediaQuery.of(context).padding.top;
+
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(text),
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.fromLTRB(12, topPad + 12, 12, 0),
+        dismissDirection: DismissDirection.up,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  String _extractApiMessage(dynamic data) {
+    if (data is Map) {
+      final err = data['error'];
+      if (err != null) return err.toString();
+
+      final msg = data['message'];
+      if (msg != null) return msg.toString();
+    }
+    return '';
+  }
+
+  Future<void> _openUrl(String url) async {
+    try {
+      final uri = Uri.parse(url);
+
+      final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!ok) {
+        final ok2 = await launchUrl(uri, mode: LaunchMode.platformDefault);
+        if (!ok2 && mounted) _showTopToast('No se pudo abrir el enlace');
+      }
+    } catch (_) {
+      if (mounted) _showTopToast('No se pudo abrir el enlace');
+    }
+  }
+
   Future<void> _submit() async {
     final s = S.of(context);
     if (!_formKey.currentState!.validate()) return;
+
+    FocusScope.of(context).unfocus();
     setState(() => _loading = true);
+
     final dio = ref.read(dioProvider);
 
     try {
       final path = _isLogin ? '/auth/login' : '/auth/register';
-      final res = await dio.post(path, data: {
-        'email': _emailCtrl.text.trim(),
-        'password': _passCtrl.text,
-      });
+      final res = await dio.post(
+        path,
+        data: {
+          'email': _emailCtrl.text.trim(),
+          'password': _passCtrl.text,
+        },
+      );
 
       final token = res.data['accessToken']?.toString();
-      if (token == null || token.isEmpty)
+      if (token == null || token.isEmpty) {
         throw Exception(s.missingTokenResponse);
+      }
 
       await ref.read(authTokenControllerProvider).set(token);
       AppReloader.restart(context);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_isLogin ? s.loginSuccess : s.registerSuccess)),
-      );
+      _showTopToast(_isLogin ? s.loginSuccess : s.registerSuccess);
     } on DioException catch (e) {
-      final msg = e.response?.data is Map &&
-              (e.response!.data as Map)['message'] != null
-          ? (e.response!.data as Map)['message'].toString()
-          : (e.message ?? s.authErrorGeneric);
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(msg)));
+      final status = e.response?.statusCode;
+
+      if (_isLogin && status == 401) {
+        if (mounted) _showTopToast('Correo o contraseña equivocado');
+        return;
       }
+
+      String msg = s.authErrorGeneric;
+      final apiMsg = _extractApiMessage(e.response?.data);
+      if (apiMsg.isNotEmpty) {
+        msg = apiMsg;
+      } else if (e.response?.statusMessage != null &&
+          e.response!.statusMessage!.isNotEmpty) {
+        msg = e.response!.statusMessage!;
+      }
+
+      if (mounted) _showTopToast(msg);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  // ===== Reset password using code/token =====
   Future<void> _resetPasswordWithCode() async {
     final s = S.of(context);
     final dio = ref.read(dioProvider);
@@ -118,11 +191,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       final newPass = passCtrl.text;
 
                       if (newPass.length < 6) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(s.minPasswordLen)),
-                          );
-                        }
+                        if (context.mounted) _showTopToast(s.minPasswordLen);
                         return;
                       }
 
@@ -134,19 +203,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         });
                         if (context.mounted) Navigator.pop(ctx, true);
                       } on DioException catch (e) {
-                        final msg = e.response?.data is Map &&
-                                (e.response!.data as Map)['message'] != null
-                            ? (e.response!.data as Map)['message'].toString()
-                            : (e.message ?? s.resetPasswordFailed);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(msg)),
-                          );
-                        }
+                        final apiMsg = _extractApiMessage(e.response?.data);
+                        final msg =
+                            apiMsg.isNotEmpty ? apiMsg : s.resetPasswordFailed;
+                        if (context.mounted) _showTopToast(msg);
                       } finally {
-                        if (context.mounted) {
+                        if (context.mounted)
                           setStateDialog(() => saving = false);
-                        }
                       }
                     },
               child: saving
@@ -162,14 +225,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       ),
     );
 
-    if (ok == true && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.passwordUpdatedToast)),
-      );
-    }
+    codeCtrl.dispose();
+    passCtrl.dispose();
+
+    if (ok == true && mounted) _showTopToast(s.passwordUpdatedToast);
   }
 
-  // ===== Olvidé mi contraseña: solicitar enlace/código =====
   Future<void> _requestPasswordReset() async {
     final s = S.of(context);
     final dio = ref.read(dioProvider);
@@ -200,33 +261,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   : () async {
                       final email = ctrl.text.trim();
                       if (!RegExp(r'.+@.+\..+').hasMatch(email)) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(s.invalidEmail)),
-                          );
-                        }
+                        if (context.mounted) _showTopToast(s.invalidEmail);
                         return;
                       }
+
                       setStateDialog(() => sending = true);
                       try {
-                        await dio.post('/auth/forgot-password', data: {
-                          'email': email,
-                        });
+                        await dio.post('/auth/forgot-password',
+                            data: {'email': email});
                         if (context.mounted) Navigator.pop(ctx, true);
                       } on DioException catch (e) {
-                        final msg = e.response?.data is Map &&
-                                (e.response!.data as Map)['message'] != null
-                            ? (e.response!.data as Map)['message'].toString()
-                            : (e.message ?? s.forgotPasswordFailed);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(msg)),
-                          );
-                        }
+                        final apiMsg = _extractApiMessage(e.response?.data);
+                        final msg =
+                            apiMsg.isNotEmpty ? apiMsg : s.forgotPasswordFailed;
+                        if (context.mounted) _showTopToast(msg);
                       } finally {
-                        if (context.mounted) {
+                        if (context.mounted)
                           setStateDialog(() => sending = false);
-                        }
                       }
                     },
               child: sending
@@ -242,30 +293,28 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       ),
     );
 
-    if (ok == true && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s.forgotPasswordAfterMsg)),
-      );
-    }
+    ctrl.dispose();
+
+    if (ok == true && mounted) _showTopToast(s.forgotPasswordAfterMsg);
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    const bg = T.cBg;
-    const hero =
-        Color.from(alpha: 1, red: 1, green: 5, blue: 15); // banda superior
-    const card = Color.from(
-        alpha: 1, red: 1, green: 5, blue: 15); // panel del formulario
-    const green = T.cPrimary;
-    const greenDark = T.deepTeal;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     final primaryLabel = _isLogin ? s.loginAction : s.registerAction;
     final secondaryLabel = _isLogin ? s.registerAction : s.loginAction;
 
+    final surface = cs.surface;
+    final surface2 = cs.surfaceVariant;
+    final border = cs.outlineVariant;
+    final textMain = cs.onSurface;
+    final textSub = cs.onSurfaceVariant;
+
     return Scaffold(
-      backgroundColor: bg,
+      backgroundColor: cs.background, // neutral app background
       body: Center(
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -275,12 +324,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ===== HERO (icono + título + subtítulo) =====
+                  // HERO
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: hero,
+                      color: surface2,
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: border, width: 1),
                     ),
                     padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
                     child: Column(
@@ -288,39 +338,46 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         SvgPicture.asset(
                           'lib/assets/app_icon.svg',
                           height: 60,
+                          colorFilter:
+                              ColorFilter.mode(cs.primary, BlendMode.srcIn),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         Text(
-                          s.welcomeTitle, // p.ej. "Welcome"
+                          s.welcomeTitle,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w800,
-                                color: Colors.black,
-                              ),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: textMain,
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          s.welcomeSubtitle, // p.ej. "Sign in to your account or create a new one"
+                          s.welcomeSubtitle,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: Colors.black54),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: textSub,
+                          ),
                         ),
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 16),
 
-                  // ===== CARD DEL FORM =====
+                  // FORM CARD
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: card,
+                      color: surface,
                       borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: border, width: 1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(.05),
+                          blurRadius: 18,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
                     padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
                     child: Form(
@@ -328,21 +385,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Email
                           TextFormField(
                             controller: _emailCtrl,
                             decoration: InputDecoration(
                               labelText: s.emailLabel,
-                              hintText: s
-                                  .enterYourEmail, // "Enter your email address"
-                              filled: true,
-                              fillColor: Colors.white,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 14),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
+                              hintText: s.enterYourEmail,
                             ),
                             keyboardType: TextInputType.emailAddress,
                             validator: (v) {
@@ -354,15 +401,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             },
                           ),
                           const SizedBox(height: 12),
-
-                          // Password
                           TextFormField(
                             controller: _passCtrl,
                             decoration: InputDecoration(
                               labelText: s.passwordLabel,
                               hintText: s.enterYourPassword,
-                              filled: true,
-                              fillColor: Colors.white,
                               suffixIcon: IconButton(
                                 onPressed: () => setState(
                                     () => _obscurePass = !_obscurePass),
@@ -374,114 +417,81 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                 ),
                                 tooltip: _obscurePass ? 'Mostrar' : 'Ocultar',
                               ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 14),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
                             ),
-                            obscureText: _obscurePass, // <— usa el flag
+                            obscureText: _obscurePass,
                             validator: (v) =>
                                 (v ?? '').length < 6 ? s.minPasswordLen : null,
                           ),
                           const SizedBox(height: 16),
-
-                          // Botón principal (verde)
                           SizedBox(
                             width: double.infinity,
                             height: 50,
                             child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: green,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                elevation: 2,
-                              ),
                               onPressed: _loading ? null : _submit,
                               child: _loading
-                                  ? const SizedBox(
+                                  ? SizedBox(
                                       height: 18,
                                       width: 18,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        color: Colors.white,
+                                        color: cs.onPrimary,
                                       ),
                                     )
                                   : Text(
-                                      primaryLabel, // login/register
+                                      primaryLabel,
                                       style: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                                          fontWeight: FontWeight.w800),
                                     ),
                             ),
                           ),
-
-                          // Forgot password (solo en login)
                           if (_isLogin) ...[
                             const SizedBox(height: 12),
                             TextButton(
                               onPressed:
                                   _loading ? null : _requestPasswordReset,
-                              child: Text(
-                                s.forgotPasswordCta,
-                                style: const TextStyle(color: Colors.black54),
-                              ),
+                              child: Text(s.forgotPasswordCta),
                             ),
-                          ],
-                          if (_isLogin) ...[
                             const SizedBox(height: 12),
                             TextButton(
                               onPressed:
                                   _loading ? null : _resetPasswordWithCode,
-                              child: Text(
-                                s.haveCodeCta,
-                                style: const TextStyle(color: Colors.black54),
-                              ),
+                              child: Text(s.haveCodeCta),
                             ),
                           ],
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Expanded(
-                                  child: Divider(color: Colors.black26)),
+                              Expanded(child: Divider(color: border)),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12.0),
                                 child: Text(
-                                  s.orLabel, // "OR"
-                                  style: const TextStyle(color: Colors.black45),
+                                  s.orLabel,
+                                  style: theme.textTheme.bodySmall
+                                      ?.copyWith(color: textSub),
                                 ),
                               ),
-                              const Expanded(
-                                  child: Divider(color: Colors.black26)),
+                              Expanded(child: Divider(color: border)),
                             ],
                           ),
                           const SizedBox(height: 10),
-
-                          // Botón secundario (outlined) que invierte el modo
                           SizedBox(
                             width: double.infinity,
                             height: 50,
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                side:
-                                    const BorderSide(color: green, width: 1.6),
+                                side: BorderSide(color: cs.primary, width: 1.4),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                foregroundColor: green,
                               ),
                               onPressed: _loading
                                   ? null
                                   : () => setState(() => _isLogin = !_isLogin),
                               child: Text(
-                                secondaryLabel, // Create Account / Sign In
+                                secondaryLabel,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                    fontWeight: FontWeight.w800),
                               ),
                             ),
                           ),
@@ -492,36 +502,42 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
                   const SizedBox(height: 28),
 
-                  // ===== LEGALES =====
+                  // LEGAL
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text.rich(
                       TextSpan(
-                        text:
-                            s.legalPrefix, // "By continuing, you agree to our "
-                        style: const TextStyle(
-                            fontSize: 12, color: Colors.black54),
+                        text: s.legalPrefix,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 12,
+                          color: textSub,
+                        ),
                         children: [
                           TextSpan(
                             text: s.termsOfService,
-                            style: const TextStyle(
-                              color: greenDark,
-                              fontWeight: FontWeight.w700,
+                            style: TextStyle(
+                              color: cs.primary,
+                              fontWeight: FontWeight.w800,
+                              decoration: TextDecoration.underline,
                             ),
+                            recognizer: _termsTap,
                           ),
-                          TextSpan(text: ' ${s.andLabel} '), // "and"
+                          TextSpan(text: ' ${s.andLabel} '),
                           TextSpan(
                             text: s.privacyPolicy,
-                            style: const TextStyle(
-                              color: greenDark,
-                              fontWeight: FontWeight.w700,
+                            style: TextStyle(
+                              color: cs.primary,
+                              fontWeight: FontWeight.w800,
+                              decoration: TextDecoration.underline,
                             ),
+                            recognizer: _privacyTap,
                           ),
                         ],
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
+
                   const SizedBox(height: 8),
                 ],
               ),

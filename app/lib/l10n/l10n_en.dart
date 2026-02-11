@@ -26,6 +26,71 @@ class SEn extends S {
   }
 
   @override
+  String get savedToast => 'Saved';
+
+  @override
+  String get removedToast => 'Member removed';
+
+  @override
+  String get notAllowed => 'You don’t have permission to do that';
+
+  @override
+  String get roleLabel => 'Role';
+
+  @override
+  String get changeRoleTitle => 'Change role';
+
+  @override
+  String get kickMemberCta => 'Remove member';
+
+  @override
+  String get confirmKickTitle => 'Remove member?';
+
+  @override
+  String confirmKickBody(Object email) {
+    return 'Do you want to remove $email from this household?';
+  }
+
+  @override
+  String get conceptLabel => 'Concept';
+
+  @override
+  String get conceptHint => 'e.g. Groceries';
+
+  @override
+  String get conceptRequiredToast => 'Concept is required';
+
+  @override
+  String get noteOptionalHint => 'Optional details';
+
+  @override
+  String get dueDateLabel => 'Due date';
+
+  @override
+  String get dayOfMonthLabel => 'Day of month';
+
+  @override
+  String get dayOfMonthHint => '1..31';
+
+  @override
+  String get invalidDayOfMonthToast => 'Invalid day (1..31)';
+
+  @override
+  String get newFixedTitle => 'New fixed expense';
+
+  @override
+  String get newPlannedTitle => 'New planned expense';
+
+  @override
+  String get noPermissionMessage => 'You don’t have permission to do this.';
+
+  @override
+  String get kickAction => 'Remove';
+
+  @override
+  String get manageMemberTooltip => 'Manage member';
+
+  @override
   String get openHousehold => 'Open';
 
   @override

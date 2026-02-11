@@ -33,8 +33,8 @@ android {
         applicationId = "com.reimii.ecopulse"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 20
-        versionName = "1.2.2"
+        versionCode = 33
+        versionName = "3.0.0"
     }
 
     signingConfigs {

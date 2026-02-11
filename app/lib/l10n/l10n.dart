@@ -131,6 +131,132 @@ abstract class S {
   /// **'Account created: {name}'**
   String createdAccount(String name);
 
+  /// No description provided for @savedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get savedToast;
+
+  /// No description provided for @removedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Member removed'**
+  String get removedToast;
+
+  /// No description provided for @notAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t have permission to do that'**
+  String get notAllowed;
+
+  /// No description provided for @roleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get roleLabel;
+
+  /// No description provided for @changeRoleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change role'**
+  String get changeRoleTitle;
+
+  /// No description provided for @kickMemberCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove member'**
+  String get kickMemberCta;
+
+  /// No description provided for @confirmKickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove member?'**
+  String get confirmKickTitle;
+
+  /// No description provided for @confirmKickBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to remove {email} from this household?'**
+  String confirmKickBody(Object email);
+
+  /// No description provided for @conceptLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Concept'**
+  String get conceptLabel;
+
+  /// No description provided for @conceptHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Groceries'**
+  String get conceptHint;
+
+  /// No description provided for @conceptRequiredToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Concept is required'**
+  String get conceptRequiredToast;
+
+  /// No description provided for @noteOptionalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional details'**
+  String get noteOptionalHint;
+
+  /// No description provided for @dueDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get dueDateLabel;
+
+  /// No description provided for @dayOfMonthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of month'**
+  String get dayOfMonthLabel;
+
+  /// No description provided for @dayOfMonthHint.
+  ///
+  /// In en, this message translates to:
+  /// **'1..31'**
+  String get dayOfMonthHint;
+
+  /// No description provided for @invalidDayOfMonthToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid day (1..31)'**
+  String get invalidDayOfMonthToast;
+
+  /// No description provided for @newFixedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New fixed expense'**
+  String get newFixedTitle;
+
+  /// No description provided for @newPlannedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New planned expense'**
+  String get newPlannedTitle;
+
+  /// No description provided for @noPermissionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t have permission to do this.'**
+  String get noPermissionMessage;
+
+  /// No description provided for @kickAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get kickAction;
+
+  /// No description provided for @manageMemberTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage member'**
+  String get manageMemberTooltip;
+
   /// No description provided for @openHousehold.
   ///
   /// In en, this message translates to:

@@ -14,6 +14,32 @@
       }
     }
   },
+  "savedToast": "Guardado",
+  "removedToast": "Miembro expulsado",
+  "notAllowed": "No tienes permisos para hacer eso",
+  "roleLabel": "Rol",
+  "changeRoleTitle": "Cambiar rol",
+  "kickMemberCta": "Expulsar miembro",
+  "confirmKickTitle": "¿Expulsar miembro?",
+  "confirmKickBody": "¿Quieres expulsar a {email} de esta cuenta?",
+  "@confirmKickBody": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "conceptLabel": "Concepto",
+  "conceptHint": "p. ej. Supermercado",
+  "conceptRequiredToast": "El concepto es obligatorio",
+  "noteOptionalHint": "Detalles opcionales",
+  "dueDateLabel": "Fecha de vencimiento",
+  "dayOfMonthLabel": "Día del mes",
+  "dayOfMonthHint": "1..31",
+  "invalidDayOfMonthToast": "Día inválido (1..31)",
+  "newFixedTitle": "Nuevo gasto fijo",
+  "newPlannedTitle": "Nuevo gasto previsto",
+  "noPermissionMessage": "No tienes permiso para hacer esto.",
+  "kickAction": "Expulsar",
+  "manageMemberTooltip": "Gestionar miembro",
   "openHousehold": "Abrir",
   "householdCarouselError": "Error al cargar cuentas",
   "householdCarouselEmpty": "Aún no tienes cuentas. Crea o únete a una.",

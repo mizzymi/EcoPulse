@@ -26,38 +26,32 @@ final householdPreviewsProvider =
     FutureProvider<List<HouseholdPreview>>((ref) async {
   final dio = ref.read(dioProvider);
 
-  // 1) Lista básica de casas
   final res = await dio.get('/households');
   final list = (res.data as List).cast<Map>();
 
   final ym = _ymNow();
 
-  // 2) Para cada casa: summary (closingBalance) + miembros reales
   final futures = list.map((raw) async {
     final id = (raw['id'] ?? raw['_id']).toString();
     final name = (raw['name'] ?? 'Unnamed').toString();
     final currency = (raw['currency'] ?? 'EUR').toString();
 
-    // --- miembros reales ---
-    int members = 1;
-    try {
-      final mRes = await dio.get('/households/$id/members');
-      final ms = (mRes.data as List);
-      members = ms.length;
-    } catch (_) {
-      // si falla, mantenemos fallback
-    }
+    final mc = raw['memberCount'];
+    final members =
+        mc is num ? mc.toInt() : int.tryParse(mc?.toString() ?? '') ?? 0;
 
-    // --- saldo real del mes actual ---
     double closing = 0;
     try {
-      final sumRes = await dio
-          .get('/households/$id/summary', queryParameters: {'month': ym});
+      final sumRes = await dio.get(
+        '/households/$id/summary',
+        queryParameters: {'month': ym},
+      );
       final sum = (sumRes.data as Map).cast<String, dynamic>();
       final v = sum['closingBalance'];
       closing =
           v is num ? v.toDouble() : double.tryParse(v?.toString() ?? '0') ?? 0;
-    } catch (_) {}
+    } catch (_) {
+    }
 
     return HouseholdPreview(
       id: id,

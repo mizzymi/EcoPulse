@@ -26,6 +26,71 @@ class SEs extends S {
   }
 
   @override
+  String get savedToast => 'Guardado';
+
+  @override
+  String get removedToast => 'Miembro expulsado';
+
+  @override
+  String get notAllowed => 'No tienes permisos para hacer eso';
+
+  @override
+  String get roleLabel => 'Rol';
+
+  @override
+  String get changeRoleTitle => 'Cambiar rol';
+
+  @override
+  String get kickMemberCta => 'Expulsar miembro';
+
+  @override
+  String get confirmKickTitle => '¿Expulsar miembro?';
+
+  @override
+  String confirmKickBody(Object email) {
+    return '¿Quieres expulsar a $email de esta cuenta?';
+  }
+
+  @override
+  String get conceptLabel => 'Concepto';
+
+  @override
+  String get conceptHint => 'p. ej. Supermercado';
+
+  @override
+  String get conceptRequiredToast => 'El concepto es obligatorio';
+
+  @override
+  String get noteOptionalHint => 'Detalles opcionales';
+
+  @override
+  String get dueDateLabel => 'Fecha de vencimiento';
+
+  @override
+  String get dayOfMonthLabel => 'Día del mes';
+
+  @override
+  String get dayOfMonthHint => '1..31';
+
+  @override
+  String get invalidDayOfMonthToast => 'Día inválido (1..31)';
+
+  @override
+  String get newFixedTitle => 'Nuevo gasto fijo';
+
+  @override
+  String get newPlannedTitle => 'Nuevo gasto previsto';
+
+  @override
+  String get noPermissionMessage => 'No tienes permiso para hacer esto.';
+
+  @override
+  String get kickAction => 'Expulsar';
+
+  @override
+  String get manageMemberTooltip => 'Gestionar miembro';
+
+  @override
   String get openHousehold => 'Abrir';
 
   @override

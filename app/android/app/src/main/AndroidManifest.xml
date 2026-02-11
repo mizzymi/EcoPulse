@@ -1,5 +1,15 @@
 <manifest package="com.reimii.ecopulse" xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+    </queries>
     <application
         android:label="EcoPulse"
         android:name="${applicationName}"
@@ -25,8 +35,7 @@
                 <data
                     android:scheme="https"
                     android:host="ecopulse.reimii.com"
-                    android:pathPrefix="/reset-password"
-                    android:launchMode="singleTask" />
+                    android:pathPrefix="/reset-password" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

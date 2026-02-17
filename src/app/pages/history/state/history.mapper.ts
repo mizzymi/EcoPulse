@@ -1,5 +1,4 @@
-import { LedgerEntryDto, TransactionRow, translateCategory, translateMoneyType } from '../../../shared';
-import { Lang } from '../../../shared/services/language.service';
+import { Lang, LedgerEntryDto, TransactionRow, translateCategory, translateMoneyType } from '../../../shared';
 
 export function mapLedgerEntriesToRows(entries: LedgerEntryDto[], lang: Lang): TransactionRow[] {
   return (entries ?? []).map((e: any) => {

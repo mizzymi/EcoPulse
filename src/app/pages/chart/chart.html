@@ -1,0 +1,43 @@
+<app-container>
+  <div class="w-full min-h-full px-4 sm:px-2 lg:px-3 py-3">
+    <div class="flex flex-col items-stretch gap-6 w-full">
+      <div class="flex justify-end gap-6 w-full">
+        <app-house-hold-selector />
+        <app-lang-switcher />
+      </div>
+      <app-charts-header
+        [breakdown]="breakdown()"
+        [period]="period()"
+        [breakdownOptions]="breakdownOptions()"
+        [periodOptions]="periodOptions()"
+        [totalSpent]="vm.totalSpent()"
+        [formatMoney]="formatMoney"
+        [from]="from()"
+        [to]="to()"
+        (breakdownChange)="setBreakdown($event)"
+        (periodChange)="setPeriod($event)"
+        (rangeChange)="onRangeChange($event)"
+      />
+    </div>
+    <div class="mt-4">
+      <div *ngIf="vm.loading()" class="text-sm text-slate-500" i18n="@@charts.loading">
+        Loading...
+      </div>
+      <div *ngIf="vm.error()" class="text-sm text-rose-600">{{ vm.error() }}</div>
+    </div>
+
+    <div *ngIf="!vm.loading() && !vm.error()" class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <app-category-distribution-card
+          [items]="vm.categoriesUi(lang())"
+          [total]="vm.totalSpent()"
+          [formatMoney]="formatMoney"
+        />
+      </div>
+
+      <div class="lg:col-span-7">
+        <app-monthly-trend-card [months]="vm.monthlyUi(lang())" [formatMoney]="formatMoney" />
+      </div>
+    </div>
+  </div>
+</app-container>

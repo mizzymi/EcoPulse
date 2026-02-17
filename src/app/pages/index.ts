@@ -1,3 +1,4 @@
+export { Chart } from './chart/chart';
 export { Dashboard } from './dashboard/dashboard';
 export { History } from './history/history';
 export { Home } from './home/home';

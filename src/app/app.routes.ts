@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { Dashboard, History, Home, Login, Register } from './pages';
+import { Chart, Dashboard, History, Home, Login, Register } from './pages';
 import { authMatchGuard, guestGuard } from './core';
 
 export const routes: Routes = [
@@ -14,7 +14,8 @@ export const routes: Routes = [
         canMatch: [authMatchGuard],
         children: [
             { path: 'dashboard', component: Dashboard },
-            { path: 'history', component: History},
+            { path: 'history', component: History },
+            { path: 'chart', component: Chart },
         ],
     },
 ];

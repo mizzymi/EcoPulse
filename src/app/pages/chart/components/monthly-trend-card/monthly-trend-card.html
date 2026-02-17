@@ -1,0 +1,56 @@
+<div class="rounded-2xl bg-white/70 border border-slate-100 shadow-sm h-full">
+  <div class="px-5 pt-5 flex items-start justify-between gap-3">
+    <div>
+      <div class="text-sm font-semibold text-slate-900" i18n="@@charts.monthlyTrend.title">
+        Monthly Trend
+      </div>
+      <div class="text-xs text-slate-500" i18n="@@charts.monthlyTrend.subtitle">
+        Spending vs Income over time
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="h-2.5 w-2.5 rounded-full bg-rose-500"></span>
+        <span class="text-slate-600" i18n="@@charts.legend.expense">Expense</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="h-2.5 w-2.5 rounded-full bg-teal-600"></span>
+        <span class="text-slate-600" i18n="@@charts.legend.income">Income</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-5 pb-5 pt-6">
+    <!-- Chart area -->
+    <div class="h-56 w-full rounded-xl border border-slate-100 bg-white/50 p-4">
+      <div class="h-full flex items-end gap-2">
+        <div
+          *ngFor="let m of months; trackBy: trackByKey"
+          class="flex-1 min-w-0 flex flex-col items-center gap-2"
+        >
+          <!-- Bars -->
+          <div class="relative w-full h-44 flex items-end justify-center gap-1">
+            <div
+              class="w-[45%] rounded-md bg-teal-600/90"
+              [style.height]="heightPct(m.income)"
+              title="Income"
+              i18n-title="@@charts.bar.incomeTitle"
+            ></div>
+            <div
+              class="w-[45%] rounded-md bg-rose-500/90"
+              [style.height]="heightPct(m.expense)"
+              title="Expense"
+              i18n-title="@@charts.bar.expenseTitle"
+            ></div>
+          </div>
+
+          <!-- Month label -->
+          <div class="text-[10px] text-slate-500 truncate w-full text-center">
+            {{ m.key }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

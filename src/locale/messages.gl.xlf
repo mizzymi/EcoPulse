@@ -3,6 +3,224 @@
     <file source-language="en-US" target-language="gl-ES" datatype="plaintext"
         original="ng2.template">
         <body>
+            <trans-unit id="charts.loading" datatype="html">
+                <source> Loading... </source>
+                <target>Cargando...</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/pages/chart/chart.html</context>
+                    <context context-type="linenumber">24,26</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.categoryDistribution.title" datatype="html">
+                <source> Category Distribution </source>
+                <target>Distribución por categorías</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/category-distribution-card/category-distribution-card.html</context>
+                    <context context-type="linenumber">4,6</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.categoryDistribution.subtitle" datatype="html">
+                <source> Where your money goes </source>
+                <target>A onde van os teus cartos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/category-distribution-card/category-distribution-card.html</context>
+                    <context context-type="linenumber">7,11</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.title" datatype="html">
+                <source> Financial Analytics </source>
+                <target>Análise financeira</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">4,7</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.subtitle" datatype="html">
+                <source> Track your spending habits and trends </source>
+                <target>Segue os teus hábitos de gasto e tendencias</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">8,11</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.breakdownBy" datatype="html">
+                <source> BREAKDOWN BY: </source>
+                <target>DESAGREGADO POR:</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">13,16</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.accountAria" datatype="html">
+                <source>Account</source>
+                <target>Conta</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">55,56</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.customRange.button" datatype="html">
+                <source> Select dates </source>
+                <target>Seleccionar datas</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">73,76</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.customRange.title" datatype="html">
+                <source> Custom range </source>
+                <target>Rango personalizado</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">81,84</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.customRange.from" datatype="html">
+                <source> From </source>
+                <target>Dende</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">87,89</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.customRange.to" datatype="html">
+                <source> To </source>
+                <target>Ata</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">99,100</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.customRange.clear" datatype="html">
+                <source> Clear </source>
+                <target>Limpar</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">117,120</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="common.cancel2" datatype="html">
+                <source> Cancel </source>
+                <target>Cancelar</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">127,128</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="common.apply" datatype="html">
+                <source> Apply </source>
+                <target>Aplicar</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">136,137</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.customRange.selected" datatype="html">
+                <source>Selected:</source>
+                <target>Seleccionado:</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">142,143</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.totalSpent" datatype="html">
+                <source> TOTAL SPENT </source>
+                <target>TOTAL GASTADO</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/charts-header/charts-header.html</context>
+                    <context context-type="linenumber">154,156</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.donut.topExpense" datatype="html">
+                <source> Top expense </source>
+                <target>Maior gasto</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/donut-chart/donut-chart.html</context>
+                    <context context-type="linenumber">7,9</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.monthlyTrend.title" datatype="html">
+                <source> Monthly Trend </source>
+                <target>Tendencia mensual</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+                    <context context-type="linenumber">5,7</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.monthlyTrend.subtitle" datatype="html">
+                <source> Spending vs Income over time </source>
+                <target>Gastos vs ingresos ao longo do tempo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+                    <context context-type="linenumber">8,12</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.legend.expense" datatype="html">
+                <source>Expense</source>
+                <target>Gastos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+                    <context context-type="linenumber">15,17</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.legend.income" datatype="html">
+                <source>Income</source>
+                <target>Ingresos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+                    <context context-type="linenumber">19,22</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="charts.bar.incomeTitle" datatype="html">
+                <source>Income</source>
+                <target>Ingresos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+                    <context context-type="linenumber">38</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="charts.bar.expenseTitle" datatype="html">
+                <source>Expense</source>
+                <target>Gastos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+                    <context context-type="linenumber">43,44</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="analytics.cashFlow.title" datatype="html">
                 <source> Cash Flow Analytics </source>
                 <target> Analítica de fluxo de caixa </target>

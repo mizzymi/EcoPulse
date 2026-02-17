@@ -1,0 +1,53 @@
+<div class="rounded-2xl bg-white/70 border border-slate-100 shadow-sm">
+  <div class="px-5 pt-5">
+    <div class="text-sm font-semibold text-slate-900" i18n="@@charts.categoryDistribution.title">
+      Category Distribution
+    </div>
+    <div class="text-xs text-slate-500" i18n="@@charts.categoryDistribution.subtitle">
+      Where your money goes
+    </div>
+  </div>
+
+  <div class="px-5 pb-5 pt-4">
+    <div class="flex items-center justify-center">
+      <app-donut-chart
+        [items]="items"
+        [topLabel]="top?.label ?? '—'"
+        [topPercent]="top ? percentOfTotal(top.amount) : '0%'"
+      />
+    </div>
+
+    <!-- Legend -->
+    <div class="mt-5 space-y-2">
+      <div
+        class="flex items-center justify-between text-xs"
+        *ngFor="let c of items; trackBy: trackByLabel"
+      >
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="h-2.5 w-2.5 rounded-full" [style.background]="c.color"></span>
+          <span class="text-slate-700 truncate">{{ c.label }}</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="text-slate-400">{{ percentOfTotal(c.amount) }}</span>
+          <span class="font-semibold text-slate-900">{{ formatMoney(c.amount) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick row (first 3 items) -->
+    <div class="mt-5 grid grid-cols-3 gap-3">
+      <ng-container *ngFor="let c of items.slice(0, 3); trackBy: trackByLabel">
+        <div class="rounded-xl border border-slate-100 bg-white/60 p-3">
+          <div class="flex items-center gap-2">
+            <span class="h-2.5 w-2.5 rounded-full" [style.background]="c.color"></span>
+            <div class="text-[11px] text-slate-600 truncate">{{ c.label }}</div>
+          </div>
+          <div class="mt-1 text-sm font-semibold text-slate-900">
+            {{ formatMoney(c.amount) }}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

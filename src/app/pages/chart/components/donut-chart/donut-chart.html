@@ -1,0 +1,12 @@
+<div class="relative h-56 w-56">
+  <div class="absolute inset-0 rounded-full" [ngStyle]="donutStyle()"></div>
+  <div class="absolute inset-7 rounded-full bg-white"></div>
+
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+    <div class="text-[10px] font-semibold text-slate-400" i18n="@@charts.donut.topExpense">
+      Top expense
+    </div>
+    <div class="text-sm font-semibold text-slate-900">{{ topLabel }}</div>
+    <div class="text-xs text-teal-700 font-semibold">{{ topPercent }}</div>
+  </div>
+</div>

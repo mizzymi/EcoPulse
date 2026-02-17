@@ -3,5 +3,7 @@ export { Dashboard } from './dashboard/dashboard';
 export { History } from './history/history';
 export { Home } from './home/home';
 export { Login } from './login/login';
+export { Recurrent } from './recurrent/recurrent';
 export { Register } from './register/register';
+export { SavingId } from './saving-id/saving-id';
 export { Savings } from './savings/savings';

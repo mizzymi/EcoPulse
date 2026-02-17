@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { Chart, Dashboard, History, Home, Login, Register, Savings } from './pages';
+import { Chart, Dashboard, History, Home, Login, Recurrent, Register, SavingId, Savings } from './pages';
 import { authMatchGuard, guestGuard } from './core';
 
 export const routes: Routes = [
@@ -17,6 +17,8 @@ export const routes: Routes = [
             { path: 'history', component: History },
             { path: 'chart', component: Chart },
             { path: 'savings', component: Savings },
+            { path: 'saving/:id', component: SavingId },
+            { path: 'recurrent', component: Recurrent },
         ],
     },
 ];

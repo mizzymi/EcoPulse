@@ -1,6 +1,6 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChartPie, House, LucideAngularModule, Plus, ReceiptText, Settings } from 'lucide-angular';
+import { House, LucideAngularModule, PiggyBank, Plus, ReceiptText, Settings } from 'lucide-angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { NavOptions } from '../nav-options/nav-options';
@@ -22,5 +22,5 @@ export class BottomNavBar {
   readonly home = House;
   readonly settings = Settings;
   readonly history = ReceiptText;
-  readonly chart = ChartPie;
+  readonly savings = PiggyBank;
 }

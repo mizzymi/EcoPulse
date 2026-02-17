@@ -1,0 +1,29 @@
+<div *ngIf="loading" class="text-sm text-slate-500 py-10 text-center" i18n="@@common.loading">Loading...</div>
+
+<div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-4">
+    <div class="text-xs text-slate-500" i18n="@@savingId.savedLabel">Saved</div>
+    <div class="text-lg font-semibold text-slate-900 mt-1">{{ saved | number: '1.0-2' }}</div>
+  </div>
+
+  <div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-4">
+    <div class="text-xs text-slate-500" i18n="@@savingId.targetLabel">Target</div>
+    <div class="text-lg font-semibold text-slate-900 mt-1">{{ target | number: '1.0-2' }}</div>
+    <div class="text-xs text-slate-500 mt-2" *ngIf="deadlineLabel() as dl">
+      <span i18n="@@savings.form.deadlineLabel">Deadline</span>: {{ dl }}
+    </div>
+  </div>
+
+  <div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-4">
+    <div class="text-xs text-slate-500" i18n="@@savings.goal.progress">Progress</div>
+
+    <div class="mt-3 h-2 rounded-full bg-slate-100 overflow-hidden" aria-hidden="true">
+      <div class="h-full bg-teal-600 rounded-full" [style.width.%]="progressPct"></div>
+    </div>
+
+    <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+      <span i18n="@@savingId.progressLabel">Completion</span>
+      <span class="font-medium text-slate-700">{{ progressPct }}%</span>
+    </div>
+  </div>
+</div>

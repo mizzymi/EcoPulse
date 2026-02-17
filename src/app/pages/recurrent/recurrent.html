@@ -1,0 +1,34 @@
+<app-container>
+  <div class="flex flex-col h-full w-full max-w-full">
+    <header
+      class="flex w-full max-w-full justify-end px-3 pt-3 gap-3"
+      [class.!justify-center]="isSmall()"
+    >
+      <app-house-hold-selector />
+      <app-lang-switcher />
+    </header>
+
+    <main class="w-full max-w-full p-3">
+      <app-recurrent-shell
+        (createPlanned)="openCreate('PLANNED')"
+        (editPlanned)="openEditPlanned($event)"
+        (createRecurring)="openCreate('RECURRING')"
+        (editRecurring)="openEditRecurring($event)"
+      ></app-recurrent-shell>
+
+      <app-add-recurrent-modal
+        [open]="open()"
+        [target]="modalTarget()"
+        [mode]="
+          (modalTarget() === 'PLANNED' ? editingPlanned() : editingRecurring()) ? 'EDIT' : 'CREATE'
+        "
+        [editingPlanned]="editingPlanned()"
+        [editingRecurring]="editingRecurring()"
+        (targetChange)="modalTarget.set($event)"
+        (close)="close()"
+        (savedTarget)="$event === 'PLANNED' ? facade.refreshPlanned() : facade.refreshRecurring()"
+        (saved)="close()"
+      ></app-add-recurrent-modal>
+    </main>
+  </div>
+</app-container>

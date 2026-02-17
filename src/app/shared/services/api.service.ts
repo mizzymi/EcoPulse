@@ -560,6 +560,19 @@ export class ApiService {
         });
     }
 
+    /** DELETE /households/:id/savings-goals/:goalId/txns/:txnId */
+    deleteSavingsTxn(householdId: string, goalId: string, txnId: string) {
+        return this.delete<{ ok: true }>(
+            `/households/${householdId}/savings-goals/${goalId}/txns/${txnId}`,
+            { auth: true },
+        );
+    }
+
+    /** GET /households/savings-goals/:goalId */
+    getSavingsGoalById(goalId: string): Observable<SavingsGoalDto> {
+        return this.get<SavingsGoalDto>(`/households/savings-goals/${goalId}`, { auth: true });
+    }
+
     // =========================================================
     // PLANNED ROUTES
     // =========================================================

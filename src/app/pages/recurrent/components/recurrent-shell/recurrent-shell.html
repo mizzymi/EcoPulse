@@ -1,0 +1,37 @@
+<section class="w-full max-w-full flex flex-col gap-3">
+  <header class="flex flex-col gap-3">
+    <div class="flex items-center justify-between gap-3 flex-wrap">
+      <h1 class="text-xl font-semibold" i18n="@@recurrent.title">Planned & Recurring</h1>
+    </div>
+
+    <app-filters-bar />
+  </header>
+
+  <main class="w-full max-w-full">
+    <section class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+      <app-planned-panel
+        (create)="createPlanned.emit()"
+        (edit)="editPlanned.emit($event)"
+      ></app-planned-panel>
+
+      <app-recurring-panel
+        (create)="createRecurring.emit()"
+        (edit)="editRecurring.emit($event)"
+      ></app-recurring-panel>
+    </section>
+
+    <section class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+      <app-planned-list
+        [rows]="facade.planned()"
+        [loading]="facade.isLoadingPlanned()"
+        (edit)="editPlanned.emit($event)"
+      ></app-planned-list>
+
+      <app-recurring-list
+        [rows]="facade.recurring()"
+        [loading]="facade.isLoadingRecurring()"
+        (edit)="editRecurring.emit($event)"
+      ></app-recurring-list>
+    </section>
+  </main>
+</section>

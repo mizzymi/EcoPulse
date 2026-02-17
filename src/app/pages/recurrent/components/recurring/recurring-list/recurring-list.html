@@ -1,0 +1,72 @@
+<div class="w-full max-w-full rounded-2xl border border-slate-200 overflow-hidden bg-white mt-6">
+  <div class="p-3 border-b border-slate-200 flex items-center justify-between">
+    <span class="text-sm text-slate-700" i18n="@@recurrent.recurring.list.title"
+      >Recurring definitions</span
+    >
+    <span class="text-xs text-slate-500" *ngIf="loading" i18n="@@recurrent.loading">Loading…</span>
+  </div>
+
+  <div
+    *ngIf="!loading && (!rows || rows.length === 0)"
+    class="p-6 text-sm text-slate-600"
+    i18n="@@recurrent.recurring.empty"
+  >
+    No recurring definitions for these filters.
+  </div>
+
+  <div
+    *ngFor="let r of rows"
+    class="p-3 border-t border-slate-100 flex items-start justify-between gap-3"
+  >
+    <div class="min-w-0">
+      <div class="flex items-center gap-2">
+        <span class="font-medium truncate">{{ r.concept }}</span>
+        <span class="text-xs px-2 py-0.5 rounded-full border border-slate-200 text-slate-600">{{
+          r.type
+        }}</span>
+      </div>
+
+      <div class="text-xs text-slate-500 mt-1">
+        <span i18n="@@recurrent.recurring.schedule">Schedule</span>:
+        <ng-container *ngIf="r.dayOfMonth">
+          <span i18n="@@recurrent.recurring.dayOfMonth">Day</span> {{ r.dayOfMonth }}
+        </ng-container>
+        <ng-container *ngIf="!r.dayOfMonth && r.rrule"> RRULE: {{ r.rrule }} </ng-container>
+        <ng-container *ngIf="!r.dayOfMonth && !r.rrule" i18n="@@recurrent.recurring.noSchedule">
+          Not configured
+        </ng-container>
+      </div>
+
+      <div class="text-xs text-slate-500 mt-1">
+        <span i18n="@@recurrent.recurring.category">Category</span>: {{ r.category || '-' }}
+      </div>
+
+      <div class="text-xs text-slate-500 mt-1" *ngIf="r.notes">
+        {{ r.notes }}
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 shrink-0">
+      <div class="text-right">
+        <div class="font-semibold">{{ r.amount | number: '1.2-2' }}</div>
+      </div>
+
+      <button
+        type="button"
+        class="px-2 py-1 rounded-lg border border-slate-200 text-sm"
+        (click)="edit.emit(r)"
+        i18n="@@recurrent.edit"
+      >
+        Edit
+      </button>
+      <button
+        type="button"
+        class="px-2 py-1 rounded-lg border border-slate-200 text-sm"
+        (click)="onDelete(r)"
+        i18n="@@recurrent.delete"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

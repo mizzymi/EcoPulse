@@ -13,7 +13,8 @@
         <app-goal-card
           *ngFor="let g of facade.goalsSorted(); trackBy: trackById"
           [goal]="g"
-          (delete)="facade.deleteGoal($event).subscribe()"
+          (open)="onOpen($event)"
+          (delete)="onDelete($event)"
         />
       </div>
     </ng-container>

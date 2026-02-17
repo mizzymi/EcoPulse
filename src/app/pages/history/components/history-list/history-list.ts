@@ -60,8 +60,8 @@ export class HistoryList {
       .trim();
   }
 
-  iconForCategory(label?: string | null): LucideIconData {
-    const l = this.normalizeCategory(label ?? '');
+  public iconForCategory(label: string): LucideIconData {
+    const l = this.normalizeCategory(label);
 
     const buckets: Array<[string[], LucideIconData]> = [
       [
@@ -183,7 +183,27 @@ export class HistoryList {
           // CA
           .concat(['oci', 'entreteniment', 'pelicules', 'cinema', 'jocs', 'festa', 'netflix', 'spotify', 'hbo', 'prime', 'disney'])
           // GL
-          .concat(['lecer', 'entretemento', 'peliculas', 'cine', 'xogos', 'festa', 'netflix', 'spotify']),
+          .concat(['lecer', 'entretemento', 'peliculas', 'cine', 'xogos', 'festa', 'netflix', 'spotify'])
+          // EN
+          .concat([
+            'subscription', 'subscriptions', 'membership', 'memberships',
+            'streaming', 'plan',
+          ])
+          // ES
+          .concat([
+            'suscripcion', 'suscripciones', 'suscripción', 'suscripciones',
+            'membresia', 'membresias', 'membresía', 'membresías',
+          ])
+          // CA
+          .concat([
+            'subscripcio', 'subscripcions', 'subscripció', 'subscripcions',
+            'membresia', 'membresies', 'membresía', 'membresies',
+          ])
+          // GL
+          .concat([
+            'subscricion', 'subscricions', 'subscrición', 'subscricións',
+            'membresia', 'membresias', 'membresía', 'membresías',
+          ]),
         this.smile,
       ],
 
@@ -232,7 +252,7 @@ export class HistoryList {
     ];
 
     for (const [keys, icon] of buckets) {
-      if (keys.some(k => l.includes(this.normalizeCategory(k)))) return icon;
+      if (keys.some((k) => l.includes(this.normalizeCategory(k)))) return icon;
     }
 
     return this.badgeDollarSign;

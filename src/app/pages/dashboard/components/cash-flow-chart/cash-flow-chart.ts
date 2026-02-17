@@ -1,5 +1,6 @@
 import { NgFor } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 export interface CashFlowSeries {
   name: string;
@@ -16,6 +17,8 @@ export interface CashFlowSeries {
   templateUrl: './cash-flow-chart.html',
 })
 export class CashFlowChart {
+  private readonly router = inject(Router);
+
   @Input({ required: true }) labels!: string[];
   @Input({ required: true }) series!: CashFlowSeries[];
 
@@ -26,6 +29,10 @@ export class CashFlowChart {
   /** UI toggle (Income/Expense) - optional */
   @Input() showHeaderToggle = true;
   activeIndex = 0;
+  
+  goChart(){
+    this.router.navigate(['/chart']);
+  }
 
   setActive(i: number) {
     this.activeIndex = i;

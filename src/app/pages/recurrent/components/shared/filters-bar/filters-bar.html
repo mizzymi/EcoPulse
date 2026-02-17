@@ -1,0 +1,65 @@
+<div class="w-full max-w-full rounded-2xl border border-slate-200 p-3 flex flex-col gap-3 bg-white">
+  <div class="flex items-center justify-between gap-3 flex-wrap">
+    <h2 class="text-sm font-medium text-slate-700" i18n="@@recurrent.filters.title">Filters</h2>
+
+    <button
+      type="button"
+      class="text-sm underline"
+      (click)="clear()"
+      i18n="@@recurrent.filters.clear"
+    >
+      Clear
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+    <label class="flex flex-col gap-1">
+      <span class="text-xs text-slate-600" i18n="@@recurrent.filters.month">Month</span>
+      <input
+        type="month"
+        class="border border-slate-200 rounded-xl px-3 py-2"
+        [ngModel]="facade.month()"
+        (ngModelChange)="onMonth($event)"
+      />
+    </label>
+
+    <label class="flex flex-col gap-1">
+      <span class="text-xs text-slate-600" i18n="@@recurrent.filters.type">Type</span>
+      <select
+        class="border border-slate-200 rounded-xl px-3 py-2"
+        [ngModel]="facade.type()"
+        (ngModelChange)="onType($event)"
+      >
+        <option *ngFor="let t of types" [ngValue]="t.value">
+          {{ t.label }}
+        </option>
+      </select>
+    </label>
+
+    <label class="flex flex-col gap-1">
+      <span class="text-xs text-slate-600" i18n="@@recurrent.filters.category">Category</span>
+      <input
+        type="text"
+        class="border border-slate-200 rounded-xl px-3 py-2"
+        [ngModel]="facade.category()"
+        (ngModelChange)="onCategory($event)"
+        placeholder="e.g. groceries"
+        i18n-placeholder="@@recurrent.filters.category.placeholder"
+      />
+    </label>
+
+    <label class="flex flex-col gap-1">
+      <span class="text-xs text-slate-600" i18n="@@recurrent.filters.accountType"
+        >Account type</span
+      >
+      <input
+        type="text"
+        class="border border-slate-200 rounded-xl px-3 py-2"
+        [ngModel]="facade.accountType()"
+        (ngModelChange)="onAccountType($event)"
+        placeholder="e.g. cash"
+        i18n-placeholder="@@recurrent.filters.accountType.placeholder"
+      />
+    </label>
+  </div>
+</div>

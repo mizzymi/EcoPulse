@@ -485,7 +485,27 @@ export class NewEntryModal {
           // CA
           .concat(['oci', 'entreteniment', 'pelicules', 'cinema', 'jocs', 'festa', 'netflix', 'spotify', 'hbo', 'prime', 'disney'])
           // GL
-          .concat(['lecer', 'entretemento', 'peliculas', 'cine', 'xogos', 'festa', 'netflix', 'spotify']),
+          .concat(['lecer', 'entretemento', 'peliculas', 'cine', 'xogos', 'festa', 'netflix', 'spotify'])
+          // EN
+          .concat([
+            'subscription', 'subscriptions', 'membership', 'memberships',
+            'streaming', 'plan',
+          ])
+          // ES
+          .concat([
+            'suscripcion', 'suscripciones', 'suscripción', 'suscripciones',
+            'membresia', 'membresias', 'membresía', 'membresías',
+          ])
+          // CA
+          .concat([
+            'subscripcio', 'subscripcions', 'subscripció', 'subscripcions',
+            'membresia', 'membresies', 'membresía', 'membresies',
+          ])
+          // GL
+          .concat([
+            'subscricion', 'subscricions', 'subscrición', 'subscricións',
+            'membresia', 'membresias', 'membresía', 'membresías',
+          ]),
         this.smile,
       ],
 

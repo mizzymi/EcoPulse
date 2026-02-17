@@ -1,0 +1,59 @@
+<app-container>
+  <div class="flex flex-col h-full w-full max-w-full">
+    <div
+      class="flex w-full max-w-full justify-end px-3 pt-3 gap-3"
+      [class.!justify-center]="isSmall()"
+    >
+      <app-house-hold-selector />
+      <app-lang-switcher />
+    </div>
+
+    <div class="w-full max-w-full px-3 pb-3 pt-4">
+      <div class="p-4">
+        <div class="rounded-2xl bg-white/60 border border-slate-100 shadow-sm p-4">
+          <app-saving-id-header
+            [goalName]="goal()?.name ?? ''"
+            [busy]="busy()"
+            (refresh)="refresh()"
+          />
+
+          <ng-container *ngIf="hasHousehold(); else noHousehold">
+            <app-saving-id-summary
+              class="mt-4"
+              [loading]="summaryLoading()"
+              [saved]="saved()"
+              [target]="target()"
+              [progressPct]="progressPct()"
+              [deadline]="goal()?.deadline ?? null"
+            />
+
+            <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div>
+                <app-saving-id-txn-form [busy]="busy()" (save)="onAddTxn($event)" />
+                <app-saving-id-edit-form
+                  [goal]="goal()"
+                  [busy]="busy()"
+                  (save)="onSaveGoal($event)"
+                  (delete)="onDeleteGoal()"
+                />
+              </div>
+              <app-saving-id-txns-list
+                [loading]="txnsLoading()"
+                [rows]="txns()"
+                [busy]="busy()"
+                [trackBy]="trackTxn"
+                (deleteTxn)="onDeleteTxn($event)"
+              />
+            </div>
+          </ng-container>
+
+          <ng-template #noHousehold>
+            <div class="text-sm text-slate-500 py-10 text-center" i18n="@@savings.selectHousehold">
+              Select a household to see savings goals.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-container>

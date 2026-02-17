@@ -11,8 +11,11 @@ import { LucideAngularModule, Target } from 'lucide-angular';
 })
 export class GoalCard {
   @Input({ required: true }) goal!: SavingsGoalDto;
+  @Output() open = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
-  public targetIcon = Target
+
+  public targetIcon = Target;
+
   saved = computed(() => Number(this.goal.saved ?? 0));
   target = computed(() => Number(this.goal.target ?? 0));
 
@@ -29,4 +32,20 @@ export class GoalCard {
     if (Number.isNaN(d.getTime())) return null;
     return d.toLocaleDateString();
   });
+
+  onOpen() {
+    this.open.emit(this.goal.id);
+  }
+
+  onDelete(ev: MouseEvent) {
+    ev.stopPropagation();
+    this.delete.emit(this.goal.id);
+  }
+
+  onKeydown(ev: KeyboardEvent) {
+    if (ev.key === 'Enter' || ev.key === ' ') {
+      ev.preventDefault();
+      this.onOpen();
+    }
+  }
 }

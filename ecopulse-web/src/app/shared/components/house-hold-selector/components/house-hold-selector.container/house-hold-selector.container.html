@@ -1,0 +1,29 @@
+<div class="relative inline-block">
+  <app-hh-selector-trigger
+    [open]="open()"
+    [loading]="loading()"
+    [error]="error()"
+    [initials]="initials()"
+    [name]="selectedHousehold()?.name ?? 'My Wallet'"
+    [roleLabel]="roleLabel()"
+    (toggle)="toggle()"
+    (refresh)="refresh()"
+  />
+
+  <app-hh-selector-dropdown
+    *ngIf="open()"
+    [households]="households()"
+    [selectedId]="selectedId()"
+    [creating]="creating()"
+    [creatingBusy]="creatingBusy()"
+    [createError]="createError()"
+    [newName]="newName()"
+    [newCurrency]="newCurrency()"
+    (selectHousehold)="select($event)"
+    (startCreate)="startCreate()"
+    (cancelCreate)="cancelCreate()"
+    (createHousehold)="createHousehold()"
+    (nameChange)="onNameChange($event)"
+    (currencyChange)="onCurrencyChange($event)"
+  />
+</div>

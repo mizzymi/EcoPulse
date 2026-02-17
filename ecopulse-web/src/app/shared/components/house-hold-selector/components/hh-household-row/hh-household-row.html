@@ -1,0 +1,38 @@
+<button
+  type="button"
+  (click)="select.emit()"
+  class="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-slate-50 transition"
+>
+  <div class="flex items-center gap-3 min-w-0">
+    <div class="h-10 w-10 rounded-xl bg-slate-100 text-slate-700 grid place-items-center font-bold">
+      {{
+        household.name.trim()
+          ? (household.name.trim().charAt(0) + household.name.trim().charAt(1)).toUpperCase()
+          : 'HW'
+      }}
+    </div>
+
+    <div class="min-w-0 text-left">
+      <div class="text-sm font-semibold text-slate-900 truncate">{{ household.name }}</div>
+      <div class="text-xs text-slate-500">
+        {{
+          household.role === 'OWNER' ? 'Owner' : household.role === 'ADMIN' ? 'Admin' : 'Member'
+        }}
+        •
+        {{ household.currency }}
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selected" class="text-emerald-600">
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M20 6L9 17l-5-5"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+</button>

@@ -1,0 +1,378 @@
+<ng-container *ngIf="open">
+  <!-- Backdrop -->
+  <div
+    class="fixed inset-0 z-[1000] bg-black/30 backdrop-blur-[2px]"
+    (click)="onBackdrop()"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Dialog wrapper -->
+  <div
+    class="fixed z-[1001] flex justify-center p-4 overflow-auto"
+    [ngClass]="
+      isSmall() ? 'top-0 left-0 right-0 max-h-screen items-start pt-6 pb-6' : 'inset-0 items-center'
+    "
+  >
+    <!-- Dialog -->
+    <div
+      class="w-full max-w-3xl rounded-3xl bg-white shadow-xl border border-slate-100 overflow-hidden"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Transaction dialog"
+      i18n-aria-label="@@tx.modal.ariaLabel"
+    >
+      <div class="p-6 sm:p-8">
+        <!-- Header row -->
+        <div class="flex items-start justify-between">
+          <div>
+            <!-- Title -->
+            <div class="text-xl sm:text-2xl font-black text-slate-900">
+              @if (mode === 'EDIT') {
+                <span i18n="@@tx.modal.title.edit">Edit Transaction</span>
+              } @else {
+                <span i18n="@@tx.modal.title.new">New Transaction</span>
+              }
+            </div>
+
+            <div
+              class="mt-2 text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+              i18n="@@tx.modal.typeLabel"
+            >
+              Transaction Type
+            </div>
+
+            <div class="mt-3 inline-flex rounded-2xl bg-slate-50 p-1 border border-slate-100">
+              <button
+                type="button"
+                class="px-4 py-2 rounded-2xl text-sm font-extrabold flex items-center gap-2 transition"
+                [class.bg-rose-500]="type() === 'EXPENSE'"
+                [class.text-white]="type() === 'EXPENSE'"
+                [class.text-slate-600]="type() !== 'EXPENSE'"
+                (click)="setType('EXPENSE')"
+              >
+                <lucide-angular [img]="arrowDown"></lucide-angular>
+                <span i18n="@@tx.modal.type.expense">Expense</span>
+              </button>
+
+              <button
+                type="button"
+                class="px-4 py-2 rounded-2xl text-sm font-extrabold flex items-center gap-2 transition"
+                [class.bg-slate-900]="type() === 'INCOME'"
+                [class.text-white]="type() === 'INCOME'"
+                [class.text-slate-600]="type() !== 'INCOME'"
+                (click)="setType('INCOME')"
+              >
+                <lucide-angular [img]="arrowUp"></lucide-angular>
+                <span i18n="@@tx.modal.type.income">Income</span>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="rounded-2xl p-2 hover:bg-slate-50 text-slate-500"
+            (click)="close.emit()"
+            aria-label="Close"
+            i18n-aria-label="@@tx.modal.close"
+          >
+            <lucide-angular [img]="x"></lucide-angular>
+          </button>
+        </div>
+
+        <!-- Amount -->
+        <div class="mt-7">
+          <div
+            class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+            i18n="@@tx.modal.amount"
+          >
+            Amount
+          </div>
+
+          <div class="mt-3 flex items-center gap-3">
+            <div class="text-slate-400 text-2xl font-black">€</div>
+
+            <input
+              type="text"
+              inputmode="decimal"
+              placeholder="0.00"
+              class="w-full text-4xl sm:text-3xl font-black text-slate-900 outline-none bg-transparent"
+              [value]="amountText()"
+              (input)="onAmountInput($any($event.target).value)"
+              aria-label="Amount"
+              i18n-aria-label="@@tx.modal.amount.inputAria"
+            />
+          </div>
+
+          <div class="mt-4 h-px w-full bg-slate-200"></div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="mt-7">
+          <div
+            class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+            i18n="@@tx.modal.paymentMethod"
+          >
+            Payment Method
+          </div>
+
+          <div class="mt-3 grid grid-cols-3 gap-3">
+            <button
+              type="button"
+              class="rounded-2xl border px-4 py-4 text-left transition flex items-center gap-3 justify-start"
+              [class.border-slate-900]="paymentMethod() === 'CASH'"
+              [class.bg-slate-900]="paymentMethod() === 'CASH'"
+              [class.text-white]="paymentMethod() === 'CASH'"
+              [class.border-slate-200]="paymentMethod() !== 'CASH'"
+              [class.bg-white]="paymentMethod() !== 'CASH'"
+              (click)="paymentMethod.set('CASH')"
+            >
+              <div class="text-sm font-extrabold">
+                <lucide-angular [img]="banknote"></lucide-angular>
+              </div>
+              <div class="text-xs font-bold opacity-90" i18n="@@tx.modal.pay.cash">Cash</div>
+            </button>
+
+            <button
+              type="button"
+              class="rounded-2xl border px-4 py-4 text-left transition flex items-center gap-3 justify-start"
+              [class.border-slate-900]="paymentMethod() === 'CARD'"
+              [class.bg-slate-900]="paymentMethod() === 'CARD'"
+              [class.text-white]="paymentMethod() === 'CARD'"
+              [class.border-slate-200]="paymentMethod() !== 'CARD'"
+              [class.bg-white]="paymentMethod() !== 'CARD'"
+              (click)="paymentMethod.set('CARD')"
+            >
+              <div class="text-sm font-extrabold">
+                <lucide-angular [img]="creditCard"></lucide-angular>
+              </div>
+              <div class="text-xs font-bold opacity-90" i18n="@@tx.modal.pay.card">Card</div>
+            </button>
+
+            <button
+              type="button"
+              class="rounded-2xl border px-4 py-4 text-left transition flex items-center gap-3 justify-start"
+              [class.border-slate-900]="paymentMethod() === 'BANK'"
+              [class.bg-slate-900]="paymentMethod() === 'BANK'"
+              [class.text-white]="paymentMethod() === 'BANK'"
+              [class.border-slate-200]="paymentMethod() !== 'BANK'"
+              [class.bg-white]="paymentMethod() !== 'BANK'"
+              (click)="paymentMethod.set('BANK')"
+            >
+              <div class="text-sm font-extrabold">
+                <lucide-angular [img]="landmark"></lucide-angular>
+              </div>
+              <div class="text-xs font-bold opacity-90" i18n="@@tx.modal.pay.bank">Bank</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="mt-7">
+          <div
+            class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+            i18n="@@tx.modal.category"
+          >
+            Category
+          </div>
+
+          <div class="mt-3 grid grid-cols-5 gap-3">
+            <button
+              *ngFor="let c of categories()"
+              type="button"
+              class="rounded-2xl border px-3 py-4 flex flex-col items-center justify-center gap-2 text-center transition"
+              [class.border-teal-400]="selectedCategoryLabel() === c.label"
+              [class.bg-teal-50]="selectedCategoryLabel() === c.label"
+              [class.shadow-sm]="selectedCategoryLabel() === c.label"
+              [class.border-slate-200]="selectedCategoryLabel() !== c.label"
+              [class.bg-white]="selectedCategoryLabel() !== c.label"
+              (click)="selectCategory(c.label)"
+              [attr.aria-label]="c.label"
+            >
+              <div
+                class="h-8 w-8 rounded-xl flex items-center justify-center"
+                [class.bg-white]="selectedCategoryLabel() === c.label"
+                [class.bg-slate-50]="selectedCategoryLabel() !== c.label"
+              >
+                <lucide-angular [img]="c.icon"></lucide-angular>
+              </div>
+
+              <div class="text-[10px] font-extrabold text-slate-700 leading-tight">
+                {{ c.label }}
+              </div>
+            </button>
+
+            <!-- Custom -->
+            <button
+              type="button"
+              class="rounded-2xl border border-dashed border-slate-200 px-3 py-4 flex flex-col items-center justify-center gap-2 text-center transition hover:bg-slate-50"
+              (click)="onCustomCategory()"
+            >
+              <div class="h-8 w-8 rounded-xl flex items-center justify-center bg-slate-50">
+                <lucide-angular [img]="plus"></lucide-angular>
+              </div>
+              <div
+                class="text-[10px] font-extrabold text-slate-700 leading-tight"
+                i18n="@@tx.modal.category.custom"
+              >
+                Custom
+              </div>
+            </button>
+
+            <!-- Custom input -->
+            <div *ngIf="isCustomCategory()" class="col-span-5 sm:col-span-5">
+              <div class="mt-2 flex gap-2">
+                <input
+                  type="text"
+                  class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-teal-200"
+                  placeholder="Type a custom category..."
+                  i18n-placeholder="@@tx.modal.category.customPlaceholder"
+                  [value]="customCategoryText()"
+                  (input)="onCustomCategoryInput($any($event.target).value)"
+                />
+
+                <button
+                  type="button"
+                  class="rounded-2xl px-4 py-3 text-sm font-extrabold text-white bg-slate-900 hover:bg-slate-800 disabled:opacity-50"
+                  (click)="applyCustomCategory()"
+                  [disabled]="!customCategoryText().trim()"
+                >
+                  <span i18n="@@tx.modal.category.apply">Apply</span>
+                </button>
+              </div>
+
+              <div
+                class="mt-2 text-[11px] font-semibold text-slate-500"
+                i18n="@@tx.modal.category.tip"
+              >
+                Tip: press Apply to lock it as the selected category.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date / Recurring / Note -->
+        <div class="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Date -->
+          <div class="sm:col-span-1">
+            <div
+              class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+              i18n="@@tx.modal.date"
+            >
+              Date
+            </div>
+
+            <div
+              class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 flex items-center justify-between gap-3 shadow-sm hover:shadow transition"
+            >
+              <div class="min-w-0">
+                <div class="text-sm font-extrabold text-slate-900 truncate">
+                  {{ date() | date: 'mediumDate' }}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="shrink-0 inline-flex items-center justify-center rounded-xl px-3 py-2 text-xs font-extrabold text-teal-700 bg-teal-50 border border-teal-100 hover:bg-teal-100 hover:border-teal-200 active:scale-[0.98] transition focus:outline-none focus:ring-2 focus:ring-teal-200"
+                (click)="openDatePicker(dateInput)"
+              >
+                <span i18n="@@tx.modal.date.change">Change</span>
+              </button>
+
+              <input
+                #dateInput
+                type="date"
+                class="absolute opacity-0 pointer-events-none h-0 w-0"
+                [value]="dateISO()"
+                (change)="onDateChange($any($event.target).value)"
+              />
+            </div>
+          </div>
+
+          <!-- Recurring -->
+          <div class="sm:col-span-1">
+            <div
+              class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+              i18n="@@tx.modal.recurring"
+            >
+              Recurring
+            </div>
+
+            <div
+              class="mt-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 flex items-center justify-between gap-3 shadow-sm hover:shadow transition"
+            >
+              <div class="text-sm font-bold text-slate-900">
+                @if (recurring()) {
+                  <span i18n="@@tx.modal.recurring.yes">Yes</span>
+                } @else {
+                  <span i18n="@@tx.modal.recurring.no">No</span>
+                }
+              </div>
+
+              <button
+                type="button"
+                class="h-6 w-11 rounded-full relative transition"
+                [class.bg-teal-600]="recurring()"
+                [class.bg-slate-200]="!recurring()"
+                (click)="recurring.set(!recurring())"
+                aria-label="Toggle recurring"
+                i18n-aria-label="@@tx.modal.recurring.toggle"
+              >
+                <span
+                  class="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition"
+                  [style.left]="recurring() ? '1.375rem' : '0.125rem'"
+                ></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Note -->
+          <div class="sm:col-span-1">
+            <div
+              class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+              i18n="@@tx.modal.note"
+            >
+              Note (optional)
+            </div>
+
+            <input
+              type="text"
+              class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-teal-200"
+              placeholder="Add a note..."
+              i18n-placeholder="@@tx.modal.note.placeholder"
+              [value]="note()"
+              (input)="note.set($any($event.target).value)"
+            />
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 flex items-center justify-end gap-3">
+          <button
+            type="button"
+            class="rounded-2xl px-5 py-3 text-sm font-extrabold text-slate-600 hover:bg-slate-50"
+            (click)="close.emit()"
+            i18n="@@tx.modal.cancel"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="rounded-2xl px-5 py-3 text-sm font-extrabold text-white bg-teal-600 hover:bg-teal-700 disabled:opacity-50 disabled:hover:bg-teal-600 flex items-center gap-2"
+            [disabled]="!canSave()"
+            (click)="onSave()"
+          >
+            <lucide-angular [img]="check"></lucide-angular>
+
+            @if (mode === 'EDIT') {
+              <span i18n="@@tx.modal.save.update">Update Transaction</span>
+            } @else {
+              <span i18n="@@tx.modal.save.save">Save Transaction</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

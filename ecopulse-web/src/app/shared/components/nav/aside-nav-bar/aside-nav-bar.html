@@ -1,0 +1,43 @@
+@if (isBig()) {
+  <div class="w-full h-full px-4 py-3 flex flex-col justify-between gap-7">
+    <div class="flex flex-col justify-between gap-7">
+      <app-ecopulse-name-logo />
+
+      <nav class="flex flex-col gap-3">
+        <app-nav-options
+          link="/dashboard"
+          name="Dashboard"
+          i18n-name="@@nav.dashboard"
+          [icon]="home"
+        />
+
+        <app-nav-options
+          link="/history"
+          name="History"
+          i18n-name="@@nav.history"
+          [icon]="history"
+        />
+
+        <app-nav-options link="/chart" name="Charts" i18n-name="@@nav.charts" [icon]="chart" />
+
+        <app-nav-options link="/goals" name="Goals" i18n-name="@@nav.goals" [icon]="goals" />
+
+        <app-nav-options
+          link="/savings"
+          name="Savings"
+          i18n-name="@@nav.savings"
+          [icon]="savings"
+        />
+
+        <app-nav-options
+          link="/settings"
+          name="Settings"
+          i18n-name="@@nav.settings"
+          [icon]="settings"
+        />
+      </nav>
+    </div>
+
+    <app-house-hold-members />
+  </div>
+}

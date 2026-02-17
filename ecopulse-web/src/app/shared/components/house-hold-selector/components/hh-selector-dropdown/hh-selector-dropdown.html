@@ -1,0 +1,21 @@
+<div class="absolute left-0 mt-3 w-full rounded-2xl bg-white border border-slate-100 shadow-lg overflow-hidden z-50">
+  <app-hh-household-list
+    *ngIf="!creating"
+    [households]="households"
+    [selectedId]="selectedId"
+    (selectHousehold)="selectHousehold.emit($event)"
+    (startCreate)="startCreate.emit()"
+  />
+
+  <app-hh-create-form
+    *ngIf="creating"
+    [busy]="creatingBusy"
+    [error]="createError"
+    [name]="newName"
+    [currency]="newCurrency"
+    (nameChange)="nameChange.emit($event)"
+    (currencyChange)="currencyChange.emit($event)"
+    (cancel)="cancelCreate.emit()"
+    (create)="createHousehold.emit()"
+  />
+</div>

@@ -1,0 +1,17 @@
+<div class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1">
+  <label class="text-xs font-semibold text-slate-600" for="lang" i18n="@@lang.label">Lang</label>
+
+  <select
+    id="lang"
+    class="text-sm font-semibold text-slate-800 outline-none bg-transparent"
+    [value]="currentLocale"
+    (change)="switch($any($event.target).value)"
+    aria-label="Language"
+    i18n-aria-label="@@lang.aria"
+  >
+    <option value="en-US">English</option>
+    <option value="es-ES">Español</option>
+    <option value="ca-ES">Català</option>
+    <option value="gl-ES">Galego</option>
+  </select>
+</div>

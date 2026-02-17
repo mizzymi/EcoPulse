@@ -1,0 +1,43 @@
+<div class="rounded-2xl p-4 shadow-sm" [ngClass]="toneClasses()">
+  <div class="relative flex items-start justify-between">
+    <div class="flex items-center gap-3">
+      <div class="h-10 w-10 rounded-xl bg-slate-100 grid place-items-center">
+        <lucide-angular
+          *ngIf="icon"
+          class="h-[18px] w-[18px] text-slate-700"
+          [img]="icon"
+        ></lucide-angular>
+      </div>
+
+      <div>
+        <div
+          class="text-sm font-medium"
+          [ngClass]="tone === 'dark' ? 'text-white/75' : 'text-slate-500'"
+        >
+          {{ title }}
+        </div>
+        <div class="mt-1 text-2xl font-semibold tracking-tight">
+          {{ value }}
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute right-0 top-0 flex flex-col items-end">
+      <span
+        *ngIf="badge"
+        class="text-xs px-2 py-1 rounded-full"
+        [ngClass]="tone === 'dark' ? 'bg-white/10 text-white/80' : 'bg-slate-100 text-slate-600'"
+      >
+        {{ badge }}
+      </span>
+
+      <span
+        *ngIf="delta"
+        class="text-xs px-2 py-1 rounded-full font-medium"
+        [ngClass]="deltaClasses()"
+      >
+        {{ delta }}
+      </span>
+    </div>
+  </div>
+</div>

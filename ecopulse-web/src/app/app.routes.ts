@@ -1,0 +1,20 @@
+import { Routes } from '@angular/router';
+import { Dashboard, History, Home, Login, Register } from './pages';
+import { authMatchGuard, guestGuard } from './core';
+
+export const routes: Routes = [
+
+    { path: '', component: Home, canActivate: [guestGuard] },
+    { path: 'auth/login', component: Login, canActivate: [guestGuard] },
+    { path: 'auth/register', component: Register, canActivate: [guestGuard] },
+
+    // Protected
+    {
+        path: '',
+        canMatch: [authMatchGuard],
+        children: [
+            { path: 'dashboard', component: Dashboard },
+            { path: 'history', component: History},
+        ],
+    },
+];

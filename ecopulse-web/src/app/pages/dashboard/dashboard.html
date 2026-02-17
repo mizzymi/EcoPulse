@@ -1,0 +1,15 @@
+<app-container>
+  <div class="flex flex-col h-full w-full max-w-full">
+    <div
+      class="flex w-full max-w-full justify-end px-3 pt-3 gap-3"
+      [class.!justify-center]="isSmall()"
+    >
+      <app-house-hold-selector />
+    </div>
+    <div class="w-full max-w-full">
+      <app-financial-overview-page
+        [householdId]="selectedHouseholdId()"
+      ></app-financial-overview-page>
+    </div>
+  </div>
+</app-container>

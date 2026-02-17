@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="es-ES" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="2734445107198612974" datatype="html">
+        <source> Track your money <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;block text-teal-600&quot;&gt;"/>calmly.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">5,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7533222314698246711" datatype="html">
+        <source> Manage your personal and shared finances with clarity. Simple, secure, and designed for your peace of mind. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2454050363478003966" datatype="html">
+        <source>Login</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3003742799656060943" datatype="html">
+        <source>Total Balance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7727042291824677883" datatype="html">
+        <source>Hello, Alex</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4200317694838753109" datatype="html">
+        <source>Welcome back</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">37,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2407784838682038117" datatype="html">
+        <source>Restaurant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6983951722564246494" datatype="html">
+        <source>Food &amp; Dining</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="498286527813307230" datatype="html">
+        <source>Salary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">65,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7721988664027512739" datatype="html">
+        <source>Income</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">66,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6276278883659633203" datatype="html">
+        <source>Home Rent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">88,89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6136520581220357690" datatype="html">
+        <source>Shared Account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">89,90</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,1068 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="analytics.cashFlow.title" datatype="html">
+        <source> Cash Flow Analytics </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="analytics.cashFlow.subtitle" datatype="html">
+        <source> Income vs Expense trend </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
+          <context context-type="linenumber">8,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="analytics.cashFlow.chartAria" datatype="html">
+        <source>Cash flow chart</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.title" datatype="html">
+        <source> Financial Overview </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.subtitle" datatype="html">
+        <source> Welcome back! Here&apos;s what&apos;s happening with your money. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.month.prev" datatype="html">
+        <source>Previous month</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">33,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.month.next" datatype="html">
+        <source>Next month</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">52,53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.totalBalance.title" datatype="html">
+        <source>Total Balance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">67,68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.badge.current" datatype="html">
+        <source>Current</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">70,71</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">99,100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.income.title" datatype="html">
+        <source>Income</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.expenses.title" datatype="html">
+        <source>Expenses</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">87,88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cards.savings.title" datatype="html">
+        <source>Savings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">96,97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dashboard.noHousehold" datatype="html">
+        <source> Select a household to load data. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">143,145</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="chart.series.income" datatype="html">
+        <source>Income</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="chart.series.expense" datatype="html">
+        <source>Expense</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.filters.searchPlaceholder" datatype="html">
+        <source>Search transactions...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-filters/history-filters.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.filters.searchAria" datatype="html">
+        <source>Search transactions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-filters/history-filters.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.filters.category" datatype="html">
+        <source> Category </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-filters/history-filters.html</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.filters.type" datatype="html">
+        <source> Type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-filters/history-filters.html</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="history.title" datatype="html">
+        <source> History of Transactions </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-header/history-header.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="history.subtitle" datatype="html">
+        <source> View and manage all your financial activity. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-header/history-header.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="history.addNew.aria" datatype="html">
+        <source>Add new transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-header/history-header.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="history.addNew" datatype="html">
+        <source>Add New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-header/history-header.html</context>
+          <context context-type="linenumber">31,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.list.empty" datatype="html">
+        <source> No transactions found.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-list/history-list.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.list.action.editAria" datatype="html">
+        <source>Edit transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-list/history-list.html</context>
+          <context context-type="linenumber">48,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.list.action.editTitle" datatype="html">
+        <source>Edit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-list/history-list.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.list.action.deleteAria" datatype="html">
+        <source>Delete transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-list/history-list.html</context>
+          <context context-type="linenumber">60,61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.list.action.deleteTitle" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-list/history-list.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.showing" datatype="html">
+        <source> Showing <x id="INTERPOLATION" equiv-text="{{ showFrom }}"/> – <x id="INTERPOLATION_1" equiv-text="{{ showTo }}"/> of <x id="INTERPOLATION_2" equiv-text="{{ total }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">3,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.prev.aria" datatype="html">
+        <source>Previous page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.prev.title" datatype="html">
+        <source>Previous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">14,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.prev" datatype="html">
+        <source>Prev</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">17,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.pageOf" datatype="html">
+        <source>Page <x id="INTERPOLATION" equiv-text="{{ page }}"/> of <x id="INTERPOLATION_1" equiv-text="{{ totalPages }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.next.aria" datatype="html">
+        <source>Next page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">33,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.next.title" datatype="html">
+        <source>Next</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="pagination.next" datatype="html">
+        <source>Next</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/components/history-pagination/history-pagination.html</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="history.loading" datatype="html">
+        <source> Loading... </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/history.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.deleteConfirm.title" datatype="html">
+        <source>Delete transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/history.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.deleteConfirm.message" datatype="html">
+        <source>This action cannot be undone.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/history.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.cancel" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/history.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.delete" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/history/history.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2734445107198612974" datatype="html">
+        <source> Track your money <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;block text-teal-600&quot;&gt;"/>calmly.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">5,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7533222314698246711" datatype="html">
+        <source> Manage your personal and shared finances with clarity. Simple, secure, and designed for your peace of mind. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">10,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2454050363478003966" datatype="html">
+        <source>Login</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3003742799656060943" datatype="html">
+        <source>Total Balance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7727042291824677883" datatype="html">
+        <source>Hello, Alex</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4200317694838753109" datatype="html">
+        <source>Welcome back</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">37,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2407784838682038117" datatype="html">
+        <source>Restaurant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6983951722564246494" datatype="html">
+        <source>Food &amp; Dining</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="498286527813307230" datatype="html">
+        <source>Salary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">65,66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7721988664027512739" datatype="html">
+        <source>Income</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">66,67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6276278883659633203" datatype="html">
+        <source>Home Rent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">88,89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6136520581220357690" datatype="html">
+        <source>Shared Account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
+          <context context-type="linenumber">89,90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8264044238565501678" datatype="html">
+        <source>Forgot password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7452360004723630799" datatype="html">
+        <source> Enter your email and we’ll send you a recovery link/code. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7817163188308824825" datatype="html">
+        <source> Email </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2837248686284270505" datatype="html">
+        <source>Please enter a valid email.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
+          <context context-type="linenumber">46,47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2330577642930707695" datatype="html">
+        <source> Cancel </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7563035552061651664" datatype="html">
+        <source> Send </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.title" datatype="html">
+        <source>Welcome back</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.quote" datatype="html">
+        <source>Please enter your details to sign in.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.emailLabel" datatype="html">
+        <source>Email Address</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.emailPlaceholder" datatype="html">
+        <source>name@example.com</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.passwordLabel" datatype="html">
+        <source>Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.passwordPlaceholder" datatype="html">
+        <source>••••••••</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.forgotLink" datatype="html">
+        <source>Forgot Password?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">41,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.submit" datatype="html">
+        <source> LogIn </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.title" datatype="html">
+        <source>Create Account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.quote" datatype="html">
+        <source>Join EcoPulse and track your money calmly.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">11,12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.emailLabel" datatype="html">
+        <source>Email Address</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">18,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.emailPlaceholder" datatype="html">
+        <source>name@example.com</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.passwordLabel" datatype="html">
+        <source>Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.passwordPlaceholder" datatype="html">
+        <source>••••••••</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.password2Label" datatype="html">
+        <source>Confirm Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.password2Placeholder" datatype="html">
+        <source>••••••••</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.passwordMismatch" datatype="html">
+        <source> Passwords do not match. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">54,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.submit" datatype="html">
+        <source> Register </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">63,65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3226661974700139719" datatype="html">
+        <source>Secure access to your finances</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/auth-card-logo/auth-card-logo.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.noAccount" datatype="html">
+        <source> Don&apos;t have an account? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+          class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
+          [routerLink]=&quot;[&apos;/auth/register&apos;]&quot;
+        &gt;"/> Create Account <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/auth-card/auth-card.html</context>
+          <context context-type="linenumber">14,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.haveAccount" datatype="html">
+        <source> Already have an account? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
+          class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
+          [routerLink]=&quot;[&apos;/auth/login&apos;]&quot;
+        &gt;"/> Sign In <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/auth-card/auth-card.html</context>
+          <context context-type="linenumber">26,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sharedMembers.title" datatype="html">
+        <source> SHARED MEMBERS </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.html</context>
+          <context context-type="linenumber">6,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sharedMembers.loading" datatype="html">
+        <source> Loading... </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.html</context>
+          <context context-type="linenumber">11,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sharedMembers.extraCountAria" datatype="html">
+        <source>+<x id="INTERPOLATION" equiv-text="{{ extraCount() }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sharedMembers.error.network" datatype="html">
+        <source>Network error. Try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sharedMembers.error.unauthorized" datatype="html">
+        <source>Session expired. Please sign in again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="sharedMembers.error.unknown" datatype="html">
+        <source>Something went wrong.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.create.title" datatype="html">
+        <source> Create household </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
+          <context context-type="linenumber">3,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.create.namePlaceholder" datatype="html">
+        <source>Household name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
+          <context context-type="linenumber">10,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.create.currencyPlaceholder" datatype="html">
+        <source>EUR</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.create.creating" datatype="html">
+        <source>Creating...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.create.create" datatype="html">
+        <source>Create</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.create.cancel" datatype="html">
+        <source> Cancel </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
+          <context context-type="linenumber">56,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.list.createButton" datatype="html">
+        <source> + Create household
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-household-list/hh-household-list.html</context>
+          <context context-type="linenumber">16,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.role.owner" datatype="html">
+        <source>Owner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-household-row/hh-household-row.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.role.admin" datatype="html">
+        <source>Admin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-household-row/hh-household-row.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.role.member" datatype="html">
+        <source>Member</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-household-row/hh-household-row.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="household.selector.placeholder" datatype="html">
+        <source>Select household</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/house-hold-selector/components/hh-selector-trigger/hh-selector-trigger.html</context>
+          <context context-type="linenumber">20,24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="lang.label" datatype="html">
+        <source>Lang</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/lang-switcher/lang-switcher.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="lang.aria" datatype="html">
+        <source>Language</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/lang-switcher/lang-switcher.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.dashboard" datatype="html">
+        <source>Dashboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.history" datatype="html">
+        <source>History</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.charts" datatype="html">
+        <source>Charts</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.goals" datatype="html">
+        <source>Goals</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.savings" datatype="html">
+        <source>Savings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
+          <context context-type="linenumber">27,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.settings" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.home" datatype="html">
+        <source>Home</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="nav.add" datatype="html">
+        <source>Add</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.ariaLabel" datatype="html">
+        <source>Transaction dialog</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.title.edit" datatype="html">
+        <source>Edit Transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.title.new" datatype="html">
+        <source>New Transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.typeLabel" datatype="html">
+        <source> Transaction Type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">42,43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.type.expense" datatype="html">
+        <source>Expense</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">55,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.type.income" datatype="html">
+        <source>Income</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">67,69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.close" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.amount" datatype="html">
+        <source> Amount </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">89,90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.amount.inputAria" datatype="html">
+        <source>Amount</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.paymentMethod" datatype="html">
+        <source> Payment Method </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">116,119</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.pay.cash" datatype="html">
+        <source>Cash</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">133,135</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.pay.card" datatype="html">
+        <source>Card</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">149,151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.pay.bank" datatype="html">
+        <source>Bank</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">165,167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.category" datatype="html">
+        <source> Category </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">176,178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.category.custom" datatype="html">
+        <source> Custom </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">218,219</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.category.customPlaceholder" datatype="html">
+        <source>Type a custom category...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">228,229</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.category.apply" datatype="html">
+        <source>Apply</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">240,242</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.category.tip" datatype="html">
+        <source> Tip: press Apply to lock it as the selected category. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">248,249</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.date" datatype="html">
+        <source> Date </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">262,263</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.date.change" datatype="html">
+        <source>Change</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">279,281</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.recurring" datatype="html">
+        <source> Recurring </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">298,299</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.recurring.yes" datatype="html">
+        <source>Yes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">306,308</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.recurring.no" datatype="html">
+        <source>No</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">308,310</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.recurring.toggle" datatype="html">
+        <source>Toggle recurring</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">318,319</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.note" datatype="html">
+        <source> Note (optional) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">335,336</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.note.placeholder" datatype="html">
+        <source>Add a note...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">341,342</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.cancel" datatype="html">
+        <source> Cancel </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">357,358</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.save.update" datatype="html">
+        <source>Update Transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">369,371</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.modal.save.save" datatype="html">
+        <source>Save Transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
+          <context context-type="linenumber">371,373</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.food" datatype="html">
+        <source>Food</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.transport" datatype="html">
+        <source>Transport</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.rent" datatype="html">
+        <source>Rent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.shopping" datatype="html">
+        <source>Shopping</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.utilities" datatype="html">
+        <source>Utilities</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">153</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.fun" datatype="html">
+        <source>Fun</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.health" datatype="html">
+        <source>Health</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.salary" datatype="html">
+        <source>Salary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="tx.cat.pets" datatype="html">
+        <source>Pets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.legal.consent" datatype="html">
+        <source> By continuing, you agree to our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com&quot;&gt;"/>Privacy<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> &amp; <x id="START_LINK_1" equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com/terms&quot;&gt;"/>Terms<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/components/privacy-terms/privacy-terms.html</context>
+          <context context-type="linenumber">3,7</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

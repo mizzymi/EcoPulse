@@ -1,0 +1,60 @@
+<app-background-gadient>
+  <div class="min-h-screen w-full flex items-center justify-center px-4">
+    <app-auth-hero>
+      <app-auth-card-logo />
+
+      <app-auth-card
+        [isRegister]="false"
+        [isLogin]="true"
+        title="Welcome back"
+        i18n-title="@@auth.login.title"
+        quote="Please enter your details to sign in."
+        i18n-quote="@@auth.login.quote"
+      >
+        <form [formGroup]="form" class="space-y-5">
+          <app-auth-options
+            formControlName="email"
+            id="email"
+            label="Email Address"
+            i18n-label="@@auth.login.emailLabel"
+            placeholder="name@example.com"
+            i18n-placeholder="@@auth.login.emailPlaceholder"
+            inputType="email"
+            [leadingIcon]="mailIcon"
+          />
+
+          <app-auth-options
+            formControlName="password"
+            id="password"
+            label="Password"
+            i18n-label="@@auth.login.passwordLabel"
+            placeholder="••••••••"
+            i18n-placeholder="@@auth.login.passwordPlaceholder"
+            inputType="password"
+            [leadingIcon]="lockIcon"
+            [showPasswordToggle]="true"
+          />
+
+          <div
+            class="font-['ImpactWeb','Impact','Haettenschweiler','Arial_Narrow_Bold',sans-serif] text-teal-600 my-5 cursor-pointer flex justify-end"
+          >
+            <a (click)="openForgot()" i18n="@@auth.login.forgotLink">Forgot Password?</a>
+          </div>
+
+          <button
+            type="submit"
+            (click)="submit()"
+            class="bg-teal-600 rounded-xl py-3 w-full text-white cursor-pointer"
+            i18n="@@auth.login.submit"
+          >
+            LogIn
+          </button>
+        </form>
+      </app-auth-card>
+    </app-auth-hero>
+  </div>
+</app-background-gadient>
+
+@if (forgotOpen) {
+  <app-forgot-password-modal (close)="closeForgot()" (submitEmail)="handleForgotEmail($event)" />
+}

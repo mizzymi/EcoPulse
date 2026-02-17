@@ -1,0 +1,44 @@
+<!-- Pill -->
+<button
+  type="button"
+  (click)="toggle.emit()"
+  class="flex items-center gap-4 rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-sm p-1 hover:bg-white/80 transition"
+>
+  <!-- Avatar -->
+  <div
+    class="h-10 w-10 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-400 text-white grid place-items-center text-xl font-bold"
+  >
+    {{ initials }}
+  </div>
+
+  <!-- Text -->
+  <div class="flex-1 text-left">
+    <div class="text-md font-semibold text-slate-900 leading-tight">
+      @if (name) {
+        {{ name }}
+      } @else {
+        <span i18n="@@household.selector.placeholder">Select household</span>
+      }
+    </div>
+
+    <div class="flex items-center gap-2 mt-1">
+      <span class="inline-block h-3 w-3 rounded-full bg-emerald-500"></span>
+      <span class="text-sm font-medium text-teal-700">
+        {{ roleLabel }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Chevron -->
+  <div class="text-slate-500">
+    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M6 9l6 6 6-6"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </div>
+</button>

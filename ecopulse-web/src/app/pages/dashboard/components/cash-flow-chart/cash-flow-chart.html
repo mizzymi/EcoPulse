@@ -1,0 +1,75 @@
+<div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+  <div class="flex items-center justify-between">
+    <div>
+      <div class="text-sm font-semibold text-slate-800" i18n="@@analytics.cashFlow.title">
+        Cash Flow Analytics
+      </div>
+      <div class="text-xs text-slate-500 mt-1" i18n="@@analytics.cashFlow.subtitle">
+        Income vs Expense trend
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 overflow-x-auto">
+    <svg
+      [attr.viewBox]="'0 0 ' + width + ' ' + height"
+      [attr.width]="width"
+      [attr.height]="height"
+      class="min-w-[680px]"
+      role="img"
+      aria-label="Cash flow chart"
+      i18n-aria-label="@@analytics.cashFlow.chartAria"
+    >
+      <!-- Grid + Y ticks -->
+      <g>
+        <ng-container *ngFor="let t of yTickValues; let i = index">
+          <line
+            [attr.x1]="52"
+            [attr.x2]="width - 20"
+            [attr.y1]="height - 34 - ((height - 18 - 34) * i) / (yTickValues.length - 1)"
+            [attr.y2]="height - 34 - ((height - 18 - 34) * i) / (yTickValues.length - 1)"
+            stroke="#E2E8F0"
+            stroke-width="1"
+          />
+          <text
+            x="6"
+            [attr.y]="height - 34 - ((height - 18 - 34) * i) / (yTickValues.length - 1) + 4"
+            font-size="11"
+            fill="#64748B"
+          >
+            {{ formatMoneyTick(t) }}
+          </text>
+        </ng-container>
+      </g>
+
+      <!-- X labels -->
+      <g>
+        <ng-container *ngFor="let lbl of labels; let i = index">
+          <text
+            [attr.x]="52 + ((width - 52 - 20) * i) / (labels.length - 1)"
+            [attr.y]="height - 12"
+            font-size="11"
+            text-anchor="middle"
+            fill="#64748B"
+          >
+            {{ lbl }}
+          </text>
+        </ng-container>
+      </g>
+
+      <!-- Render ALL series -->
+      <ng-container *ngFor="let s of series; let si = index">
+        <path [attr.d]="areaPath(s.values)" [attr.fill]="s.fill" opacity="0.18"></path>
+
+        <path
+          [attr.d]="linePath(s.values)"
+          [attr.stroke]="s.stroke"
+          fill="none"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </ng-container>
+    </svg>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="w-full max-w-[520px] rounded-[36px] bg-white p-4 shadow-sm">
+  <div
+    class="text-teal-600 font-['ImpactWeb','Impact','Haettenschweiler','Arial_Narrow_Bold',sans-serif] tracking-wide text-md"
+    i18n="@@sharedMembers.title"
+  >
+    SHARED MEMBERS
+  </div>
+
+  <div class="mt-2">
+    <div *ngIf="loading()" class="text-sm text-slate-500" i18n="@@sharedMembers.loading">
+      Loading...
+    </div>
+
+    <div *ngIf="error()" class="text-sm text-rose-600">
+      {{ error() }}
+    </div>
+
+    <div *ngIf="!loading() && !error()" class="flex items-center">
+      <div class="flex items-center">
+        <ng-container *ngFor="let m of visibleMembers(); let i = index">
+          <div class="relative" [ngStyle]="{ 'margin-left': i === 0 ? '0px' : '-7px' }">
+            <app-user-avatar [id]="m.id" [size]="30" ringClass="ring-white"></app-user-avatar>
+          </div>
+        </ng-container>
+
+        <div
+          *ngIf="extraCount() > 0"
+          class="relative grid place-items-center rounded-full bg-teal-100 text-teal-500 font-bold ring-4 ring-white"
+          [ngStyle]="{
+            width: '30px',
+            height: '30px',
+            'margin-left': visibleMembers().length ? '-7px' : '0px',
+          }"
+          aria-label="+{{ extraCount() }}"
+          i18n-aria-label="@@sharedMembers.extraCountAria"
+        >
+          +{{ extraCount() }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

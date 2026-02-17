@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.reimii.ecopulse",
+      "sha256_cert_fingerprints": [
+        "76:00:CC:DC:08:AA:84:EF:05:17:0A:6D:1C:B7:10:33:8F:66:C4:4F:BA:F4:9D:6E:C9:7A:D0:55:C5:FE:0F:47",
+        "2A:68:0A:CD:44:3E:B0:F9:8E:8A:F5:38:38:D7:A5:A8:6C:03:C7:E9:88:88:26:9E:B0:D1:4E:D7:53:CD:EC:CB"
+      ]
+    }
+  }
+]

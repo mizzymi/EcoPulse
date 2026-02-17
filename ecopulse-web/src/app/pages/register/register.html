@@ -1,0 +1,69 @@
+<app-background-gadient>
+  <div class="min-h-screen w-full flex items-center justify-center px-4">
+    <app-auth-hero>
+      <app-auth-card-logo />
+
+      <app-auth-card
+        [isRegister]="true"
+        [isLogin]="false"
+        title="Create Account"
+        i18n-title="@@auth.register.title"
+        quote="Join EcoPulse and track your money calmly."
+        i18n-quote="@@auth.register.quote"
+      >
+        <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5">
+          <app-auth-options
+            formControlName="email"
+            id="email"
+            label="Email Address"
+            i18n-label="@@auth.register.emailLabel"
+            placeholder="name@example.com"
+            i18n-placeholder="@@auth.register.emailPlaceholder"
+            inputType="email"
+            [leadingIcon]="mailIcon"
+          />
+
+          <app-auth-options
+            formControlName="password"
+            id="password"
+            label="Password"
+            i18n-label="@@auth.register.passwordLabel"
+            placeholder="••••••••"
+            i18n-placeholder="@@auth.register.passwordPlaceholder"
+            inputType="password"
+            [leadingIcon]="lockIcon"
+            [showPasswordToggle]="true"
+          />
+
+          <app-auth-options
+            formControlName="password2"
+            id="password2"
+            label="Confirm Password"
+            i18n-label="@@auth.register.password2Label"
+            placeholder="••••••••"
+            i18n-placeholder="@@auth.register.password2Placeholder"
+            inputType="password"
+            [leadingIcon]="lockIcon"
+            [showPasswordToggle]="true"
+          />
+
+          @if (
+            form.controls.password2.touched && form.controls.password2.hasError('passwordsMismatch')
+          ) {
+            <p class="text-sm text-amber-600" i18n="@@auth.register.passwordMismatch">
+              Passwords do not match.
+            </p>
+          }
+
+          <button
+            type="submit"
+            class="bg-teal-600 rounded-xl py-3 w-full text-white cursor-pointer mt-5"
+            i18n="@@auth.register.submit"
+          >
+            Register
+          </button>
+        </form>
+      </app-auth-card>
+    </app-auth-hero>
+  </div>
+</app-background-gadient>

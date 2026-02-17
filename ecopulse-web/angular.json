@@ -1,0 +1,87 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "ecopulse": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "es-ES": "src/locale/messages.es.xlf",
+          "ca-ES": "src/locale/messages.ca.xlf",
+          "gl-ES": "src/locale/messages.gl.xlf"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [{ "glob": "**/*", "input": "public" }],
+            "styles": ["src/styles.css"],
+            "polyfills": ["@angular/localize/init"],
+            "localize": true
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                { "type": "initial", "maximumWarning": "500kB", "maximumError": "1MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "4kB", "maximumError": "8kB" }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+
+            "en-US": {
+              "localize": ["en-US"],
+              "baseHref": "/"
+            },
+            "es-ES": {
+              "localize": ["es-ES"],
+              "baseHref": "/es-ES/"
+            },
+            "ca-ES": {
+              "localize": ["ca-ES"],
+              "baseHref": "/ca-ES/"
+            },
+            "gl-ES": {
+              "localize": ["gl-ES"],
+              "baseHref": "/gl-ES/"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": { "buildTarget": "ecopulse:build:production" },
+            "development": { "buildTarget": "ecopulse:build:development" },
+
+            "en-US": { "buildTarget": "ecopulse:build:en-US" },
+            "es-ES": { "buildTarget": "ecopulse:build:es-ES" },
+            "ca-ES": { "buildTarget": "ecopulse:build:ca-ES" },
+            "gl-ES": { "buildTarget": "ecopulse:build:gl-ES" }
+          },
+          "defaultConfiguration": "development"
+        },
+
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "711cb432-8e74-40a2-a13d-9af669c5cfe6"
+  }
+}

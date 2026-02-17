@@ -1,0 +1,37 @@
+<div class="p-7 sm:p-10 lg:p-12">
+  <app-ecopulse-name-logo />
+
+  <h1 class="mt-8 text-[40px] leading-[1.05] font-extrabold text-slate-900 md:text-5xl" i18n>
+    Track your money
+    <span class="block text-teal-600">calmly.</span>
+  </h1>
+
+  <p class="mt-4 max-w-md text-slate-500 leading-relaxed" i18n>
+    Manage your personal and shared finances with clarity. Simple, secure, and designed for your
+    peace of mind.
+  </p>
+
+  <div class="mt-8 space-y-3">
+    <a
+      routerLink="/auth/login"
+      class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3 font-bold text-white shadow-[0_10px_24px_rgba(15,152,135,0.22)] transition hover:-translate-y-[1px] hover:brightness-[1.02]"
+      aria-label="Login"
+    >
+      <span i18n>Login</span>
+      <span>→</span>
+    </a>
+
+    <a
+      routerLink="/auth/register"
+      class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 font-bold text-slate-900 transition hover:-translate-y-[1px] hover:bg-slate-50"
+      aria-label="Register"
+    >
+      <span i18n>Register</span>
+      <span class="font-extrabold text-teal-600">+</span>
+    </a>
+  </div>
+
+  <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-400">
+    <app-privacy-terms />
+  </div>
+</div>

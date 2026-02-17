@@ -1,0 +1,58 @@
+<div class="space-y-3 p-2">
+  <div class="text-sm font-semibold text-slate-900" i18n="@@household.create.title">
+    Create household
+  </div>
+
+  <input
+    #nameInput
+    type="text"
+    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-200"
+    placeholder="Household name"
+    i18n-placeholder="@@household.create.namePlaceholder"
+    [value]="name"
+    (input)="nameChange.emit(nameInput.value)"
+    [disabled]="busy"
+  />
+
+  <div class="flex gap-2">
+    <input
+      #curInput
+      type="text"
+      maxlength="3"
+      class="w-24 rounded-xl border border-slate-200 px-3 py-2 text-sm uppercase outline-none focus:ring-2 focus:ring-teal-200"
+      placeholder="EUR"
+      i18n-placeholder="@@household.create.currencyPlaceholder"
+      [value]="currency"
+      (input)="currencyChange.emit(curInput.value)"
+      [disabled]="busy"
+    />
+
+    <button
+      type="button"
+      (click)="create.emit()"
+      [disabled]="busy"
+      class="flex-1 rounded-xl bg-teal-600 hover:bg-teal-700 disabled:opacity-60 px-4 py-2 text-sm font-semibold text-white"
+    >
+      <ng-container *ngIf="busy; else createLabel">
+        <span i18n="@@household.create.creating">Creating...</span>
+      </ng-container>
+      <ng-template #createLabel>
+        <span i18n="@@household.create.create">Create</span>
+      </ng-template>
+    </button>
+  </div>
+
+  <div *ngIf="error" class="text-xs text-rose-600">
+    {{ error }}
+  </div>
+
+  <button
+    type="button"
+    (click)="cancel.emit()"
+    [disabled]="busy"
+    class="text-xs font-semibold text-slate-600 hover:text-slate-800 disabled:opacity-60"
+    i18n="@@household.create.cancel"
+  >
+    Cancel
+  </button>
+</div>

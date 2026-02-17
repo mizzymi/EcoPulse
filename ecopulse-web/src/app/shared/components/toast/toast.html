@@ -1,0 +1,44 @@
+@if (toast.state().open) {
+  <div class="fixed inset-x-0 top-4 z-[1000] flex justify-center px-4">
+    <div
+      class="w-full max-w-sm rounded-xl border bg-white px-4 py-3 shadow-lg flex items-start gap-3"
+      [class.border-emerald-200]="toast.state().type === 'success'"
+      [class.border-rose-200]="toast.state().type === 'error'"
+      role="status"
+      aria-live="polite"
+    >
+      <!-- Icon -->
+      <div
+        class="mt-0.5 h-8 w-8 rounded-lg grid place-items-center"
+        [class.bg-emerald-50]="toast.state().type === 'success'"
+        [class.bg-rose-50]="toast.state().type === 'error'"
+      >
+        @if (toast.state().type === 'success') {
+          <span class="text-emerald-700 font-black">✓</span>
+        } @else {
+          <span class="text-rose-700 font-black">!</span>
+        }
+      </div>
+
+      <!-- Text -->
+      <div class="min-w-0">
+        <div class="text-sm font-extrabold text-slate-900">
+          {{ toast.state().type === 'success' ? 'Success' : 'Error' }}
+        </div>
+        <div class="text-sm text-slate-600 break-words">
+          {{ toast.state().message }}
+        </div>
+      </div>
+
+      <!-- Close -->
+      <button
+        type="button"
+        class="ml-auto rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+        (click)="toast.hide()"
+        aria-label="Close toast"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+}

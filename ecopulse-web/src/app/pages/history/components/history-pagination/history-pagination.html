@@ -1,0 +1,41 @@
+<div class="flex items-center justify-between">
+  <div class="text-xs text-slate-500" i18n="@@pagination.showing">
+    Showing {{ showFrom }} – {{ showTo }} of {{ total }}
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button
+      type="button"
+      class="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 disabled:opacity-50"
+      (click)="prev.emit()"
+      [disabled]="page <= 1"
+      aria-label="Previous page"
+      i18n-aria-label="@@pagination.prev.aria"
+      title="Previous"
+      i18n-title="@@pagination.prev.title"
+    >
+      <span i18n="@@pagination.prev">Prev</span>
+    </button>
+
+    <div
+      class="text-sm font-semibold text-slate-700"
+      aria-label="Page {{ page }} of {{ totalPages }}"
+      i18n-aria-label="@@pagination.pageOf"
+    >
+      {{ page }} / {{ totalPages }}
+    </div>
+
+    <button
+      type="button"
+      class="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 disabled:opacity-50"
+      (click)="next.emit()"
+      [disabled]="page >= totalPages"
+      aria-label="Next page"
+      i18n-aria-label="@@pagination.next.aria"
+      title="Next"
+      i18n-title="@@pagination.next.title"
+    >
+      <span i18n="@@pagination.next">Next</span>
+    </button>
+  </div>
+</div>

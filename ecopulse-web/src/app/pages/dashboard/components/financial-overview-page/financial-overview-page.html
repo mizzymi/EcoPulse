@@ -1,0 +1,147 @@
+<div class="h-full w-full p-2">
+  <div class="max-w-7xl w-full mx-auto">
+    <div class="flex flex-col w-full items-center justify-center gap-6">
+      <div class="flex w-full items-start justify-between gap-6">
+        <div>
+          <h1 class="text-2xl font-semibold text-slate-900" i18n="@@dashboard.title">
+            Financial Overview
+          </h1>
+          <p class="text-sm text-slate-500 mt-1" i18n="@@dashboard.subtitle">
+            Welcome back! Here's what's happening with your money.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            class="px-3 py-2 rounded-xl bg-white border border-slate-100 shadow-sm text-sm font-medium text-slate-700"
+            [attr.aria-label]="'Selected month: ' + monthLabel()"
+            i18n-aria-label="@@dashboard.month.selectedAria"
+          >
+            {{ monthLabel() }}
+          </button>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <!-- Prev month -->
+        <button
+          type="button"
+          (click)="prevMonth()"
+          class="h-10 w-10 rounded-xl bg-white/80 backdrop-blur border border-slate-100 shadow-sm grid place-items-center text-slate-700 hover:bg-white transition active:scale-[0.98]"
+          aria-label="Previous month"
+          i18n-aria-label="@@dashboard.month.prev"
+          title="Previous month"
+          i18n-title="@@dashboard.month.prev"
+        >
+          <lucide-angular class="h-[18px] w-[18px]" [img]="iconPrev" />
+        </button>
+
+        <!-- Month pill -->
+        <div
+          class="h-10 px-4 rounded-xl bg-white/80 backdrop-blur border border-slate-100 shadow-sm flex items-center gap-2 text-slate-800"
+        >
+          <lucide-angular class="h-[16px] w-[16px] text-slate-500" [img]="iconCalendar" />
+          <span class="text-sm font-semibold">{{ monthLabel() }}</span>
+        </div>
+
+        <!-- Next month -->
+        <button
+          type="button"
+          (click)="nextMonth()"
+          class="h-10 w-10 rounded-xl bg-white/80 backdrop-blur border border-slate-100 shadow-sm grid place-items-center text-slate-700 hover:bg-white transition active:scale-[0.98]"
+          aria-label="Next month"
+          i18n-aria-label="@@dashboard.month.next"
+          title="Next month"
+          i18n-title="@@dashboard.month.next"
+        >
+          <lucide-angular class="h-[18px] w-[18px]" [img]="iconNext" />
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngIf="vm$() as vmObs; else noHousehold">
+      <ng-container *ngIf="vmObs | async as vm">
+        <!-- Top cards -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <app-stat-card
+            title="Total Balance"
+            i18n-title="@@cards.totalBalance.title"
+            [value]="formatMoney(vm.cards.totalBalance)"
+            badge="Current"
+            i18n-badge="@@cards.badge.current"
+            [icon]="iconBalance"
+            tone="neutral"
+          />
+
+          @if (!isSmall()) {
+            <app-stat-card
+              title="Income"
+              i18n-title="@@cards.income.title"
+              [value]="formatMoney(vm.cards.income)"
+              deltaTone="up"
+              [icon]="iconIncome"
+              tone="positive"
+            />
+
+            <app-stat-card
+              title="Expenses"
+              i18n-title="@@cards.expenses.title"
+              [value]="formatMoney(vm.cards.expenses)"
+              deltaTone="down"
+              [icon]="iconExpenses"
+              tone="negative"
+            />
+
+            <app-stat-card
+              title="Savings"
+              i18n-title="@@cards.savings.title"
+              [value]="formatMoney(vm.cards.savings)"
+              badge="Current"
+              i18n-badge="@@cards.badge.current"
+              [icon]="iconNet"
+              tone="dark"
+            />
+          }
+        </div>
+
+        <!-- Main grid -->
+        <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4">
+          <div class="xl:col-span-2">
+            <app-cash-flow-chart
+              [labels]="vm.chart.labels"
+              [series]="[
+                {
+                  name: incomeLabel,
+                  values: vm.chart.incomeByWeek,
+                  stroke: '#0F766E',
+                  fill: '#0F766E',
+                },
+                {
+                  name: expenseLabel,
+                  values: vm.chart.expenseByWeek,
+                  stroke: '#F43F5E',
+                  fill: '#F43F5E',
+                },
+              ]"
+              [width]="780"
+              [height]="300"
+            />
+          </div>
+
+          <div>
+            <app-upcoming-bills [bills]="vm.upcoming"></app-upcoming-bills>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #noHousehold>
+      <div
+        class="mt-6 p-4 rounded-xl bg-white border border-slate-100 text-slate-700"
+        i18n="@@dashboard.noHousehold"
+      >
+        Select a household to load data.
+      </div>
+    </ng-template>
+  </div>
+</div>

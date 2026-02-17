@@ -1,0 +1,49 @@
+<app-container (entryCreated)="vm.refresh()">
+  <div class="flex flex-col h-[calc(100%-30px)] w-[calc(100%-20px)] min-w-0 m-[10px]">
+    <app-history-header [isSmall]="isSmall()" (addNew)="onAddNew()">
+      <app-house-hold-selector />
+      <app-lang-switcher />
+    </app-history-header>
+
+    <div class="w-full min-w-0 mt-5">
+      <div class="rounded-3xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <app-history-filters
+          [q]="vm.q()"
+          (search)="onSearch($event)"
+          (category)="setCategory($event)"
+          (type)="setType($event)"
+        />
+
+        <div class="p-5">
+          <div *ngIf="vm.loading()" class="text-sm text-slate-500" i18n="@@history.loading">
+            Loading...
+          </div>
+
+          <div *ngIf="vm.error()" class="text-sm text-rose-600">
+            {{ vm.error() }}
+          </div>
+
+          <div *ngIf="!vm.loading() && !vm.error()">
+            <app-history-list
+              [items]="vm.items()"
+              [formatMoney]="vm.formatMoney.bind(vm)"
+              (edit)="onEdit($event)"
+              (remove)="onDelete($event)"
+            />
+
+            <app-history-pagination
+              class="block mt-5"
+              [page]="vm.page()"
+              [totalPages]="vm.totalPages()"
+              [showFrom]="vm.showFrom()"
+              [showTo]="vm.showTo()"
+              [total]="vm.total()"
+              (prev)="prev()"
+              (next)="next()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-container>

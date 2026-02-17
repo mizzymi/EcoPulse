@@ -1,0 +1,70 @@
+<div *ngIf="items.length === 0" class="text-sm text-slate-500" i18n="@@tx.list.empty">
+  No transactions found.
+</div>
+
+<div *ngIf="items.length" class="divide-y divide-slate-100">
+  <div *ngFor="let t of items" class="flex items-center justify-between gap-4 py-4">
+    <lucide-angular [img]="iconForCategory(t.category)" [size]="18"></lucide-angular>
+
+    <div class="min-w-0 flex-1">
+      <div class="text-sm font-semibold text-slate-900 truncate">
+        {{ t.note }}
+      </div>
+
+      <div class="text-xs text-slate-500 truncate">
+        @if (t.category) {
+          {{ t.category }}
+        } @else {
+          <span aria-hidden="true">—</span>
+        }
+        <span aria-hidden="true"> • </span>
+
+        @if (t.paymentMethod) {
+          {{ t.paymentMethod }}
+        } @else {
+          <span aria-hidden="true">—</span>
+        }
+        <span aria-hidden="true"> • </span>
+
+        {{ t.date | date: 'mediumDate' }}
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div
+        class="text-sm font-extrabold whitespace-nowrap"
+        [class.text-emerald-600]="t.amount >= 0"
+        [class.text-slate-700]="t.amount < 0"
+      >
+        {{ formatMoney(t.amount, t.currency) }}
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-1">
+        <button
+          type="button"
+          class="h-9 w-9 rounded-xl grid place-items-center hover:bg-slate-50 text-slate-600"
+          (click)="edit.emit(t)"
+          aria-label="Edit transaction"
+          i18n-aria-label="@@tx.list.action.editAria"
+          title="Edit"
+          i18n-title="@@tx.list.action.editTitle"
+        >
+          <lucide-angular [img]="pencil" [size]="16"></lucide-angular>
+        </button>
+
+        <button
+          type="button"
+          class="h-9 w-9 rounded-xl grid place-items-center hover:bg-rose-50 text-rose-600"
+          (click)="remove.emit(t)"
+          aria-label="Delete transaction"
+          i18n-aria-label="@@tx.list.action.deleteAria"
+          title="Delete"
+          i18n-title="@@tx.list.action.deleteTitle"
+        >
+          <lucide-angular [img]="trash" [size]="16"></lucide-angular>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

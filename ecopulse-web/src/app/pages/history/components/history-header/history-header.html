@@ -1,0 +1,35 @@
+<div
+  class="w-full min-w-0 rounded-3xl border border-slate-100 bg-white/70 backdrop-blur shadow-sm px-6 py-5 sm:px-8 sm:py-6"
+>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between min-w-0">
+    <div class="min-w-0">
+      <h1
+        class="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight"
+        i18n="@@history.title"
+      >
+        History of Transactions
+      </h1>
+      <p class="text-sm text-slate-500" i18n="@@history.subtitle">
+        View and manage all your financial activity.
+      </p>
+    </div>
+
+    <div
+      class="flex items-stretch gap-3 sm:items-center sm:justify-end min-w-0"
+      [class.!justify-center]="isSmall"
+    >
+      <ng-content></ng-content>
+
+      <button
+        type="button"
+        class="rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 shadow-sm flex items-center gap-2"
+        (click)="addNew.emit()"
+        aria-label="Add new transaction"
+        i18n-aria-label="@@history.addNew.aria"
+      >
+        <span class="text-base leading-none" aria-hidden="true">+</span>
+        <span i18n="@@history.addNew">Add New</span>
+      </button>
+    </div>
+  </div>
+</div>

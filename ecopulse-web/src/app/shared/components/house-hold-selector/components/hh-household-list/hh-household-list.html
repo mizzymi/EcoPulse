@@ -1,0 +1,17 @@
+<div class="max-h-[320px] overflow-auto">
+  <app-hh-household-row
+    *ngFor="let h of households"
+    [household]="h"
+    [selected]="h.id === selectedId"
+    (select)="selectHousehold.emit(h)"
+  />
+</div>
+
+<button
+  type="button"
+  class="w-full flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800"
+  (click)="startCreate.emit()"
+  i18n="@@household.list.createButton"
+>
+  + Create household
+</button>

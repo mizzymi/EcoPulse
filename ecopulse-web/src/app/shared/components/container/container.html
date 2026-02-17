@@ -1,0 +1,23 @@
+<app-background-gadient>
+  <div class="flex flex-1 overflow-auto">
+    <app-aside-nav-bar />
+
+    <div class="flex-1 min-w-0">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
+  <app-bottom-nav-bar />
+
+  <app-new-entry-modal
+    [open]="modal.open()"
+    [existingRows]="modal.rows()"
+    [defaultCurrency]="defaultCurrency"
+    [initial]="modal.initial()"
+    [mode]="modal.mode()"
+    (close)="modal.hide()"
+    (save)="onModalSave($event)"
+  ></app-new-entry-modal>
+
+  <app-confirm-dialog />
+</app-background-gadient>

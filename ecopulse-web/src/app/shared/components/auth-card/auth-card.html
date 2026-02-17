@@ -1,0 +1,36 @@
+<div class="flex flex-col items-center justify-center p-4 gap-2">
+  <h2
+    class="font-['ImpactWeb','Impact','Haettenschweiler','Arial_Narrow_Bold',sans-serif] text-3xl leading-none tracking-tight text-slate-900 mt-10"
+  >
+    {{ title() }}
+  </h2>
+  <p class="text-sm text-slate-400 mb-10">{{ quote() }}</p>
+
+  <ng-content />
+
+  @if (isLogin()) {
+    <div class="py-4 border-t-1 border-slate-400 mt-10">
+      <p class="text-sm text-slate-400" i18n="@@auth.login.noAccount">
+        Don't have an account?
+        <a
+          class="text-teal-600 cursor-pointer font-['ImpactWeb','Impact','Haettenschweiler','Arial_Narrow_Bold',sans-serif]"
+          [routerLink]="['/auth/register']"
+        >
+          Create Account
+        </a>
+      </p>
+    </div>
+  } @else if (isRegister()) {
+    <div class="py-4 border-t-1 border-slate-400 mt-10">
+      <p class="text-sm text-slate-400" i18n="@@auth.register.haveAccount">
+        Already have an account?
+        <a
+          class="text-teal-600 cursor-pointer font-['ImpactWeb','Impact','Haettenschweiler','Arial_Narrow_Bold',sans-serif]"
+          [routerLink]="['/auth/login']"
+        >
+          Sign In
+        </a>
+      </p>
+    </div>
+  }
+</div>

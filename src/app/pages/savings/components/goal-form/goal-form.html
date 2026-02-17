@@ -1,0 +1,95 @@
+<div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+  <h2 class="text-base font-semibold text-slate-900" i18n="@@savings.createTitle">
+    Create New Goal
+  </h2>
+  <p class="text-sm text-slate-500 mt-1" i18n="@@savings.createSubtitle">
+    Define your target and start saving.
+  </p>
+
+  <div class="mt-5 space-y-4">
+    <div>
+      <label class="block text-xs font-medium text-slate-600 mb-1" i18n="@@savings.form.nameLabel"
+        >Goal name</label
+      >
+      <input
+        class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-200"
+        placeholder="e.g. New Camera"
+        i18n-placeholder="@@savings.form.namePlaceholder"
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+        aria-label="Goal name"
+        i18n-aria-label="@@savings.form.nameAria"
+      />
+    </div>
+
+    <div>
+      <label class="block text-xs font-medium text-slate-600 mb-1" i18n="@@savings.form.targetLabel"
+        >Target amount</label
+      >
+      <input
+        type="number"
+        min="0"
+        class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-200"
+        placeholder="0.00"
+        i18n-placeholder="@@savings.form.targetPlaceholder"
+        [ngModel]="target()"
+        (ngModelChange)="target.set(parseNumber($event))"
+        aria-label="Target amount"
+        i18n-aria-label="@@savings.form.targetAria"
+      />
+    </div>
+
+    <div>
+      <label
+        class="block text-xs font-medium text-slate-600 mb-1"
+        i18n="@@savings.form.deadlineLabel"
+        >Deadline</label
+      >
+      <input
+        type="date"
+        class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-200"
+        [ngModel]="deadline()"
+        (ngModelChange)="deadline.set($event)"
+        aria-label="Deadline"
+        i18n-aria-label="@@savings.form.deadlineAria"
+      />
+    </div>
+
+    <div
+      *ngIf="error()"
+      class="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl p-3"
+    >
+      <span i18n="@@savings.form.errorPrefix">Error:</span>
+      {{ error() }}
+    </div>
+
+    <div
+      *ngIf="success()"
+      class="text-sm text-teal-700 bg-teal-50 border border-teal-100 rounded-xl p-3"
+      i18n="@@savings.form.createdOk"
+    >
+      Goal created.
+    </div>
+
+    <button
+      type="button"
+      class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-teal-600 text-white text-sm font-semibold shadow-sm hover:bg-teal-700 active:bg-teal-800 disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="!canSubmit() || submitting()"
+      (click)="submit()"
+      aria-label="Create goal"
+      i18n-aria-label="@@savings.form.createAria"
+      i18n="@@savings.form.createBtn"
+    >
+      <span aria-hidden="true">✓</span>
+      <span>Create Goal</span>
+    </button>
+
+    <p
+      class="text-xs text-slate-500 text-center"
+      *ngIf="!facade.householdId()"
+      i18n="@@savings.form.needsHousehold"
+    >
+      Select a household first.
+    </p>
+  </div>
+</div>

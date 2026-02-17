@@ -1,0 +1,54 @@
+<div class="rounded-2xl bg-white border border-slate-100 shadow-sm p-4">
+  <div class="flex items-start justify-between gap-3">
+    <div class="min-w-0">
+      <div class="flex items-center gap-2">
+        <div
+          class="h-9 w-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center"
+        >
+          <span class="text-slate-700" aria-hidden="true"><lucide-angular [img]="targetIcon"/></span>
+        </div>
+
+        <div class="min-w-0">
+          <div class="font-semibold text-slate-900 truncate">{{ goal.name }}</div>
+
+          <div class="text-xs text-slate-500" *ngIf="deadlineLabel() as dl">
+            <span i18n="@@savings.goal.targetLabel">Target</span>:
+            {{ dl }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="text-xs font-medium text-slate-500 hover:text-red-600 px-2 py-1 rounded-lg hover:bg-red-50"
+      (click)="delete.emit(goal.id)"
+      aria-label="Delete goal"
+      i18n-aria-label="@@savings.goal.deleteAria"
+      i18n="@@common.delete"
+    >
+      Delete
+    </button>
+  </div>
+
+  <div class="mt-4 flex items-baseline justify-between">
+    <div class="text-lg font-semibold text-slate-900">
+      {{ saved() | number: '1.0-0' }}
+    </div>
+    <div class="text-sm text-slate-500">
+      <span aria-hidden="true">/</span>
+      {{ target() | number: '1.0-0' }}
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <div class="h-2 rounded-full bg-slate-100 overflow-hidden" aria-hidden="true">
+      <div class="h-full bg-teal-600 rounded-full" [style.width.%]="progressPct()"></div>
+    </div>
+
+    <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+      <span i18n="@@savings.goal.progress">Progress</span>
+      <span class="font-medium text-slate-700">{{ progressPct() }}%</span>
+    </div>
+  </div>
+</div>

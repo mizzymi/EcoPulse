@@ -1,0 +1,34 @@
+<div class="rounded-2xl bg-white/60 border border-slate-100 shadow-sm p-4">
+  <ng-container *ngIf="facade.householdId(); else noHousehold">
+    <ng-container *ngIf="!facade.goalsError(); else errorTpl">
+      <div
+        *ngIf="facade.goalsSorted().length === 0"
+        class="text-sm text-slate-500 py-10 text-center"
+        i18n="@@savings.empty"
+      >
+        No goals yet. Create your first one on the right.
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <app-goal-card
+          *ngFor="let g of facade.goalsSorted(); trackBy: trackById"
+          [goal]="g"
+          (delete)="facade.deleteGoal($event).subscribe()"
+        />
+      </div>
+    </ng-container>
+
+    <ng-template #errorTpl>
+      <div class="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl p-3">
+        <span i18n="@@savings.loadErrorPrefix">Error:</span>
+        {{ facade.goalsError() }}
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #noHousehold>
+    <div class="text-sm text-slate-500 py-10 text-center" i18n="@@savings.selectHousehold">
+      Select a household to see savings goals.
+    </div>
+  </ng-template>
+</div>

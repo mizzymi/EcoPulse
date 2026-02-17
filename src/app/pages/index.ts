@@ -4,3 +4,4 @@ export { History } from './history/history';
 export { Home } from './home/home';
 export { Login } from './login/login';
 export { Register } from './register/register';
+export { Savings } from './savings/savings';

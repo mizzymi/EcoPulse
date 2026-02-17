@@ -993,6 +993,294 @@
                 </context-group>
             </trans-unit>
 
+            <trans-unit id="savings.goal.targetLabel" datatype="html">
+                <source>Target</source>
+                <target>Objetivo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-card/goal-card.html</context>
+                    <context context-type="linenumber">15,17</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.goal.deleteAria" datatype="html">
+                <source>Delete goal</source>
+                <target>Eliminar objetivo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-card/goal-card.html</context>
+                    <context context-type="linenumber">26,27</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.goal.progress" datatype="html">
+                <source>Progress</source>
+                <target>Progreso</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-card/goal-card.html</context>
+                    <context context-type="linenumber">50,51</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.createTitle" datatype="html">
+                <source> Create New Goal </source>
+                <target> Crear nuevo objetivo </target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">3,5</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.createSubtitle" datatype="html">
+                <source> Define your target and start saving. </source>
+                <target> Define tu objetivo y empieza a ahorrar. </target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">6,9</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.nameLabel" datatype="html">
+                <source>Goal name</source>
+                <target>Nombre del objetivo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">12,15</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.namePlaceholder" datatype="html">
+                <source>e.g. New Camera</source>
+                <target>p. ej., Nueva cámara</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">16,17</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.nameAria" datatype="html">
+                <source>Goal name</source>
+                <target>Nombre del objetivo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">20,21</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.targetLabel" datatype="html">
+                <source>Target amount</source>
+                <target>Cantidad objetivo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">27,30</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.targetPlaceholder" datatype="html">
+                <source>0.00</source>
+                <target>0,00</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">34</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.targetAria" datatype="html">
+                <source>Target amount</source>
+                <target>Cantidad objetivo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">37,38</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.deadlineLabel" datatype="html">
+                <source>Deadline</source>
+                <target>Fecha límite</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">46,49</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.deadlineAria" datatype="html">
+                <source>Deadline</source>
+                <target>Fecha límite</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">53,54</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.errorPrefix" datatype="html">
+                <source>Error:</source>
+                <target>Error:</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">62,64</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.createdOk" datatype="html">
+                <source> Goal created. </source>
+                <target> Objetivo creado. </target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">71,75</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.createAria" datatype="html">
+                <source>Create goal</source>
+                <target>Crear objetivo</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">79,80</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.createBtn" datatype="html">
+                <source><x id="START_TAG_SPAN" ctype="x-span"
+                        equiv-text="&lt;span aria-hidden=&quot;true&quot;&gt;" />✓<x
+                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
+                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />Create
+                    Goal<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></source>
+                <target><x id="START_TAG_SPAN" ctype="x-span"
+                        equiv-text="&lt;span aria-hidden=&quot;true&quot;&gt;" />✓<x
+                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
+                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />Crear
+                    objetivo<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">83,86</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.form.needsHousehold" datatype="html">
+                <source> Select a household first. </source>
+                <target> Selecciona un hogar primero. </target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goal-form/goal-form.html</context>
+                    <context context-type="linenumber">92,96</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.empty" datatype="html">
+                <source> No goals yet. Create your first one on the right. </source>
+                <target> Aún no hay objetivos. Crea el primero a la derecha. </target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goals-grid/goals-grid.html</context>
+                    <context context-type="linenumber">9,12</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.loadErrorPrefix" datatype="html">
+                <source>Error:</source>
+                <target>Error:</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goals-grid/goals-grid.html</context>
+                    <context context-type="linenumber">23,24</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.selectHousehold" datatype="html">
+                <source> Select a household to see savings goals. </source>
+                <target> Selecciona un hogar para ver los objetivos de ahorro. </target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/goals-grid/goals-grid.html</context>
+                    <context context-type="linenumber">31,34</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.title" datatype="html">
+                <source>Financial Goals</source>
+                <target>Objetivos financieros</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
+                    <context context-type="linenumber">5,6</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.subtitle" datatype="html">
+                <source>Track progress towards your targets</source>
+                <target>Haz seguimiento del progreso hacia tus objetivos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
+                    <context context-type="linenumber">6,9</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.refreshAria" datatype="html">
+                <source>Refresh goals</source>
+                <target>Actualizar objetivos</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
+                    <context context-type="linenumber">13,14</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.refreshBtn" datatype="html">
+                <source><x id="START_TAG_SPAN" ctype="x-span"
+                        equiv-text="&lt;span class=&quot;text-base leading-none&quot; aria-hidden=&quot;true&quot;&gt;" />
+                    ↻<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
+                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />Refresh<x
+                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></source>
+                <target><x id="START_TAG_SPAN" ctype="x-span"
+                        equiv-text="&lt;span class=&quot;text-base leading-none&quot; aria-hidden=&quot;true&quot;&gt;" />
+                    ↻<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
+                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />
+                    Actualizar<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">
+                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
+                    <context context-type="linenumber">17,19</context>
+                </context-group>
+            </trans-unit>
+
+            <trans-unit id="savings.err.noHousehold" datatype="html">
+                <source>No household selected</source>
+                <target>No se ha seleccionado ningún hogar</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/pages/savings/data/savings.facade.ts</context>
+                    <context context-type="linenumber">21</context>
+                </context-group>
+                <note priority="1" from="description">Error when no household is selected</note>
+                <note priority="1" from="meaning">Savings</note>
+            </trans-unit>
+
+            <trans-unit id="savings.err.loadGoalsFailed" datatype="html">
+                <source>Failed to load savings goals</source>
+                <target>No se han podido cargar los objetivos de ahorro</target>
+                <context-group purpose="location">
+                    <context context-type="sourcefile">src/app/pages/savings/data/savings.facade.ts</context>
+                    <context context-type="linenumber">22</context>
+                </context-group>
+                <note priority="1" from="description">Error when loading savings goals</note>
+                <note priority="1" from="meaning">Savings</note>
+            </trans-unit>
+
             <trans-unit id="3226661974700139719" datatype="html">
                 <source>Secure access to your finances</source>
                 <target>Acceso seguro a tus finanzas</target>
@@ -1269,16 +1557,6 @@
                     <context context-type="sourcefile">
                         src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
                     <context context-type="linenumber">18</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="nav.goals" datatype="html">
-                <source>Goals</source>
-                <target>Objetivos</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
-                    <context context-type="linenumber">23</context>
                 </context-group>
             </trans-unit>
 

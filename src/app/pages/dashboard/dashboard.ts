@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Container, HouseHoldSelector, SelectedHouseholdService } from '../../shared';
+import { Container, HouseHoldSelector, LangSwitcher, SelectedHouseholdService } from '../../shared';
 import { FinancialOverviewPage } from './components';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,7 +7,7 @@ import { map } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Container, FinancialOverviewPage, HouseHoldSelector],
+  imports: [Container, FinancialOverviewPage, HouseHoldSelector, LangSwitcher],
   templateUrl: './dashboard.html',
 })
 export class Dashboard {

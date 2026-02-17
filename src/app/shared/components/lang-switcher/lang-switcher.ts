@@ -1,9 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DOCUMENT } from '@angular/common';
-
-type Locale = 'en-US' | 'es-ES' | 'ca-ES' | 'gl-ES';
-
+import { Locale } from '../../services';
 @Component({
   selector: 'app-lang-switcher',
   standalone: true,

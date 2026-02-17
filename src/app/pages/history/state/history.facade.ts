@@ -1,6 +1,6 @@
 import { DestroyRef, computed, effect, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ApiService, LedgerEntryDto, LedgerEntryType, SelectedHouseholdService, TransactionRow } from '../../../shared';
+import { ApiService, LanguageService, LedgerEntryDto, LedgerEntryType, SelectedHouseholdService, TransactionRow } from '../../../shared';
 import { mapLedgerEntriesToRows } from './history.mapper';
 
 @Injectable()
@@ -8,6 +8,7 @@ export class HistoryFacade {
     private api = inject(ApiService);
     private destroyRef = inject(DestroyRef);
     private householdSvc = inject(SelectedHouseholdService);
+    private language = inject(LanguageService);
 
     // selected household id (signal from shared service)
     readonly selectedHouseholdId = this.householdSvc.selectedHouseholdId;
@@ -35,7 +36,9 @@ export class HistoryFacade {
     readonly entries = signal<LedgerEntryDto[]>([]);
 
     // mapped rows
-    readonly rowsAll = computed<TransactionRow[]>(() => mapLedgerEntriesToRows(this.entries()));
+    readonly rowsAll = computed<TransactionRow[]>(() =>
+        mapLedgerEntriesToRows(this.entries(), this.language.lang())
+    );
 
     // filtered
     readonly filteredRows = computed(() => {

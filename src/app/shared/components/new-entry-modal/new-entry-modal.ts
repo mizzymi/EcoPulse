@@ -31,7 +31,7 @@ import {
   Check,
 } from 'lucide-angular';
 
-import { TransactionRow } from '../../../shared';
+import { DefaultCategoryKey, TransactionRow } from '../../../shared';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -57,17 +57,6 @@ export type NewEntryPayload = {
   note: string;
 };
 
-type DefaultCategoryKey =
-  | 'FOOD'
-  | 'TRANSPORT'
-  | 'RENT'
-  | 'SHOPPING'
-  | 'UTILITIES'
-  | 'FUN'
-  | 'HEALTH'
-  | 'SALARY'
-  | 'PETS';
-
 @Component({
   selector: 'app-new-entry-modal',
   standalone: true,
@@ -81,7 +70,7 @@ export class NewEntryModal {
   private _initial: Partial<NewEntryPayload> | null = null;
 
   // Responsive
-  isSmall = toSignal(this.bp.observe('(max-width: 639px)').pipe(map((r) => r.matches)), {
+  isSmall = toSignal(this.bp.observe('(max-height: 853px)').pipe(map((r) => r.matches)), {
     initialValue: false,
   });
 

@@ -216,14 +216,17 @@ export type RecurringDefDto = {
 };
 
 export type TransactionRow = {
-  id: string;
-  note: string;
-  subtitle?: string;
-  category?: string;
-  date: string;
-  paymentMethod?: string;
-  amount: number;
-  currency: string;
+    id: string;
+    note: string;
+    subtitle?: string;
+    category?: string | null;
+    categoryLabel?: string;
+    date: string;
+    paymentMethod?: string | null;
+    paymentMethodLabel?: string;
+    amount: number;
+    currency: string;
+    type?: 'INCOME' | 'EXPENSE';
 };
 
 export type PostRecurringInstanceResponseDto =

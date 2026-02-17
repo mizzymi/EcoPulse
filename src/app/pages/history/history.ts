@@ -3,7 +3,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
-import { Container, HouseHoldSelector, NewEntryModalService, LangSwitcher } from '../../shared';
+import { Container, HouseHoldSelector, NewEntryModalService } from '../../shared';
 import { NgIf } from '@angular/common';
 
 import { HistoryHeader } from './components/history-header/history-header';
@@ -27,7 +27,6 @@ import { ConfirmDialogService } from '../../shared';
     HistoryFilters,
     HistoryList,
     HistoryPagination,
-    LangSwitcher
   ],
   templateUrl: './history.html',
 })

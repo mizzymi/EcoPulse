@@ -12,7 +12,8 @@ import { ApiService, MembersListDto, SelectedHouseholdService } from '../../serv
 import { UserAvatar } from '../user-avatar/user-avatar';
 
 type MemberVM = {
-  id: string;        // used for gradient
+  id: string; 
+  username: string;
   role: string;
   isMe: boolean;
 };
@@ -71,8 +72,8 @@ export class HouseHoldMembers {
     if (!res) return [];
 
     return (res.members ?? []).map((m) => ({
-      // Use user.id for gradient seed (recommended)
       id: m.user?.id ?? m.userId,
+      username: m.user.username,
       role: m.role,
       isMe: m.isMe,
     }));

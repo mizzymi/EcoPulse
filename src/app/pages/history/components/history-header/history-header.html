@@ -21,16 +21,19 @@
       <div class="flex flex-wrap gap-3 min-w-0">
         <ng-content></ng-content>
       </div>
-      <button
-        type="button"
-        class="rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 shadow-sm flex items-center gap-2 whitespace-nowrap"
-        (click)="addNew.emit()"
-        aria-label="Add new transaction"
-        i18n-aria-label="@@history.addNew.aria"
-      >
-        <span class="text-base leading-none" aria-hidden="true">+</span>
-        <span i18n="@@history.addNew">Add New</span>
-      </button>
+      @if (!isSmall) {
+        <button
+          type="button"
+          class="rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 shadow-sm flex items-center gap-2 whitespace-nowrap"
+          (click)="addNew.emit()"
+          aria-label="Add new transaction"
+          i18n-aria-label="@@history.addNew.aria"
+        >
+          <span class="text-base leading-none" aria-hidden="true">+</span>
+
+          <span i18n="@@history.addNew">Add New</span>
+        </button>
+      }
     </div>
   </div>
 </div>

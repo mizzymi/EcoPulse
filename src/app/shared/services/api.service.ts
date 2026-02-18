@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, catchError, from, map, switchMap, tap, throwError } from 'rxjs';
+import { Observable, catchError, forkJoin, from, map, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { encrypt } from './encrypt';
-import { emailHasher } from './emailHasher';
 
 /* =========================================================
    Errors
@@ -54,19 +53,18 @@ export type HouseholdRole = 'OWNER' | 'ADMIN' | 'MEMBER';
 export type LedgerEntryType = 'INCOME' | 'EXPENSE';
 export type SavingsTxnType = 'DEPOSIT' | 'WITHDRAW';
 
-/** Adjust to your Prisma MoneyType enum if needed */
 export type MoneyType = 'CASH' | 'BANK' | 'CARD' | 'OTHER';
 
-/** User in your backend has no email, only emailHash */
 export type PublicUserDto = {
     id: string;
+    username: string;
     emailHash: string;
     createdAt?: string;
 };
 
 export type AuthResponseDto = {
     accessToken: string;
-    user: any; // You can strongly type if you want (id/emailHash/createdAt)
+    user: PublicUserDto;
 };
 
 export type HouseholdListItemDto = {
@@ -105,7 +103,7 @@ export type JoinRequestDto = {
     createdAt: string; // ISO
     decidedAt: string | null;
     decidedBy: string | null;
-    user: Pick<PublicUserDto, 'id' | 'emailHash'>;
+    user: Pick<PublicUserDto, 'id' | 'emailHash' | 'username'>;
 };
 
 export type MembersListDto = {
@@ -114,7 +112,7 @@ export type MembersListDto = {
         userId: string;
         role: HouseholdRole;
         joinedAt: string; // ISO
-        user: Pick<PublicUserDto, 'id' | 'emailHash'>;
+        user: Pick<PublicUserDto, 'id' | 'emailHash' | 'username'>;
         isMe: boolean;
     }>;
 };
@@ -124,7 +122,7 @@ export type MemberRoleUpdateDto = {
     userId: string;
     role: HouseholdRole;
     joinedAt: string; // ISO
-    user: Pick<PublicUserDto, 'id' | 'emailHash'>;
+    user: Pick<PublicUserDto, 'id' | 'emailHash' | 'username'>;
 };
 
 export type LedgerEntryDto = {
@@ -291,42 +289,42 @@ export class ApiService {
     // AUTH ROUTES
     // =========================================================
 
-    login(email: string, password: string): Observable<AuthResponseDto> {
+    login(email: string, password: string) {
         const normalizedEmail = email.trim().toLowerCase();
 
-        return from(Promise.all([encrypt(password), emailHasher(normalizedEmail)])).pipe(
-            switchMap(([passwordHash, emailHash]) => {
-                const dto = { email: emailHash, password: passwordHash };
-                return this.post<AuthResponseDto>('/auth/login', dto, { auth: false });
-            }),
-            tap((res) => this.setToken(res.accessToken)),
+        return from(Promise.all([encrypt(password), encrypt(normalizedEmail)])).pipe(
+            switchMap(([passwordHash, emailHash]) =>
+                this.post<AuthResponseDto>('/auth/login', { email: emailHash, password: passwordHash }, { auth: false })
+            ),
+            tap(res => this.setToken(res.accessToken)),
         );
     }
 
-    register(email: string, password: string): Observable<AuthResponseDto> {
+    register(email: string, password: string, username: string) {
         const normalizedEmail = email.trim().toLowerCase();
+        const cleanUsername = username.trim();
 
-        return from(Promise.all([encrypt(password), emailHasher(normalizedEmail)])).pipe(
-            switchMap(([passwordHash, emailHash]) => {
-                const dto = { email: emailHash, password: passwordHash };
-                return this.post<AuthResponseDto>('/auth/register', dto, { auth: false });
-            }),
-            tap((res) => this.setToken(res.accessToken)),
+        return from(Promise.all([encrypt(password), encrypt(normalizedEmail)])).pipe(
+            switchMap(([passwordHash, emailHash]) =>
+                this.post<AuthResponseDto>('/auth/register', { email: emailHash, username: cleanUsername, password: passwordHash }, { auth: false })
+            ),
+            tap(res => this.setToken(res.accessToken)),
         );
     }
 
-    requestPasswordReset(email: string): Observable<OkResponseDto> {
-        const normalizedEmail = email.trim().toLowerCase();
-
-        return from(emailHasher(normalizedEmail)).pipe(
-            switchMap((emailHash) => this.post<OkResponseDto>('/auth/request-password-reset', { email: emailHash }, { auth: false })),
+    requestPasswordReset(email: string) {
+        const normalized = email.trim().toLowerCase();
+        return this.post<OkResponseDto>(
+            "/auth/forgot-password",
+            { email: normalized },
+            { auth: false }
         );
     }
 
     resetPassword(email: string, token: string, newPassword: string): Observable<OkResponseDto> {
         const normalizedEmail = email.trim().toLowerCase();
 
-        return from(Promise.all([emailHasher(normalizedEmail), encrypt(newPassword)])).pipe(
+        return from(Promise.all([encrypt(normalizedEmail), encrypt(newPassword)])).pipe(
             switchMap(([emailClientHash, passwordClientHash]) => {
                 const dto = { email: emailClientHash, token, newPassword: passwordClientHash };
                 return this.post<OkResponseDto>('/auth/reset-password', dto, { auth: false });
@@ -761,4 +759,58 @@ export class ApiService {
 
         return throwError(() => new ApiError('Unexpected error', 0));
     }
+
+    /**
+ * Auto-post recurring items that are due today.
+ * Safe because backend postRecurringInstance is idempotent (returns already:true).
+ */
+    autoPostRecurringToday(householdId: string) {
+        const now = new Date();
+        const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        // create a canonical occursAt at noon UTC for today (same as backend)
+        const occursAt = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12, 0, 0, 0)).toISOString();
+
+        return this.listRecurring(householdId, { month }).pipe(
+            map(rows => (rows ?? []).filter(r => r.active !== false)),
+            map(rows => rows.filter(r => isDueToday(r, now))), // handles dayOfMonth and projected occursAt
+            switchMap(due => {
+                if (due.length === 0) return of({ posted: 0, already: 0 });
+
+                return forkJoin(
+                    due.map(r =>
+                        this.postRecurringInstance(householdId, r.id, { month, occursAt }).pipe(
+                            catchError(() => of(null))
+                        )
+                    )
+                ).pipe(
+                    map(results => {
+                        let posted = 0;
+                        let already = 0;
+                        for (const res of results) {
+                            if (!res) continue;
+                            if ((res as any).already) already++;
+                            else posted++;
+                        }
+                        return { posted, already };
+                    })
+                );
+            })
+        );
+    }
+}
+
+function isDueToday(r: any, today: Date) {
+    if (r.occursAt) {
+        const d = new Date(r.occursAt);
+        return d.getUTCFullYear() === today.getUTCFullYear()
+            && d.getUTCMonth() === today.getUTCMonth()
+            && d.getUTCDate() === today.getUTCDate();
+    }
+
+    if (typeof r.dayOfMonth === 'number') {
+        return r.dayOfMonth === today.getDate();
+    }
+
+    return false;
 }

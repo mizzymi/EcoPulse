@@ -1,0 +1,16 @@
+<div class="flex items-center justify-end gap-2">
+  <div class="text-xs text-slate-500" i18n="@@settings_members_label">Members</div>
+
+  <div class="flex -space-x-2 items-center">
+    <ng-container *ngFor="let m of shown()">
+      <div class="relative">
+        <app-user-avatar
+          [id]="m.user.emailHash"
+          [size]="36"
+          ringClass="ring-white"
+          [title]="m.user.username"
+        />
+      </div>
+    </ng-container>
+  </div>
+</div>

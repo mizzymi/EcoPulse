@@ -4,6 +4,7 @@ import { House, LucideAngularModule, PiggyBank, Plus, ReceiptText, Settings } fr
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { NavOptions } from '../nav-options/nav-options';
+import { NewEntryModalService } from '../../../services';
 
 @Component({
   selector: 'app-bottom-nav-bar',
@@ -11,6 +12,7 @@ import { NavOptions } from '../nav-options/nav-options';
   templateUrl: './bottom-nav-bar.html',
 })
 export class BottomNavBar {
+  private readonly modal = inject(NewEntryModalService);
   private bp = inject(BreakpointObserver);
 
   isSmall = toSignal(
@@ -18,6 +20,10 @@ export class BottomNavBar {
     { initialValue: false }
   );
 
+  onAddClick() {
+    this.modal.showCreate([]);
+  }
+  
   readonly plus = Plus;
   readonly home = House;
   readonly settings = Settings;

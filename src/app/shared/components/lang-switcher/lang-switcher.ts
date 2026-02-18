@@ -26,11 +26,8 @@ export class LangSwitcher {
     const first = parts[0] as Locale | undefined;
     const rest = this.supported.includes(first as Locale) ? parts.slice(1) : parts;
 
-    const newPath =
-      locale === 'en-US'
-        ? '/' + rest.join('/')
-        : '/' + locale + '/' + rest.join('/');
+    const newPath = `/${locale}/index.html`;
 
-    this.doc.location.href = origin + (newPath.endsWith('/') ? newPath : newPath + '/') + search + hash;
+    this.doc.location.href = origin + newPath + search + hash;
   }
 }

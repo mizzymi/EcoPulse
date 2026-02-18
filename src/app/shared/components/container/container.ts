@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { DestroyRef } from '@angular/core';
 
 import { NewEntryModal, NewEntryPayload } from '../new-entry-modal/new-entry-modal';
@@ -8,6 +8,8 @@ import { ApiService, NewEntryModalService, SelectedHouseholdService, Transaction
 import { BackgroundGadient } from '../background-gadient/background-gadient';
 import { AsideNavBar, BottomNavBar } from '../nav';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-container',
@@ -16,7 +18,12 @@ import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
   templateUrl: './container.html',
 })
 export class Container {
-  // ✅ must be public because template uses it
+  private bp = inject(BreakpointObserver);
+
+  isSmall = toSignal(
+    this.bp.observe('(max-width: 639px)').pipe(map(r => r.matches)),
+    { initialValue: false }
+  );
   public readonly modal = inject(NewEntryModalService);
 
   private api = inject(ApiService);
@@ -29,7 +36,7 @@ export class Container {
   // If you have a default currency in your app, set it here
   // or keep the @Input if you already have it.
   public defaultCurrency = 'EUR';
-  
+
   onModalSave(payload: NewEntryPayload) {
     const householdId = this.householdSvc.selectedHouseholdId();
     if (!householdId) return;

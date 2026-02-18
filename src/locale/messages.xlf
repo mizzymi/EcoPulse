@@ -280,6 +280,13 @@
           <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="recurring_autopost_done" datatype="html">
+        <source>Recurring entries added: <x id="posted" equiv-text="posted"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/dashboard/dashboard.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="tx.filters.searchPlaceholder" datatype="html">
         <source>Search transactions...</source>
         <context-group purpose="location">
@@ -326,14 +333,14 @@
         <source>Add new transaction</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/history/components/history-header/history-header.html</context>
-          <context context-type="linenumber">28,29</context>
+          <context context-type="linenumber">29,30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="history.addNew" datatype="html">
         <source>Add New</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/history/components/history-header/history-header.html</context>
-          <context context-type="linenumber">32,34</context>
+          <context context-type="linenumber">34,36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.list.empty" datatype="html">
@@ -456,6 +463,14 @@
           <context context-type="linenumber">55</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/saving-id/saving-id.ts</context>
           <context context-type="linenumber">185</context>
         </context-group>
@@ -473,6 +488,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/history/history.ts</context>
           <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.ts</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/saving-id/components/saving-id-edit-form/saving-id-edit-form.html</context>
@@ -678,14 +701,473 @@
         <source>Forgot Password?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/login/login.html</context>
-          <context context-type="linenumber">41,44</context>
+          <context context-type="linenumber">41,43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.login.recoveryLink" datatype="html">
+        <source> Did we send a code? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/login/login.html</context>
+          <context context-type="linenumber">46,48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.login.submit" datatype="html">
         <source> LogIn </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/login/login.html</context>
-          <context context-type="linenumber">50,51</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.planned.list.title" datatype="html">
+        <source>Planned items</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.loading" datatype="html">
+        <source>Loading…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.html</context>
+          <context context-type="linenumber">4,8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">6,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.planned.empty" datatype="html">
+        <source> No planned items for these filters. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.html</context>
+          <context context-type="linenumber">12,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.planned.due" datatype="html">
+        <source>Due</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.planned.category" datatype="html">
+        <source>Category</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.edit" datatype="html">
+        <source> Edit </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.html</context>
+          <context context-type="linenumber">47,49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">60,62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.delete" datatype="html">
+        <source> Delete </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.html</context>
+          <context context-type="linenumber">55,57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">68,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="planned.delete.title" datatype="html">
+        <source>Delete planned item</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="planned.delete.message" datatype="html">
+        <source>Are you sure you want to delete this planned item?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="planned.delete.success" datatype="html">
+        <source>Planned item deleted successfully.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="planned.delete.error" datatype="html">
+        <source>Could not delete the planned item. Please try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-list/planned-list.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.planned.title" datatype="html">
+        <source>Planned</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-panel/planned-panel.html</context>
+          <context context-type="linenumber">3,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.planned.add" datatype="html">
+        <source> Add planned </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/planned/planned-panel/planned-panel.html</context>
+          <context context-type="linenumber">12,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.title" datatype="html">
+        <source>Planned &amp; Recurring</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurrent-shell/recurrent-shell.html</context>
+          <context context-type="linenumber">4,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.tab.recurring" datatype="html">
+        <source> Recurring </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurrent-shell/recurrent-shell.html</context>
+          <context context-type="linenumber">23,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.tab.planned" datatype="html">
+        <source> Planned </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurrent-shell/recurrent-shell.html</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.list.title" datatype="html">
+        <source>Recurring definitions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.empty" datatype="html">
+        <source> No recurring definitions for these filters. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">14,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.schedule" datatype="html">
+        <source>Schedule</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">202,205</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.dayOfMonth" datatype="html">
+        <source>Day</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.noSchedule" datatype="html">
+        <source> Not configured </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">36,38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.category" datatype="html">
+        <source>Category</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurring.delete.title" datatype="html">
+        <source>Delete recurring definition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurring.delete.message" datatype="html">
+        <source>Are you sure you want to delete this recurring definition?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurring.delete.success" datatype="html">
+        <source>Recurring definition deleted successfully.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurring.delete.error" datatype="html">
+        <source>Could not delete the recurring definition. Please try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-list/recurring-list.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.title" datatype="html">
+        <source>Recurring</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-panel/recurring-panel.html</context>
+          <context context-type="linenumber">3,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.add" datatype="html">
+        <source> Add recurring </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/recurring/recurring-panel/recurring-panel.html</context>
+          <context context-type="linenumber">12,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.ariaLabel" datatype="html">
+        <source>Planned/Recurring dialog</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.title.edit" datatype="html">
+        <source>Edit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.title.new" datatype="html">
+        <source>New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.kind.planned" datatype="html">
+        <source>Planned</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">38,40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.kind.recurring" datatype="html">
+        <source>Recurring</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.tab.planned" datatype="html">
+        <source> Planned </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.tab.recurring" datatype="html">
+        <source> Recurring </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">68,70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.typeLabel" datatype="html">
+        <source> Type </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">77,80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.types.expense" datatype="html">
+        <source>Expense</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">89,92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.types.income" datatype="html">
+        <source>Income</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">100,102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.close" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.fields.amount" datatype="html">
+        <source>Amount</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">124,126</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">189,191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.fields.dueDate" datatype="html">
+        <source>Due date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">138,140</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.fields.concept" datatype="html">
+        <source>Concept</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">150,152</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">235,237</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.fields.category" datatype="html">
+        <source>Category</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">161,163</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">281,283</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.fields.notes" datatype="html">
+        <source>Notes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">173,175</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">293,295</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.schedule.dayOfMonth" datatype="html">
+        <source> Day </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">215,218</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.schedule.rrule" datatype="html">
+        <source> RRULE </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">227,229</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.dayOfMonthLabel" datatype="html">
+        <source>Day of month</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">248,250</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.rruleLabel" datatype="html">
+        <source>RRULE</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">266,268</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.recurring.rrulePlaceholder" datatype="html">
+        <source>FREQ=MONTHLY;INTERVAL=1</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">271,272</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.cancel" datatype="html">
+        <source> Cancel </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">312,315</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.save.update" datatype="html">
+        <source>Update</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">322,324</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.modal.save.save" datatype="html">
+        <source>Save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/add-recurrent-modal/add-recurrent-modal.html</context>
+          <context context-type="linenumber">324,326</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.title" datatype="html">
+        <source>Filters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">3,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.clear" datatype="html">
+        <source> Clear </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">11,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.month" datatype="html">
+        <source>Month</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">17,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.type" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">27,29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.category" datatype="html">
+        <source>Category</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">40,42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.category.placeholder" datatype="html">
+        <source>e.g. groceries</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">46,47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.accountType" datatype="html">
+        <source>Account type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">53,56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="recurrent.filters.accountType.placeholder" datatype="html">
+        <source>e.g. cash</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/recurrent/components/shared/filters-bar/filters-bar.html</context>
+          <context context-type="linenumber">60,61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.title" datatype="html">
@@ -702,60 +1184,291 @@
           <context context-type="linenumber">11,12</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="auth.register.usernameLabel" datatype="html">
+        <source>Username</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">19,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.usernamePlaceholder" datatype="html">
+        <source>yourname</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.usernameRequired" datatype="html">
+        <source>Username is required.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.usernameMin" datatype="html">
+        <source>Minimum 3 characters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.usernameMax" datatype="html">
+        <source>Maximum 24 characters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.usernamePattern" datatype="html">
+        <source> Only letters, numbers, dot, underscore and dash. Must start with a letter or number. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="auth.register.emailLabel" datatype="html">
         <source>Email Address</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">18,19</context>
+          <context context-type="linenumber">48,49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.emailPlaceholder" datatype="html">
         <source>name@example.com</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">20,21</context>
+          <context context-type="linenumber">50,51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.emailRequired" datatype="html">
+        <source>Email is required.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.emailInvalid" datatype="html">
+        <source>Enter a valid email.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">61,63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.passwordLabel" datatype="html">
         <source>Password</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">29,30</context>
+          <context context-type="linenumber">70,71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.passwordPlaceholder" datatype="html">
         <source>••••••••</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">31,32</context>
+          <context context-type="linenumber">72,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.passwordRequired" datatype="html">
+        <source>Password is required.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">82,83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.passwordMin" datatype="html">
+        <source>Minimum 6 characters.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">84,85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.passwordMax" datatype="html">
+        <source>Password is too long.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">86,88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.password2Label" datatype="html">
         <source>Confirm Password</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">41,42</context>
+          <context context-type="linenumber">95,96</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.password2Placeholder" datatype="html">
         <source>••••••••</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">43,44</context>
+          <context context-type="linenumber">97,98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.password2Required" datatype="html">
+        <source>Confirm your password.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.html</context>
+          <context context-type="linenumber">107,110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.passwordMismatch" datatype="html">
         <source> Passwords do not match. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">54,56</context>
+          <context context-type="linenumber">114,116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.register.submit" datatype="html">
         <source> Register </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/pages/register/register.html</context>
-          <context context-type="linenumber">63,65</context>
+          <context context-type="linenumber">124,126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.toastSuccess" datatype="html">
+        <source>Registered successfully!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common.unexpectedError" datatype="html">
+        <source>Unexpected error. Try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.emailConflict" datatype="html">
+        <source>Email already registered</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.ts</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="auth.register.badRequest" datatype="html">
+        <source>Check the form fields and try again</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/register/register.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.title" datatype="html">
+        <source> Reset password </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">4,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.subtitle" datatype="html">
+        <source> Enter your email and a new password. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">8,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.detectedCodeLabel" datatype="html">
+        <source>Code:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">13,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.manualCodeLabel" datatype="html">
+        <source> Enter code manually </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.manualCodePlaceholder" datatype="html">
+        <source>paste the code here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.manualCodeHint" datatype="html">
+        <source> If the link didn’t include a code, paste it from the email. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.emailLabel" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">43,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.emailPlaceholder" datatype="html">
+        <source>you@email.com</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.newPasswordLabel" datatype="html">
+        <source> New password </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">57,59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.newPasswordPlaceholder" datatype="html">
+        <source>minimum 6 characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">63,64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.repeatPasswordLabel" datatype="html">
+        <source> Repeat password </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">74,77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.repeatPasswordPlaceholder" datatype="html">
+        <source>repeat the password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">80,81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.passwordMismatch" datatype="html">
+        <source> Passwords do not match. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">89,93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.successMessage" datatype="html">
+        <source> Password updated. Redirecting to login… </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">105,109</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.submitLoading" datatype="html">
+        <source>Updating…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">113,114</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.submitButton" datatype="html">
+        <source>Update password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">114,118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resetPassword.backToLogin" datatype="html">
+        <source> Back to login </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/reset-password/reset-password.html</context>
+          <context context-type="linenumber">122,125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="savingId.editTitle" datatype="html">
@@ -1230,6 +1943,385 @@
         <note priority="1" from="description">Error when loading savings goals</note>
         <note priority="1" from="meaning">Savings</note>
       </trans-unit>
+      <trans-unit id="settings_active_invite_title" datatype="html">
+        <source> Active Invite Code </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/active-invite-card/active-invite-card.html</context>
+          <context context-type="linenumber">12,15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_active_invite_desc" datatype="html">
+        <source> Share this code with trusted people to give them access to this account. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/active-invite-card/active-invite-card.html</context>
+          <context context-type="linenumber">16,19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_copy" datatype="html">
+        <source> Copy </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/active-invite-card/active-invite-card.html</context>
+          <context context-type="linenumber">33,35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_expires_prefix" datatype="html">
+        <source>Expires</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/active-invite-card/active-invite-card.html</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_expires_unknown" datatype="html">
+        <source>in 7 days</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/active-invite-card/active-invite-card.html</context>
+          <context context-type="linenumber">41,43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1808419493242205986" datatype="html">
+        <source> Shared account </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/household-summary-card/household-summary-card.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_currency_label" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ h.currency }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/household-summary-card/household-summary-card.html</context>
+          <context context-type="linenumber">16,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_household_title" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ household()?.name || &apos;—&apos; }}"/> </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/household-summary-card/household-summary-card.html</context>
+          <context context-type="linenumber">24,27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_created_label" datatype="html">
+        <source>Created</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/household-summary-card/household-summary-card.html</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_created_unknown" datatype="html">
+        <source>Unknown</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/household-summary-card/household-summary-card.html</context>
+          <context context-type="linenumber">40,41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_management_actions_title" datatype="html">
+        <source> Management Actions </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">3,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_invite_member" datatype="html">
+        <source> Invite Member </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_invite_member_desc" datatype="html">
+        <source> Share link or code </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">18,20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_see_members" datatype="html">
+        <source>See Members</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_see_members_desc" datatype="html">
+        <source> Manage access &amp; roles </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">34,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_log_out" datatype="html">
+        <source>Log Out</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_delete_account" datatype="html">
+        <source> Delete Account </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">67,69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_delete_account_hint" datatype="html">
+        <source> This action cannot be undone. Owner only. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.html</context>
+          <context context-type="linenumber">70,74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_delete_modal_title" datatype="html">
+        <source>Delete account?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_delete_modal_msg_named" datatype="html">
+        <source>This will permanently delete &quot;<x id="PH" equiv-text="householdName"/>&quot;. This action cannot be undone.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_delete_modal_msg" datatype="html">
+        <source>This will permanently delete this account. This action cannot be undone.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common_cancel" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common_delete" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_delete_success" datatype="html">
+        <source>Account deleted successfully!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/management-actions/management-actions.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_members_admin_title" datatype="html">
+        <source> Members </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">4,6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_members_admin_subtitle" datatype="html">
+        <source> Manage roles and access for this household. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">7,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_my_role" datatype="html">
+        <source>My role:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_me" datatype="html">
+        <source> Me </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_downgrade_btn" datatype="html">
+        <source> Downgrade to Member </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">60,62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_upgrade_btn" datatype="html">
+        <source> Upgrade to Admin </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">71,73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_remove_member" datatype="html">
+        <source> Remove </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">83,85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_members_empty" datatype="html">
+        <source> No members found. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.html</context>
+          <context context-type="linenumber">92,96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="role_owner" datatype="html">
+        <source>Owner</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="role_admin" datatype="html">
+        <source>Admin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="role_member" datatype="html">
+        <source>Member</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_upgrade_title" datatype="html">
+        <source>Promote member?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_upgrade_msg" datatype="html">
+        <source>This will grant admin permissions to this member.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common_promote" datatype="html">
+        <source>Promote</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_upgrade_success" datatype="html">
+        <source>Member promoted to admin.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_upgrade_error" datatype="html">
+        <source>Could not promote member. Please try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_downgrade_title" datatype="html">
+        <source>Demote member?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_downgrade_msg" datatype="html">
+        <source>This will remove admin permissions from this member.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common_demote" datatype="html">
+        <source>Demote</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_downgrade_success" datatype="html">
+        <source>Member demoted to member.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_role_downgrade_error" datatype="html">
+        <source>Could not demote member. Please try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_remove_member_title" datatype="html">
+        <source>Remove member?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_remove_member_msg" datatype="html">
+        <source>This will remove this member from the household.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="common_remove" datatype="html">
+        <source>Remove</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_remove_member_success" datatype="html">
+        <source>Member removed successfully.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_remove_member_error" datatype="html">
+        <source>Could not remove member. Please try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-admin/members-admin.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="settings_members_label" datatype="html">
+        <source>Members</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/members-avatars/members-avatars.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6121866259229402013" datatype="html">
+        <source> Loading settings... </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/settings-shell/settings-shell.html</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4606091236515013460" datatype="html">
+        <source>Error:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/pages/settings/components/settings-shell/settings-shell.html</context>
+          <context context-type="linenumber">23,24</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="3226661974700139719" datatype="html">
         <source>Secure access to your finances</source>
         <context-group purpose="location">
@@ -1282,21 +2374,21 @@
         <source>Network error. Try again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sharedMembers.error.unauthorized" datatype="html">
         <source>Session expired. Please sign in again.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sharedMembers.error.unknown" datatype="html">
         <source>Something went wrong.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/house-hold-members/house-hold-members.ts</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="household.create.title" datatype="html">
@@ -1406,7 +2498,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.charts" datatype="html">
@@ -1431,28 +2523,28 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-          <context context-type="linenumber">22,23</context>
+          <context context-type="linenumber">26,27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.home" datatype="html">
         <source>Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.add" datatype="html">
         <source>Add</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="nav.Savings" datatype="html">
         <source>Savings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.ariaLabel" datatype="html">
@@ -1557,168 +2649,140 @@
         <source> Custom </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">218,219</context>
+          <context context-type="linenumber">220,221</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.category.customPlaceholder" datatype="html">
         <source>Type a custom category...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">228,229</context>
+          <context context-type="linenumber">230,231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.category.apply" datatype="html">
         <source>Apply</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">240,242</context>
+          <context context-type="linenumber">242,244</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.category.tip" datatype="html">
         <source> Tip: press Apply to lock it as the selected category. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">248,249</context>
+          <context context-type="linenumber">250,251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.date" datatype="html">
         <source> Date </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">262,263</context>
+          <context context-type="linenumber">264,265</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.date.change" datatype="html">
         <source>Change</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">279,281</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="tx.modal.recurring" datatype="html">
-        <source> Recurring </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">298,299</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="tx.modal.recurring.yes" datatype="html">
-        <source>Yes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">306,308</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="tx.modal.recurring.no" datatype="html">
-        <source>No</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">308,310</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="tx.modal.recurring.toggle" datatype="html">
-        <source>Toggle recurring</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">318,319</context>
+          <context context-type="linenumber">281,283</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.note" datatype="html">
         <source> Note (optional) </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">335,336</context>
+          <context context-type="linenumber">300,301</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.note.placeholder" datatype="html">
         <source>Add a note...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">341,342</context>
+          <context context-type="linenumber">306,307</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.cancel" datatype="html">
         <source> Cancel </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">357,358</context>
+          <context context-type="linenumber">322,323</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.save.update" datatype="html">
         <source>Update Transaction</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">369,371</context>
+          <context context-type="linenumber">334,336</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.modal.save.save" datatype="html">
         <source>Save Transaction</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-          <context context-type="linenumber">371,373</context>
+          <context context-type="linenumber">336,338</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.food" datatype="html">
         <source>Food</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.transport" datatype="html">
         <source>Transport</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.rent" datatype="html">
         <source>Rent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.shopping" datatype="html">
         <source>Shopping</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.utilities" datatype="html">
         <source>Utilities</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.fun" datatype="html">
         <source>Fun</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.health" datatype="html">
         <source>Health</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.salary" datatype="html">
         <source>Salary</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit id="tx.cat.pets" datatype="html">
         <source>Pets</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="auth.legal.consent" datatype="html">

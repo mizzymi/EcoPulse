@@ -3,7 +3,7 @@ import { BackgroundGadient, AuthHero, AuthCard, AuthOptions, AuthCardLogo, Toast
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Mail, LockIcon } from 'lucide-angular';
 import { ForgotPasswordModal } from './components';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
     AuthOptions,
     ReactiveFormsModule,
     ForgotPasswordModal,
+    RouterLink
   ],
   templateUrl: './login.html',
 })
@@ -49,7 +50,10 @@ export class Login {
         this.toast.success('Recovery email sent!');
         this.forgotOpen = false;
       },
-      error: () => this.toast.error('Could not send recovery email'),
+      error: (e) => {
+        console.error("Reset error:", e);
+        this.toast.error(e?.message ?? `Status: ${e?.status}`);
+      },
     });
   }
 

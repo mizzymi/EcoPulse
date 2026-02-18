@@ -1,6 +1,3 @@
-import { hash } from "bcryptjs";
-import { environment } from "../../../environments/environment";
-
 /**
  * Generates a bcrypt hash for the given input.
  *
@@ -17,10 +14,9 @@ import { environment } from "../../../environments/environment";
  * @param toEncrypt With this Property we need to pass the data we want to hash (commonly a password).
  * @returns With this method we can get the bcrypt hash string.
  */
-export async function encrypt(toEncrypt: string): Promise<string> {
-    if (environment.hash) {
-        return await hash(toEncrypt, environment.hash);
-    } else {
-        throw new Error("Error on encrypt method: we can't find the hash");
-    }
+export async function encrypt(input: string): Promise<string> {
+  const data = new TextEncoder().encode(input);
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
+

@@ -1,0 +1,9 @@
+<div class="rounded-3xl border border-slate-200 bg-white overflow-hidden">
+  <div class="p-4">
+    @if (isInvite()) {
+      <app-active-invite-card />
+    } @else {
+      <app-members-admin />
+    }
+  </div>
+</div>

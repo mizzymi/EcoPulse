@@ -1,3 +1,10 @@
+
+function base64ToBytes(b64: string): Uint8Array {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+}
 /**
  * Generates an HMAC-SHA256 signature for the given data using a secret key.
  *
@@ -13,22 +20,26 @@
  * @param key With this property we need to pass the key to produce the same signature.
  * @returns With this method we can get the hmac sign (Base64URL).
  */
-export async function signWithHmac(data: string, key: string): Promise<string> {
+export async function signWithHmac(data: string, keyB64: string): Promise<string> {
     const enc = new TextEncoder();
 
-    // Import the key for HMAC SHA-256
-    const cryptoKey = await crypto.subtle.importKey(
-        'raw',
-        enc.encode(key),
-        { name: 'HMAC', hash: 'SHA-256' },
-        false,
-        ['sign']
+    const keyBytes = base64ToBytes(keyB64.trim());
+
+    // ✅ fuerza a ArrayBuffer (no ArrayBufferLike)
+    const keyBuf = keyBytes.buffer.slice(
+        keyBytes.byteOffset,
+        keyBytes.byteOffset + keyBytes.byteLength
     );
 
-    // Sign the data
-    const signature = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(data));
+    const cryptoKey = await crypto.subtle.importKey(
+        "raw",
+        keyBytes as unknown as BufferSource,
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"]
+    );
 
-    // Convert ArrayBuffer -> Base64URL
+    const signature = await crypto.subtle.sign("HMAC", cryptoKey, enc.encode(data));
     return toBase64Url(signature);
 }
 
@@ -49,3 +60,4 @@ function toBase64Url(buf: ArrayBuffer): string {
     // Base64URL: + -> -, / -> _, remove =
     return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
+

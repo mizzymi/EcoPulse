@@ -117,18 +117,6 @@
         @if (targetUi() === 'PLANNED') {
           <!-- Planned -->
           <form class="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-4" [formGroup]="plannedForm">
-            <label class="flex flex-col gap-1 sm:col-span-2">
-              <span
-                class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
-                i18n="@@recurrent.fields.concept"
-                >Concept</span
-              >
-              <input
-                class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-teal-200"
-                formControlName="concept"
-              />
-            </label>
-
             <label class="flex flex-col gap-1">
               <span
                 class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
@@ -155,7 +143,17 @@
                 formControlName="dueDate"
               />
             </label>
-
+            <label class="flex flex-col gap-1 sm:col-span-2">
+              <span
+                class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+                i18n="@@recurrent.fields.concept"
+                >Concept</span
+              >
+              <input
+                class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-teal-200"
+                formControlName="concept"
+              />
+            </label>
             <label class="flex flex-col gap-1">
               <span
                 class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
@@ -184,18 +182,6 @@
         } @else {
           <!-- Recurring -->
           <form class="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-4" [formGroup]="recurringForm">
-            <label class="flex flex-col gap-1 sm:col-span-2">
-              <span
-                class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
-                i18n="@@recurrent.fields.concept"
-                >Concept</span
-              >
-              <input
-                class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-teal-200"
-                formControlName="concept"
-              />
-            </label>
-
             <label class="flex flex-col gap-1">
               <span
                 class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
@@ -209,7 +195,6 @@
                 (input)="onNumberInput('recurring', 'amount', $any($event.target).valueAsNumber)"
               />
             </label>
-
             <div class="flex flex-col gap-2">
               <span
                 class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
@@ -243,6 +228,17 @@
                 </button>
               </div>
             </div>
+            <label class="flex flex-col gap-1 sm:col-span-2">
+              <span
+                class="text-[11px] font-extrabold tracking-wide text-slate-500 uppercase"
+                i18n="@@recurrent.fields.concept"
+                >Concept</span
+              >
+              <input
+                class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:ring-2 focus:ring-teal-200"
+                formControlName="concept"
+              />
+            </label>
 
             @if (scheduleMode() === 'DAY_OF_MONTH') {
               <label class="flex flex-col gap-1">

@@ -25,7 +25,8 @@
             "assets": [{ "glob": "**/*", "input": "public" }],
             "styles": ["src/styles.css"],
             "polyfills": ["@angular/localize/init"],
-            "localize": true
+            "localize": true,
+            "baseHref": "./"
           },
           "configurations": {
             "production": {
@@ -39,23 +40,6 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
-            },
-
-            "en-US": {
-              "localize": ["en-US"],
-              "baseHref": "/"
-            },
-            "es-ES": {
-              "localize": ["es-ES"],
-              "baseHref": "/es-ES/"
-            },
-            "ca-ES": {
-              "localize": ["ca-ES"],
-              "baseHref": "/ca-ES/"
-            },
-            "gl-ES": {
-              "localize": ["gl-ES"],
-              "baseHref": "/gl-ES/"
             }
           },
           "defaultConfiguration": "production"
@@ -64,13 +48,8 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
-            "production": { "buildTarget": "ecopulse:build:production" },
             "development": { "buildTarget": "ecopulse:build:development" },
-
-            "en-US": { "buildTarget": "ecopulse:build:en-US" },
-            "es-ES": { "buildTarget": "ecopulse:build:es-ES" },
-            "ca-ES": { "buildTarget": "ecopulse:build:ca-ES" },
-            "gl-ES": { "buildTarget": "ecopulse:build:gl-ES" }
+            "production": { "buildTarget": "ecopulse:build:production" }
           },
           "defaultConfiguration": "development"
         },

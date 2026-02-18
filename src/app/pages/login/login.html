@@ -40,7 +40,11 @@
           >
             <a (click)="openForgot()" i18n="@@auth.login.forgotLink">Forgot Password?</a>
           </div>
-
+          <div
+            class="font-['ImpactWeb','Impact','Haettenschweiler','Arial_Narrow_Bold',sans-serif] text-teal-600 my-5 cursor-pointer flex justify-end"
+          >
+            <a routerLink="/reset-password" i18n="@@auth.login.recoveryLink"> Did we send a code? </a>
+          </div>
           <button
             type="submit"
             (click)="submit()"

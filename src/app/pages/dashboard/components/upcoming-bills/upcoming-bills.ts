@@ -48,16 +48,16 @@ export class UpcomingBills {
   public badgeDollarSign = BadgeDollarSign;
   public paw = PawPrint;
 
-  public goRecurrent(){
+  public goRecurrent() {
     this.router.navigate(['/recurrent']);
   }
   /**
     * Normalize for matching across EN/ES/CA (removes accents too).
     */
-  private normalizeCategory(s: string): string {
-    const base = (s ?? '')
-      .normalize('NFD') // split accents
-      .replace(/[\u0300-\u036f]/g, '') // remove accents
+  private normalizeCategory(s: unknown): string {
+    const base = String(s ?? '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase();
 
     return base
@@ -67,7 +67,7 @@ export class UpcomingBills {
       .trim();
   }
 
-  public iconForCategory(label: string): LucideIconData {
+  public iconForCategory(label: unknown): LucideIconData {
     const l = this.normalizeCategory(label);
 
     const buckets: Array<[string[], LucideIconData]> = [

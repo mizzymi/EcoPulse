@@ -53,7 +53,6 @@ export type NewEntryPayload = {
   paymentMethod: PaymentMethod;
   categoryLabel: string | null;
   dateISO: string;
-  recurring: boolean;
   note: string;
 };
 
@@ -116,7 +115,6 @@ export class NewEntryModal {
   readonly type = signal<NewEntryType>('EXPENSE');
   readonly paymentMethod = signal<PaymentMethod>('CASH');
   readonly selectedCategoryLabel = signal<string | null>(null);
-  readonly recurring = signal(false);
   readonly note = signal('');
 
   private readonly _amount = signal<number>(0);
@@ -194,7 +192,6 @@ export class NewEntryModal {
     this.type.set('EXPENSE');
     this.paymentMethod.set('CASH');
     this.selectedCategoryLabel.set(null);
-    this.recurring.set(false);
     this.note.set('');
 
     this._amount.set(0);
@@ -211,7 +208,6 @@ export class NewEntryModal {
       this.selectedCategoryLabel.set(init.categoryLabel ?? null);
     }
 
-    if (init.recurring !== undefined) this.recurring.set(!!init.recurring);
     if (init.note !== undefined) this.note.set(init.note ?? '');
     if (init.dateISO) this.dateISO.set(init.dateISO);
 
@@ -276,7 +272,6 @@ export class NewEntryModal {
       paymentMethod: this.paymentMethod(),
       categoryLabel: this.selectedCategoryLabel(),
       dateISO: this.dateISO(),
-      recurring: this.recurring(),
       note: this.note(),
     });
   }

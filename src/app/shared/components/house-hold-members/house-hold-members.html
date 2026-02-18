@@ -19,7 +19,7 @@
       <div class="flex items-center">
         <ng-container *ngFor="let m of visibleMembers(); let i = index">
           <div class="relative" [ngStyle]="{ 'margin-left': i === 0 ? '0px' : '-7px' }">
-            <app-user-avatar [id]="m.id" [size]="30" ringClass="ring-white"></app-user-avatar>
+            <app-user-avatar [id]="m.id" [size]="30" ringClass="ring-white" [title]="m.username"></app-user-avatar>
           </div>
         </ng-container>
 

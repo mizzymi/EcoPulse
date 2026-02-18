@@ -1,8 +1,10 @@
 <app-background-gadient>
   <div class="flex flex-1 overflow-hidden">
     <app-aside-nav-bar />
-
     <div class="flex-1 min-w-0 overflow-auto">
+      @if (isSmall()) {
+        <div class="w-full h-[50px]">-</div>
+      }
       <ng-content></ng-content>
     </div>
   </div>

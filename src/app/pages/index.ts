@@ -5,5 +5,7 @@ export { Home } from './home/home';
 export { Login } from './login/login';
 export { Recurrent } from './recurrent/recurrent';
 export { Register } from './register/register';
+export { ResetPassword } from './reset-password/reset-password';
 export { SavingId } from './saving-id/saving-id';
 export { Savings } from './savings/savings';
+export { Settings } from './settings/settings';

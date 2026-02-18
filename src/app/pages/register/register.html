@@ -12,6 +12,36 @@
         i18n-quote="@@auth.register.quote"
       >
         <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5">
+          <!-- Username -->
+          <app-auth-options
+            formControlName="username"
+            id="username"
+            label="Username"
+            i18n-label="@@auth.register.usernameLabel"
+            placeholder="yourname"
+            i18n-placeholder="@@auth.register.usernamePlaceholder"
+            inputType="text"
+            [leadingIcon]="userIcon"
+          />
+
+          @if (u.touched && u.invalid) {
+            <p class="text-sm text-amber-600">
+              @if (u.hasError('required')) {
+                <span i18n="@@auth.register.usernameRequired">Username is required.</span>
+              } @else if (u.hasError('minlength')) {
+                <span i18n="@@auth.register.usernameMin">Minimum 3 characters.</span>
+              } @else if (u.hasError('maxlength')) {
+                <span i18n="@@auth.register.usernameMax">Maximum 24 characters.</span>
+              } @else if (u.hasError('pattern')) {
+                <span i18n="@@auth.register.usernamePattern">
+                  Only letters, numbers, dot, underscore and dash. Must start with a letter or
+                  number.
+                </span>
+              }
+            </p>
+          }
+
+          <!-- Email -->
           <app-auth-options
             formControlName="email"
             id="email"
@@ -23,6 +53,17 @@
             [leadingIcon]="mailIcon"
           />
 
+          @if (e.touched && e.invalid) {
+            <p class="text-sm text-amber-600">
+              @if (e.hasError('required')) {
+                <span i18n="@@auth.register.emailRequired">Email is required.</span>
+              } @else if (e.hasError('email')) {
+                <span i18n="@@auth.register.emailInvalid">Enter a valid email.</span>
+              }
+            </p>
+          }
+
+          <!-- Password -->
           <app-auth-options
             formControlName="password"
             id="password"
@@ -35,6 +76,19 @@
             [showPasswordToggle]="true"
           />
 
+          @if (p1.touched && p1.invalid) {
+            <p class="text-sm text-amber-600">
+              @if (p1.hasError('required')) {
+                <span i18n="@@auth.register.passwordRequired">Password is required.</span>
+              } @else if (p1.hasError('minlength')) {
+                <span i18n="@@auth.register.passwordMin">Minimum 6 characters.</span>
+              } @else if (p1.hasError('maxlength')) {
+                <span i18n="@@auth.register.passwordMax">Password is too long.</span>
+              }
+            </p>
+          }
+
+          <!-- Password confirm -->
           <app-auth-options
             formControlName="password2"
             id="password2"
@@ -47,9 +101,15 @@
             [showPasswordToggle]="true"
           />
 
-          @if (
-            form.controls.password2.touched && form.controls.password2.hasError('passwordsMismatch')
-          ) {
+          @if (p2.touched && p2.invalid) {
+            <p class="text-sm text-amber-600">
+              @if (p2.hasError('required')) {
+                <span i18n="@@auth.register.password2Required">Confirm your password.</span>
+              }
+            </p>
+          }
+
+          @if (p2.touched && p2.hasError('passwordsMismatch')) {
             <p class="text-sm text-amber-600" i18n="@@auth.register.passwordMismatch">
               Passwords do not match.
             </p>
@@ -57,7 +117,8 @@
 
           <button
             type="submit"
-            class="bg-teal-600 rounded-xl py-3 w-full text-white cursor-pointer mt-5"
+            class="bg-teal-600 hover:bg-teal-700 transition rounded-xl py-3 w-full text-white cursor-pointer mt-5 disabled:opacity-60 disabled:cursor-not-allowed"
+            [disabled]="form.invalid"
             i18n="@@auth.register.submit"
           >
             Register

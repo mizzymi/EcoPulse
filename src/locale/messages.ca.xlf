@@ -1,2007 +1,2074 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en-US" target-language="ca-ES" datatype="plaintext"
-        original="ng2.template">
-        <body>
-            <trans-unit id="charts.loading" datatype="html">
-                <source> Loading... </source>
-                <target>Carregant...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/chart/chart.html</context>
-                    <context context-type="linenumber">24,26</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.categoryDistribution.title" datatype="html">
-                <source> Category Distribution </source>
-                <target>Distribució per categories</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/category-distribution-card/category-distribution-card.html</context>
-                    <context context-type="linenumber">4,6</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.categoryDistribution.subtitle" datatype="html">
-                <source> Where your money goes </source>
-                <target>On van els teus diners</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/category-distribution-card/category-distribution-card.html</context>
-                    <context context-type="linenumber">7,11</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.title" datatype="html">
-                <source> Financial Analytics </source>
-                <target>Anàlisi financer</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">4,7</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.subtitle" datatype="html">
-                <source> Track your spending habits and trends </source>
-                <target>Segueix els teus hàbits de despesa i tendències</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">8,11</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.breakdownBy" datatype="html">
-                <source> BREAKDOWN BY: </source>
-                <target>DESGLOSSAT PER:</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">13,16</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.accountAria" datatype="html">
-                <source>Account</source>
-                <target>Compte</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">55,56</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.customRange.button" datatype="html">
-                <source> Select dates </source>
-                <target>Selecciona dates</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">73,76</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.customRange.title" datatype="html">
-                <source> Custom range </source>
-                <target>Rang personalitzat</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">81,84</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.customRange.from" datatype="html">
-                <source> From </source>
-                <target>Des de</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">87,89</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.customRange.to" datatype="html">
-                <source> To </source>
-                <target>Fins a</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">99,100</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.customRange.clear" datatype="html">
-                <source> Clear </source>
-                <target>Netejar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">117,120</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="common.cancel2" datatype="html">
-                <source> Cancel </source>
-                <target>Cancel·lar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">127,128</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="common.apply" datatype="html">
-                <source> Apply </source>
-                <target>Aplicar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">136,137</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.customRange.selected" datatype="html">
-                <source>Selected:</source>
-                <target>Seleccionat:</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">142,143</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.totalSpent" datatype="html">
-                <source> TOTAL SPENT </source>
-                <target>TOTAL DESPESAT</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/charts-header/charts-header.html</context>
-                    <context context-type="linenumber">154,156</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.donut.topExpense" datatype="html">
-                <source> Top expense </source>
-                <target>Despesa més alta</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/donut-chart/donut-chart.html</context>
-                    <context context-type="linenumber">7,9</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.monthlyTrend.title" datatype="html">
-                <source> Monthly Trend </source>
-                <target>Tendència mensual</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
-                    <context context-type="linenumber">5,7</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.monthlyTrend.subtitle" datatype="html">
-                <source> Spending vs Income over time </source>
-                <target>Despeses vs ingressos al llarg del temps</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
-                    <context context-type="linenumber">8,12</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.legend.expense" datatype="html">
-                <source>Expense</source>
-                <target>Despeses</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
-                    <context context-type="linenumber">15,17</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.legend.income" datatype="html">
-                <source>Income</source>
-                <target>Ingressos</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
-                    <context context-type="linenumber">19,22</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="charts.bar.incomeTitle" datatype="html">
-                <source>Income</source>
-                <target>Ingressos</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
-                    <context context-type="linenumber">38</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="charts.bar.expenseTitle" datatype="html">
-                <source>Expense</source>
-                <target>Despeses</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
-                    <context context-type="linenumber">43,44</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="analytics.cashFlow.title" datatype="html">
-                <source> Cash Flow Analytics </source>
-                <target> Analítica de flux de caixa </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
-                    <context context-type="linenumber">5,7</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="analytics.cashFlow.subtitle" datatype="html">
-                <source> Income vs Expense trend </source>
-                <target> Tendència d’ingressos vs despeses </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
-                    <context context-type="linenumber">8,11</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="analytics.cashFlow.chartAria" datatype="html">
-                <source>Cash flow chart</source>
-                <target>Gràfic de flux de caixa</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
-                    <context context-type="linenumber">20,21</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="dashboard.title" datatype="html">
-                <source> Financial Overview </source>
-                <target> Resum financer </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">7,8</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="dashboard.subtitle" datatype="html">
-                <source> Welcome back! Here&apos;s what&apos;s happening with your money. </source>
-                <target>Benvingut/da de nou! Això és el que està passant amb els teus diners.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">10,12</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="dashboard.month.prev" datatype="html">
-                <source>Previous month</source>
-                <target>Mes anterior</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">31,32</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">33,34</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="dashboard.month.next" datatype="html">
-                <source>Next month</source>
-                <target>Mes següent</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">52,53</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">54,55</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="cards.totalBalance.title" datatype="html">
-                <source>Total Balance</source>
-                <target>Saldo total</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">67,68</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="cards.badge.current" datatype="html">
-                <source>Current</source>
-                <target>Actual</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">70,71</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">99,100</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="cards.income.title" datatype="html">
-                <source>Income</source>
-                <target>Ingressos</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">79</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="cards.expenses.title" datatype="html">
-                <source>Expenses</source>
-                <target>Despeses</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">87,88</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="cards.savings.title" datatype="html">
-                <source>Savings</source>
-                <target>Estalvis</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">96,97</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="dashboard.noHousehold" datatype="html">
-                <source> Select a household to load data. </source>
-                <target>Selecciona una llar per carregar les dades.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
-                    <context context-type="linenumber">143,145</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="chart.series.income" datatype="html">
-                <source>Income</source>
-                <target>Ingressos</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.ts</context>
-                    <context context-type="linenumber">42</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="chart.series.expense" datatype="html">
-                <source>Expense</source>
-                <target>Despesa</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.ts</context>
-                    <context context-type="linenumber">43</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.filters.searchPlaceholder" datatype="html">
-                <source>Search transactions...</source>
-                <target>Cerca transaccions...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-filters/history-filters.html</context>
-                    <context context-type="linenumber">8,9</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.filters.searchAria" datatype="html">
-                <source>Search transactions</source>
-                <target>Cerca transaccions</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-filters/history-filters.html</context>
-                    <context context-type="linenumber">13,14</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.filters.category" datatype="html">
-                <source> Category </source>
-                <target> Categoria </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-filters/history-filters.html</context>
-                    <context context-type="linenumber">24,27</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.filters.type" datatype="html">
-                <source> Type </source>
-                <target> Tipus </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-filters/history-filters.html</context>
-                    <context context-type="linenumber">33,35</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="history.title" datatype="html">
-                <source> History of Transactions </source>
-                <target> Historial de transaccions </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-header/history-header.html</context>
-                    <context context-type="linenumber">10,12</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="history.subtitle" datatype="html">
-                <source> View and manage all your financial activity. </source>
-                <target>Consulta i gestiona tota la teva activitat financera.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-header/history-header.html</context>
-                    <context context-type="linenumber">13,15</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="history.addNew.aria" datatype="html">
-                <source>Add new transaction</source>
-                <target>Afegir una transacció nova</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-header/history-header.html</context>
-                    <context context-type="linenumber">27,28</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="history.addNew" datatype="html">
-                <source>Add New</source>
-                <target>Afegir</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-header/history-header.html</context>
-                    <context context-type="linenumber">31,33</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.list.empty" datatype="html">
-                <source> No transactions found.
-                </source>
-                <target> No s’han trobat transaccions.
-                </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-list/history-list.html</context>
-                    <context context-type="linenumber">2,5</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.list.action.editAria" datatype="html">
-                <source>Edit transaction</source>
-                <target>Editar transacció</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-list/history-list.html</context>
-                    <context context-type="linenumber">48,49</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.list.action.editTitle" datatype="html">
-                <source>Edit</source>
-                <target>Editar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-list/history-list.html</context>
-                    <context context-type="linenumber">51</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.list.action.deleteAria" datatype="html">
-                <source>Delete transaction</source>
-                <target>Eliminar transacció</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-list/history-list.html</context>
-                    <context context-type="linenumber">60,61</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.list.action.deleteTitle" datatype="html">
-                <source>Delete</source>
-                <target>Eliminar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-list/history-list.html</context>
-                    <context context-type="linenumber">63</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.showing" datatype="html">
-                <source> Showing <x id="INTERPOLATION" equiv-text="{{ showFrom }}" /> – <x
-                        id="INTERPOLATION_1" equiv-text="{{ showTo }}" /> of <x id="INTERPOLATION_2"
-                        equiv-text="{{ total }}" />
-                </source>
-                <target> Mostrant <x id="INTERPOLATION" equiv-text="{{ showFrom }}" /> – <x
-                        id="INTERPOLATION_1" equiv-text="{{ showTo }}" /> de <x id="INTERPOLATION_2"
-                        equiv-text="{{ total }}" />
-                </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">3,6</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.prev.aria" datatype="html">
-                <source>Previous page</source>
-                <target>Pàgina anterior</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">12,13</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.prev.title" datatype="html">
-                <source>Previous</source>
-                <target>Anterior</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">14,15</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.prev" datatype="html">
-                <source>Prev</source>
-                <target>Ant.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">17,20</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.pageOf" datatype="html">
-                <source>Page <x id="INTERPOLATION" equiv-text="{{ page }}" /> of <x
-                        id="INTERPOLATION_1" equiv-text="{{ totalPages }}" /></source>
-                <target>Pàgina <x id="INTERPOLATION" equiv-text="{{ page }}" /> de <x
-                        id="INTERPOLATION_1" equiv-text="{{ totalPages }}" /></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">22,23</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.next.aria" datatype="html">
-                <source>Next page</source>
-                <target>Pàgina següent</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">33,34</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.next.title" datatype="html">
-                <source>Next</source>
-                <target>Següent</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">36</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="pagination.next" datatype="html">
-                <source>Next</source>
-                <target>Següent</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/history/components/history-pagination/history-pagination.html</context>
-                    <context context-type="linenumber">38,40</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="history.loading" datatype="html">
-                <source> Loading... </source>
-                <target> Carregant... </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/history/history.html</context>
-                    <context context-type="linenumber">18,19</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="tx.deleteConfirm.title" datatype="html">
-                <source>Delete transaction</source>
-                <target>Eliminar transacció</target>
-            </trans-unit>
-
-            <trans-unit id="tx.deleteConfirm.message" datatype="html">
-                <source>This action cannot be undone.</source>
-                <target>Aquesta acció no es pot desfer.</target>
-            </trans-unit>
-
-            <trans-unit id="common.cancel" datatype="html">
-                <source>Cancel</source>
-                <target>Cancel·lar</target>
-            </trans-unit>
-
-            <trans-unit id="common.delete" datatype="html">
-                <source>Delete</source>
-                <target>Eliminar</target>
-            </trans-unit>
-            <trans-unit id="2734445107198612974" datatype="html">
-                <source> Track your money <x id="START_TAG_SPAN" ctype="x-span"
-                        equiv-text="&lt;span class=&quot;block text-teal-600&quot;&gt;" />calmly.<x
-                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></source>
-                <target> Controla els teus diners <x id="START_TAG_SPAN" ctype="x-span"
-                        equiv-text="&lt;span class=&quot;block text-teal-600&quot;&gt;" />amb calma.<x
-                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
-                    <context context-type="linenumber">5,9</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="7533222314698246711" datatype="html">
-                <source> Manage your personal and shared finances with clarity. Simple, secure, and
-                    designed for your peace of mind. </source>
-                <target>Gestiona les teves finances personals i compartides amb claredat. Simple,
-                    segur i dissenyat per a la teva tranquil·litat.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
-                    <context context-type="linenumber">10,12</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="2454050363478003966" datatype="html">
-                <source>Login</source>
-                <target>Inicia sessió</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
-                    <context context-type="linenumber">20,21</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="3301086086650990787" datatype="html">
-                <source>Register</source>
-                <target>Registra’t</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-auth-panel/home-auth-panel.html</context>
-                    <context context-type="linenumber">29,30</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="3003742799656060943" datatype="html">
-                <source>Total Balance</source>
-                <target>Saldo total</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">15,16</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="7727042291824677883" datatype="html">
-                <source>Hello, Alex</source>
-                <target>Hola, Alex</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">36,37</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="4200317694838753109" datatype="html">
-                <source>Welcome back</source>
-                <target>Benvingut/da de nou</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">37,38</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="2407784838682038117" datatype="html">
-                <source>Restaurant</source>
-                <target>Restaurant</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">56,57</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="6983951722564246494" datatype="html">
-                <source>Food &amp; Dining</source>
-                <target>Menjar i restauració</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">57,58</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="498286527813307230" datatype="html">
-                <source>Salary</source>
-                <target>Sou</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">65,66</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="7721988664027512739" datatype="html">
-                <source>Income</source>
-                <target>Ingressos</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">66,67</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="6276278883659633203" datatype="html">
-                <source>Home Rent</source>
-                <target>Lloguer</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">88,89</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="6136520581220357690" datatype="html">
-                <source>Shared Account</source>
-                <target>Compte compartit</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/home/components/home-mock-panel/home-mock-panel.html</context>
-                    <context context-type="linenumber">89,90</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="8264044238565501678" datatype="html">
-                <source>Forgot password</source>
-                <target>He oblidat la contrasenya</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
-                    <context context-type="linenumber">15,16</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="7452360004723630799" datatype="html">
-                <source> Enter your email and we’ll send you a recovery link/code. </source>
-                <target>Introdueix el teu correu i t’enviarem un enllaç/codi de recuperació.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
-                    <context context-type="linenumber">17</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="7817163188308824825" datatype="html">
-                <source> Email </source>
-                <target> Correu </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
-                    <context context-type="linenumber">34</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="2837248686284270505" datatype="html">
-                <source>Please enter a valid email.</source>
-                <target>Introdueix un correu vàlid.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
-                    <context context-type="linenumber">46,47</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="2330577642930707695" datatype="html">
-                <source> Cancel </source>
-                <target> Cancel·lar </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
-                    <context context-type="linenumber">57</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="7563035552061651664" datatype="html">
-                <source> Send </source>
-                <target> Enviar </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/login/components/forgot-password-modal/forgot-password-modal.html</context>
-                    <context context-type="linenumber">65</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.title" datatype="html">
-                <source>Welcome back</source>
-                <target>Benvingut/da de nou</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">9,10</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.quote" datatype="html">
-                <source>Please enter your details to sign in.</source>
-                <target>Introdueix les teves dades per iniciar sessió.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">11,12</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.emailLabel" datatype="html">
-                <source>Email Address</source>
-                <target>Adreça de correu electrònic</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">18,19</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.emailPlaceholder" datatype="html">
-                <source>name@example.com</source>
-                <target>nom@exemple.com</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">20,21</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.passwordLabel" datatype="html">
-                <source>Password</source>
-                <target>Contrasenya</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">29,30</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.passwordPlaceholder" datatype="html">
-                <source>••••••••</source>
-                <target>••••••••</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">31,32</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.forgotLink" datatype="html">
-                <source>Forgot Password?</source>
-                <target>Has oblidat la contrasenya?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">41,44</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.submit" datatype="html">
-                <source> LogIn </source>
-                <target> Iniciar sessió </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/login/login.html</context>
-                    <context context-type="linenumber">50,51</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.title" datatype="html">
-                <source>Create Account</source>
-                <target>Crear compte</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">9,10</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.quote" datatype="html">
-                <source>Join EcoPulse and track your money calmly.</source>
-                <target>Uneix-te a EcoPulse i controla els teus diners amb calma.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">11,12</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.emailLabel" datatype="html">
-                <source>Email Address</source>
-                <target>Adreça de correu electrònic</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">18,19</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.emailPlaceholder" datatype="html">
-                <source>name@example.com</source>
-                <target>nom@exemple.com</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">20,21</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.passwordLabel" datatype="html">
-                <source>Password</source>
-                <target>Contrasenya</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">29,30</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.passwordPlaceholder" datatype="html">
-                <source>••••••••</source>
-                <target>••••••••</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">31,32</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.password2Label" datatype="html">
-                <source>Confirm Password</source>
-                <target>Confirmar contrasenya</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">41,42</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.password2Placeholder" datatype="html">
-                <source>••••••••</source>
-                <target>••••••••</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">43,44</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.passwordMismatch" datatype="html">
-                <source> Passwords do not match. </source>
-                <target> Les contrasenyes no coincideixen. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">54,56</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.submit" datatype="html">
-                <source> Register </source>
-                <target> Registra’t </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/register/register.html</context>
-                    <context context-type="linenumber">63,65</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.goal.targetLabel" datatype="html">
-                <source>Target</source>
-                <target>Objectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-card/goal-card.html</context>
-                    <context context-type="linenumber">15,17</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.goal.deleteAria" datatype="html">
-                <source>Delete goal</source>
-                <target>Suprimeix l’objectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-card/goal-card.html</context>
-                    <context context-type="linenumber">26,27</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.goal.progress" datatype="html">
-                <source>Progress</source>
-                <target>Progrés</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-card/goal-card.html</context>
-                    <context context-type="linenumber">50,51</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.createTitle" datatype="html">
-                <source> Create New Goal </source>
-                <target> Crear un objectiu nou </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">3,5</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.createSubtitle" datatype="html">
-                <source> Define your target and start saving. </source>
-                <target> Defineix l’objectiu i comença a estalviar. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">6,9</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.nameLabel" datatype="html">
-                <source>Goal name</source>
-                <target>Nom de l’objectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">12,15</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.namePlaceholder" datatype="html">
-                <source>e.g. New Camera</source>
-                <target>p. ex., Càmera nova</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">16,17</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.nameAria" datatype="html">
-                <source>Goal name</source>
-                <target>Nom de l’objectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">20,21</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.targetLabel" datatype="html">
-                <source>Target amount</source>
-                <target>Import objectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">27,30</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.targetPlaceholder" datatype="html">
-                <source>0.00</source>
-                <target>0,00</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">34</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.targetAria" datatype="html">
-                <source>Target amount</source>
-                <target>Import objectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">37,38</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.deadlineLabel" datatype="html">
-                <source>Deadline</source>
-                <target>Data límit</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">46,49</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.deadlineAria" datatype="html">
-                <source>Deadline</source>
-                <target>Data límit</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">53,54</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.errorPrefix" datatype="html">
-                <source>Error:</source>
-                <target>Error:</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">62,64</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.createdOk" datatype="html">
-                <source> Goal created. </source>
-                <target> Objectiu creat. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">71,75</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.createAria" datatype="html">
-                <source>Create goal</source>
-                <target>Crea un objectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">79,80</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.createBtn" datatype="html">
-                <source><x id="START_TAG_SPAN" ctype="x-span"
-                        equiv-text="&lt;span aria-hidden=&quot;true&quot;&gt;" />✓<x
-                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
-                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />Create
-                    Goal<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></source>
-                <target><x id="START_TAG_SPAN" ctype="x-span"
-                        equiv-text="&lt;span aria-hidden=&quot;true&quot;&gt;" />✓<x
-                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
-                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />Crea un
-                    objectiu<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">83,86</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.form.needsHousehold" datatype="html">
-                <source> Select a household first. </source>
-                <target> Selecciona primer una llar. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goal-form/goal-form.html</context>
-                    <context context-type="linenumber">92,96</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.empty" datatype="html">
-                <source> No goals yet. Create your first one on the right. </source>
-                <target> Encara no hi ha objectius. Crea el primer a la dreta. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goals-grid/goals-grid.html</context>
-                    <context context-type="linenumber">9,12</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.loadErrorPrefix" datatype="html">
-                <source>Error:</source>
-                <target>Error:</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goals-grid/goals-grid.html</context>
-                    <context context-type="linenumber">23,24</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.selectHousehold" datatype="html">
-                <source> Select a household to see savings goals. </source>
-                <target> Selecciona una llar per veure els objectius d’estalvi. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/goals-grid/goals-grid.html</context>
-                    <context context-type="linenumber">31,34</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.title" datatype="html">
-                <source>Financial Goals</source>
-                <target>Objectius financers</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
-                    <context context-type="linenumber">5,6</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.subtitle" datatype="html">
-                <source>Track progress towards your targets</source>
-                <target>Fes seguiment del progrés cap als teus objectius</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
-                    <context context-type="linenumber">6,9</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.refreshAria" datatype="html">
-                <source>Refresh goals</source>
-                <target>Actualitza els objectius</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
-                    <context context-type="linenumber">13,14</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.refreshBtn" datatype="html">
-                <source><x id="START_TAG_SPAN" ctype="x-span"
-                        equiv-text="&lt;span class=&quot;text-base leading-none&quot; aria-hidden=&quot;true&quot;&gt;" />
-                    ↻<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
-                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />Refresh<x
-                        id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></source>
-                <target><x id="START_TAG_SPAN" ctype="x-span"
-                        equiv-text="&lt;span class=&quot;text-base leading-none&quot; aria-hidden=&quot;true&quot;&gt;" />
-                    ↻<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
-                        id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span&gt;" />
-                    Actualitza<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/pages/savings/components/savings-goals-shell/savings-goals-shell.html</context>
-                    <context context-type="linenumber">17,19</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="savings.err.noHousehold" datatype="html">
-                <source>No household selected</source>
-                <target>No s’ha seleccionat cap llar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/savings/data/savings.facade.ts</context>
-                    <context context-type="linenumber">21</context>
-                </context-group>
-                <note priority="1" from="description">Error when no household is selected</note>
-                <note priority="1" from="meaning">Savings</note>
-            </trans-unit>
-
-            <trans-unit id="savings.err.loadGoalsFailed" datatype="html">
-                <source>Failed to load savings goals</source>
-                <target>No s’han pogut carregar els objectius d’estalvi</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/pages/savings/data/savings.facade.ts</context>
-                    <context context-type="linenumber">22</context>
-                </context-group>
-                <note priority="1" from="description">Error when loading savings goals</note>
-                <note priority="1" from="meaning">Savings</note>
-            </trans-unit>
-
-            <trans-unit id="3226661974700139719" datatype="html">
-                <source>Secure access to your finances</source>
-                <target>Accés segur a les teves finances</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/auth-card-logo/auth-card-logo.html</context>
-                    <context context-type="linenumber">13,14</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.login.noAccount" datatype="html">
-                <source> Don&apos;t have an account? <x id="START_LINK" ctype="x-a"
-                        equiv-text="&lt;a
-          class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
-          [routerLink]=&quot;[&apos;/auth/register&apos;]&quot;
-        &gt;" />
-                    Create Account <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></source>
-                <target> No tens compte? <x id="START_LINK" ctype="x-a"
-                        equiv-text="&lt;a
-          class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
-          [routerLink]=&quot;[&apos;/auth/register&apos;]&quot;
-        &gt;" />
-                    Crea un compte <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/auth-card/auth-card.html</context>
-                    <context context-type="linenumber">14,22</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.register.haveAccount" datatype="html">
-                <source> Already have an account? <x id="START_LINK" ctype="x-a"
-                        equiv-text="&lt;a
-          class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
-          [routerLink]=&quot;[&apos;/auth/login&apos;]&quot;
-        &gt;" />
-                    Sign In <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></source>
-                <target> Ja tens compte? <x id="START_LINK" ctype="x-a"
-                        equiv-text="&lt;a
-          class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
-          [routerLink]=&quot;[&apos;/auth/login&apos;]&quot;
-        &gt;" />
-                    Inicia sessió <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/auth-card/auth-card.html</context>
-                    <context context-type="linenumber">26,34</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="sharedMembers.title" datatype="html">
-                <source> SHARED MEMBERS </source>
-                <target> MEMBRES COMPARTITS </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-members/house-hold-members.html</context>
-                    <context context-type="linenumber">6,9</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="sharedMembers.loading" datatype="html">
-                <source> Loading... </source>
-                <target> Carregant... </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-members/house-hold-members.html</context>
-                    <context context-type="linenumber">11,14</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="sharedMembers.extraCountAria" datatype="html">
-                <source>+<x id="INTERPOLATION" equiv-text="{{ extraCount() }}" /></source>
-                <target>+<x id="INTERPOLATION" equiv-text="{{ extraCount() }}" /></target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-members/house-hold-members.html</context>
-                    <context context-type="linenumber">34,35</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="sharedMembers.error.network" datatype="html">
-                <source>Network error. Try again.</source>
-                <target>Error de xarxa. Torna-ho a provar.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-members/house-hold-members.ts</context>
-                    <context context-type="linenumber">88</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="sharedMembers.error.unauthorized" datatype="html">
-                <source>Session expired. Please sign in again.</source>
-                <target>La sessió ha caducat. Torna a iniciar sessió.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-members/house-hold-members.ts</context>
-                    <context context-type="linenumber">90</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="sharedMembers.error.unknown" datatype="html">
-                <source>Something went wrong.</source>
-                <target>Alguna cosa ha anat malament.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-members/house-hold-members.ts</context>
-                    <context context-type="linenumber">92</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.create.title" datatype="html">
-                <source> Create household </source>
-                <target> Crear llar </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
-                    <context context-type="linenumber">3,7</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.create.namePlaceholder" datatype="html">
-                <source>Household name</source>
-                <target>Nom de la llar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
-                    <context context-type="linenumber">10,11</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.create.currencyPlaceholder" datatype="html">
-                <source>EUR</source>
-                <target>EUR</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.create.creating" datatype="html">
-                <source>Creating...</source>
-                <target>Creant...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
-                    <context context-type="linenumber">37,39</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.create.create" datatype="html">
-                <source>Create</source>
-                <target>Crear</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
-                    <context context-type="linenumber">40,42</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.create.cancel" datatype="html">
-                <source> Cancel </source>
-                <target> Cancel·lar </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-create-form/hh-create-form.html</context>
-                    <context context-type="linenumber">56,59</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.list.createButton" datatype="html">
-                <source> + Create household
-                </source>
-                <target> + Crear llar
-                </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-household-list/hh-household-list.html</context>
-                    <context context-type="linenumber">16,18</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.role.owner" datatype="html">
-                <source>Owner</source>
-                <target>Propietari/ària</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-household-row/hh-household-row.ts</context>
-                    <context context-type="linenumber">20</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.role.admin" datatype="html">
-                <source>Admin</source>
-                <target>Administrador/a</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-household-row/hh-household-row.ts</context>
-                    <context context-type="linenumber">22</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.role.member" datatype="html">
-                <source>Member</source>
-                <target>Membre</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-household-row/hh-household-row.ts</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="household.selector.placeholder" datatype="html">
-                <source>Select household</source>
-                <target>Selecciona una llar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/house-hold-selector/components/hh-selector-trigger/hh-selector-trigger.html</context>
-                    <context context-type="linenumber">20,24</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="lang.label" datatype="html">
-                <source>Lang</source>
-                <target>Idioma</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/lang-switcher/lang-switcher.html</context>
-                    <context context-type="linenumber">2,5</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="lang.aria" datatype="html">
-                <source>Language</source>
-                <target>Idioma</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/lang-switcher/lang-switcher.html</context>
-                    <context context-type="linenumber">9,10</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="nav.dashboard" datatype="html">
-                <source>Dashboard</source>
-                <target>Tauler</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
-                    <context context-type="linenumber">9,10</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="nav.history" datatype="html">
-                <source>History</source>
-                <target>Historial</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
-                    <context context-type="linenumber">16,17</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-                    <context context-type="linenumber">7</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="nav.charts" datatype="html">
-                <source>Charts</source>
-                <target>Gràfiques</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
-                    <context context-type="linenumber">21</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-                    <context context-type="linenumber">18</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="nav.savings" datatype="html">
-                <source>Savings</source>
-                <target>Estalvis</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
-                    <context context-type="linenumber">27,28</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="nav.settings" datatype="html">
-                <source>Settings</source>
-                <target>Configuració</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/aside-nav-bar/aside-nav-bar.html</context>
-                    <context context-type="linenumber">34,35</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-                    <context context-type="linenumber">22,23</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="nav.home" datatype="html">
-                <source>Home</source>
-                <target>Inici</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-                    <context context-type="linenumber">5</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="nav.add" datatype="html">
-                <source>Add</source>
-                <target>Afegir</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/nav/bottom-nav-bar/bottom-nav-bar.html</context>
-                    <context context-type="linenumber">13</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.ariaLabel" datatype="html">
-                <source>Transaction dialog</source>
-                <target>Diàleg de transacció</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">22,23</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.title.edit" datatype="html">
-                <source>Edit Transaction</source>
-                <target>Editar transacció</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">32,34</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.title.new" datatype="html">
-                <source>New Transaction</source>
-                <target>Transacció nova</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">34,36</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.typeLabel" datatype="html">
-                <source> Transaction Type </source>
-                <target> Tipus de transacció </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">42,43</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.type.expense" datatype="html">
-                <source>Expense</source>
-                <target>Despesa</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">55,58</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.type.income" datatype="html">
-                <source>Income</source>
-                <target>Ingrés</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">67,69</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.close" datatype="html">
-                <source>Close</source>
-                <target>Tancar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">77</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.amount" datatype="html">
-                <source> Amount </source>
-                <target> Import </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">89,90</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.amount.inputAria" datatype="html">
-                <source>Amount</source>
-                <target>Import</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">103</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.paymentMethod" datatype="html">
-                <source> Payment Method </source>
-                <target> Mètode de pagament </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">116,119</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.pay.cash" datatype="html">
-                <source>Cash</source>
-                <target>Efectiu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">133,135</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.pay.card" datatype="html">
-                <source>Card</source>
-                <target>Targeta</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">149,151</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.pay.bank" datatype="html">
-                <source>Bank</source>
-                <target>Banc</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">165,167</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.category" datatype="html">
-                <source> Category </source>
-                <target> Categoria </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">176,178</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.category.custom" datatype="html">
-                <source> Custom </source>
-                <target> Personalitzada </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">218,219</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.category.customPlaceholder" datatype="html">
-                <source>Type a custom category...</source>
-                <target>Escriu una categoria personalitzada...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">228,229</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.category.apply" datatype="html">
-                <source>Apply</source>
-                <target>Aplicar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">240,242</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.category.tip" datatype="html">
-                <source> Tip: press Apply to lock it as the selected category. </source>
-                <target> Consell: prem Aplicar per fixar-la com a categoria seleccionada. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">248,249</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.date" datatype="html">
-                <source> Date </source>
-                <target> Data </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">262,263</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.date.change" datatype="html">
-                <source>Change</source>
-                <target>Canviar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">279,281</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.recurring" datatype="html">
-                <source> Recurring </source>
-                <target> Recurrent </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">298,299</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.recurring.yes" datatype="html">
-                <source>Yes</source>
-                <target>Sí</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">306,308</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.recurring.no" datatype="html">
-                <source>No</source>
-                <target>No</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">308,310</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.recurring.toggle" datatype="html">
-                <source>Toggle recurring</source>
-                <target>Alternar recurrència</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">318,319</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.note" datatype="html">
-                <source> Note (optional) </source>
-                <target> Nota (opcional) </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">335,336</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.note.placeholder" datatype="html">
-                <source>Add a note...</source>
-                <target>Afegir una nota...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">341,342</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.cancel" datatype="html">
-                <source> Cancel </source>
-                <target> Cancel·lar </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">357,358</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.save.update" datatype="html">
-                <source>Update Transaction</source>
-                <target>Actualitzar transacció</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">369,371</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.modal.save.save" datatype="html">
-                <source>Save Transaction</source>
-                <target>Desar transacció</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.html</context>
-                    <context context-type="linenumber">371,373</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.food" datatype="html">
-                <source>Food</source>
-                <target>Menjar</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">149</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.transport" datatype="html">
-                <source>Transport</source>
-                <target>Transport</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">150</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.rent" datatype="html">
-                <source>Rent</source>
-                <target>Lloguer</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">151</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.shopping" datatype="html">
-                <source>Shopping</source>
-                <target>Compres</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">152</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.utilities" datatype="html">
-                <source>Utilities</source>
-                <target>Subministraments</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">153</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.fun" datatype="html">
-                <source>Fun</source>
-                <target>Oci</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">154</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.health" datatype="html">
-                <source>Health</source>
-                <target>Salut</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">155</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.salary" datatype="html">
-                <source>Salary</source>
-                <target>Sou</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">156</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="tx.cat.pets" datatype="html">
-                <source>Pets</source>
-                <target>Mascotes</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/new-entry-modal/new-entry-modal.ts</context>
-                    <context context-type="linenumber">157</context>
-                </context-group>
-            </trans-unit>
-
-            <trans-unit id="auth.legal.consent" datatype="html">
-                <source> By continuing, you agree to our <x id="START_LINK" ctype="x-a"
-                        equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com&quot;&gt;" />
-                    Privacy<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /> &amp; <x
-                        id="START_LINK_1"
-                        equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com/terms&quot;&gt;" />
-                    Terms<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" />. </source>
-                <target> En continuar, acceptes la nostra <x id="START_LINK" ctype="x-a"
-                        equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com&quot;&gt;" />
-                    Privacitat<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /> i <x
-                        id="START_LINK_1"
-                        equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com/terms&quot;&gt;" />
-                    Termes<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" />. </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">
-                        src/app/shared/components/privacy-terms/privacy-terms.html</context>
-                    <context context-type="linenumber">3,7</context>
-                </context-group>
-            </trans-unit>
-        </body>
-    </file>
+  <file source-language="en-US" target-language="ca-ES" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="charts.loading">
+        <source> Loading... </source>
+        <target> Carregant… </target>
+      </trans-unit>
+
+      <trans-unit id="charts.categoryDistribution.title">
+        <source> Category Distribution </source>
+        <target> Distribució per categories </target>
+      </trans-unit>
+
+      <trans-unit id="charts.categoryDistribution.subtitle">
+        <source> Where your money goes </source>
+        <target> En què se’n va els teus diners </target>
+      </trans-unit>
+
+      <trans-unit id="charts.title">
+        <source> Financial Analytics </source>
+        <target> Anàlisi financera </target>
+      </trans-unit>
+
+      <trans-unit id="charts.subtitle">
+        <source> Track your spending habits and trends </source>
+        <target> Fes seguiment dels teus hàbits i tendències de despesa </target>
+      </trans-unit>
+
+      <trans-unit id="charts.breakdownBy">
+        <source> BREAKDOWN BY: </source>
+        <target> DESGLOSSAMENT PER: </target>
+      </trans-unit>
+
+      <trans-unit id="charts.accountAria">
+        <source>Account</source>
+        <target>Compte</target>
+      </trans-unit>
+
+      <trans-unit id="charts.customRange.button">
+        <source> Select dates </source>
+        <target> Selecciona dates </target>
+      </trans-unit>
+
+      <trans-unit id="charts.customRange.title">
+        <source> Custom range </source>
+        <target> Rang personalitzat </target>
+      </trans-unit>
+
+      <trans-unit id="charts.customRange.from">
+        <source> From </source>
+        <target> Des de </target>
+      </trans-unit>
+
+      <trans-unit id="charts.customRange.to">
+        <source> To </source>
+        <target> Fins a </target>
+      </trans-unit>
+
+      <trans-unit id="charts.customRange.clear">
+        <source> Clear </source>
+        <target> Neteja </target>
+      </trans-unit>
+
+      <trans-unit id="common.cancel2">
+        <source> Cancel </source>
+        <target> Cancel·la </target>
+      </trans-unit>
+
+      <trans-unit id="common.apply">
+        <source> Apply </source>
+        <target> Aplica </target>
+      </trans-unit>
+
+      <trans-unit id="charts.customRange.selected">
+        <source>Selected:</source>
+        <target>Seleccionat:</target>
+      </trans-unit>
+
+      <trans-unit id="charts.totalSpent">
+        <source> TOTAL SPENT </source>
+        <target> TOTAL DESPESAT </target>
+      </trans-unit>
+
+      <trans-unit id="charts.donut.topExpense">
+        <source> Top expense </source>
+        <target> Despesa més alta </target>
+      </trans-unit>
+
+      <trans-unit id="charts.monthlyTrend.title">
+        <source> Monthly Trend </source>
+        <target> Evolució mensual </target>
+      </trans-unit>
+
+      <trans-unit id="charts.monthlyTrend.subtitle">
+        <source> Spending vs Income over time </source>
+        <target> Despeses vs ingressos al llarg del temps </target>
+      </trans-unit>
+
+      <trans-unit id="charts.legend.expense">
+        <source>Expense</source>
+        <target>Despesa</target>
+      </trans-unit>
+
+      <trans-unit id="charts.legend.income">
+        <source>Income</source>
+        <target>Ingrés</target>
+      </trans-unit>
+
+      <trans-unit id="charts.bar.incomeTitle" datatype="html">
+        <source>Income</source>
+        <target>Ingrés</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="charts.bar.expenseTitle" datatype="html">
+        <source>Expense</source>
+        <target>Despesa</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/chart/components/monthly-trend-card/monthly-trend-card.html</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="analytics.cashFlow.title" datatype="html">
+        <source> Cash Flow Analytics </source>
+        <target> Flux de caixa </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
+          <context context-type="linenumber">5,7</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="analytics.cashFlow.subtitle" datatype="html">
+        <source> Income vs Expense trend </source>
+        <target> Evolució d’ingressos i despeses </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
+          <context context-type="linenumber">8,11</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="analytics.cashFlow.chartAria" datatype="html">
+        <source>Cash flow chart</source>
+        <target>Gràfic de flux de caixa</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/cash-flow-chart/cash-flow-chart.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="dashboard.title" datatype="html">
+        <source> Financial Overview </source>
+        <target> El teu resum financer </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="dashboard.subtitle" datatype="html">
+        <source> Welcome back! Here&apos;s what&apos;s happening with your money. </source>
+        <target> Això és el que està passant amb els teus diners. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">12,14</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="dashboard.month.prev" datatype="html">
+        <source>Previous month</source>
+        <target>Mes anterior</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">33,34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="dashboard.month.next" datatype="html">
+        <source>Next month</source>
+        <target>Mes següent</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">56,57</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="cards.totalBalance.title" datatype="html">
+        <source>Total Balance</source>
+        <target>Balanç total</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">69,70</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="cards.badge.current" datatype="html">
+        <source>Current</source>
+        <target>Actual</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">72,73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">101,102</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="cards.income.title" datatype="html">
+        <source>Income</source>
+        <target>Ingressos</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="cards.expenses.title" datatype="html">
+        <source>Expenses</source>
+        <target>Despeses</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">89,90</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="cards.savings.title" datatype="html">
+        <source>Savings</source>
+        <target>Estalvis</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">98,99</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="dashboard.noHousehold" datatype="html">
+        <source> Select a household to load data. </source>
+        <target> Selecciona una llar per veure les teves dades. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/pages/dashboard/components/financial-overview-page/financial-overview-page.html</context>
+          <context context-type="linenumber">144,146</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="chart.series.income" datatype="html">
+        <source>Income</source>
+        <target>Ingressos</target>
+      </trans-unit>
+
+      <trans-unit id="chart.series.expense" datatype="html">
+        <source>Expense</source>
+        <target>Despeses</target>
+      </trans-unit>
+
+      <trans-unit id="recurring_autopost_done" datatype="html">
+        <source>Recurring entries added: <x id="posted" equiv-text="posted" /></source>
+        <target>Entrades recurrents afegides: <x id="posted" equiv-text="posted" /></target>
+      </trans-unit>
+
+      <trans-unit id="tx.filters.searchPlaceholder" datatype="html">
+        <source>Search transactions...</source>
+        <target>Cerca moviments...</target>
+      </trans-unit>
+
+      <trans-unit id="tx.filters.searchAria" datatype="html">
+        <source>Search transactions</source>
+        <target>Cerca moviments</target>
+      </trans-unit>
+
+      <trans-unit id="tx.filters.category" datatype="html">
+        <source> Category </source>
+        <target> Categoria </target>
+      </trans-unit>
+
+      <trans-unit id="tx.filters.type" datatype="html">
+        <source> Type </source>
+        <target> Tipus </target>
+      </trans-unit>
+
+      <trans-unit id="history.title" datatype="html">
+        <source> History of Transactions </source>
+        <target> Historial de moviments </target>
+      </trans-unit>
+
+      <trans-unit id="history.subtitle" datatype="html">
+        <source> View and manage all your financial activity. </source>
+        <target> Consulta i gestiona tota la teva activitat financera. </target>
+      </trans-unit>
+
+      <trans-unit id="history.addNew.aria" datatype="html">
+        <source>Add new transaction</source>
+        <target>Afegeix un moviment</target>
+      </trans-unit>
+
+      <trans-unit id="history.addNew" datatype="html">
+        <source>Add New</source>
+        <target>Afegeix</target>
+      </trans-unit>
+
+      <trans-unit id="tx.list.empty" datatype="html">
+        <source> No transactions found.
+</source>
+        <target> Encara no hi ha moviments.
+</target>
+      </trans-unit>
+
+      <trans-unit id="tx.list.action.editAria" datatype="html">
+        <source>Edit transaction</source>
+        <target>Edita el moviment</target>
+      </trans-unit>
+
+      <trans-unit id="tx.list.action.editTitle" datatype="html">
+        <source>Edit</source>
+        <target>Edita</target>
+      </trans-unit>
+
+      <trans-unit id="tx.list.action.deleteAria" datatype="html">
+        <source>Delete transaction</source>
+        <target>Elimina el moviment</target>
+      </trans-unit>
+
+      <trans-unit id="tx.list.action.deleteTitle" datatype="html">
+        <source>Delete</source>
+        <target>Elimina</target>
+      </trans-unit>
+
+      <trans-unit id="pagination.showing" datatype="html">
+        <source> Showing <x id="INTERPOLATION" equiv-text="{{ showFrom }}" /> – <x
+            id="INTERPOLATION_1" equiv-text="{{ showTo }}" /> of <x id="INTERPOLATION_2"
+            equiv-text="{{ total }}" />
+        </source>
+        <target> Mostrant <x id="INTERPOLATION" equiv-text="{{ showFrom }}" /> – <x
+            id="INTERPOLATION_1" equiv-text="{{ showTo }}" /> de <x id="INTERPOLATION_2"
+            equiv-text="{{ total }}" />
+        </target>
+      </trans-unit>
+
+      <trans-unit id="pagination.prev.aria" datatype="html">
+        <source>Previous page</source>
+        <target>Pàgina anterior</target>
+      </trans-unit>
+
+      <trans-unit id="pagination.prev.title" datatype="html">
+        <source>Previous</source>
+        <target>Anterior</target>
+      </trans-unit>
+
+      <trans-unit id="pagination.prev" datatype="html">
+        <source>Prev</source>
+        <target>Ant.</target>
+      </trans-unit>
+
+      <trans-unit id="pagination.pageOf" datatype="html">
+        <source>Page <x id="INTERPOLATION" equiv-text="{{ page }}" /> of <x id="INTERPOLATION_1"
+            equiv-text="{{ totalPages }}" /></source>
+        <target>Pàgina <x id="INTERPOLATION" equiv-text="{{ page }}" /> de <x id="INTERPOLATION_1"
+            equiv-text="{{ totalPages }}" /></target>
+      </trans-unit>
+
+      <trans-unit id="pagination.next.aria" datatype="html">
+        <source>Next page</source>
+        <target>Pàgina següent</target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="pagination.next.title" datatype="html">
+        <source>Next</source>
+        <target>Següent</target>
+      </trans-unit>
+
+      <trans-unit id="pagination.next" datatype="html">
+        <source>Next</source>
+        <target>Següent</target>
+      </trans-unit>
+
+      <trans-unit id="history.loading" datatype="html">
+        <source> Loading... </source>
+        <target> Carregant… </target>
+      </trans-unit>
+
+      <trans-unit id="tx.deleteConfirm.title" datatype="html">
+        <source>Delete transaction</source>
+        <target>Elimina el moviment</target>
+      </trans-unit>
+
+      <trans-unit id="tx.deleteConfirm.message" datatype="html">
+        <source>This action cannot be undone.</source>
+        <target>Aquesta acció no es pot desfer.</target>
+      </trans-unit>
+
+      <trans-unit id="common.cancel" datatype="html">
+        <source>Cancel</source>
+        <target>Cancel·la</target>
+      </trans-unit>
+
+      <trans-unit id="common.delete" datatype="html">
+        <source>Delete</source>
+        <target>Elimina</target>
+      </trans-unit>
+
+      <trans-unit id="2734445107198612974" datatype="html">
+        <source> Track your money <x id="START_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;span class=&quot;block text-teal-600&quot;&gt;" />calmly.<x
+            id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></source>
+        <target> Gestiona els teus diners <x id="START_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;span class=&quot;block text-teal-600&quot;&gt;" />amb calma.<x
+            id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></target>
+      </trans-unit>
+
+      <trans-unit id="7533222314698246711" datatype="html">
+        <source> Manage your personal and shared finances with clarity. Simple, secure, and designed
+          for your peace of mind. </source>
+        <target> Gestiona les teves finances personals i compartides amb claredat. Simple, segur i
+          pensat
+          per a la teva tranquil·litat. </target>
+      </trans-unit>
+
+      <trans-unit id="2454050363478003966" datatype="html">
+        <source>Login</source>
+        <target>Inicia sessió</target>
+      </trans-unit>
+
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source>
+        <target>Crea un compte</target>
+      </trans-unit>
+
+      <trans-unit id="3003742799656060943" datatype="html">
+        <source>Total Balance</source>
+        <target>Balanç total</target>
+      </trans-unit>
+
+      <trans-unit id="7727042291824677883" datatype="html">
+        <source>Hello, Alex</source>
+        <target>Hola, Alex</target>
+      </trans-unit>
+
+      <trans-unit id="4200317694838753109" datatype="html">
+        <source>Welcome back</source>
+        <target>Quina alegria tornar-te a veure</target>
+      </trans-unit>
+
+      <trans-unit id="2407784838682038117" datatype="html">
+        <source>Restaurant</source>
+        <target>Restaurant</target>
+      </trans-unit>
+
+      <trans-unit id="6983951722564246494" datatype="html">
+        <source>Food &amp; Dining</source>
+        <target>Menjar i restauració</target>
+      </trans-unit>
+
+      <trans-unit id="498286527813307230" datatype="html">
+        <source>Salary</source>
+        <target>Sou</target>
+      </trans-unit>
+
+      <trans-unit id="7721988664027512739" datatype="html">
+        <source>Income</source>
+        <target>Ingressos</target>
+      </trans-unit>
+
+      <trans-unit id="6276278883659633203" datatype="html">
+        <source>Home Rent</source>
+        <target>Lloguer</target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="6136520581220357690" datatype="html">
+        <source>Shared Account</source>
+        <target>Compte compartit</target>
+      </trans-unit>
+
+      <trans-unit id="8264044238565501678" datatype="html">
+        <source>Forgot password</source>
+        <target>Has oblidat la contrasenya?</target>
+      </trans-unit>
+
+      <trans-unit id="7452360004723630799" datatype="html">
+        <source> Enter your email and we’ll send you a recovery link/code. </source>
+        <target> Introdueix el teu correu i t’enviarem un enllaç o codi de recuperació. </target>
+      </trans-unit>
+
+      <trans-unit id="7817163188308824825" datatype="html">
+        <source> Email </source>
+        <target> Correu electrònic </target>
+      </trans-unit>
+
+      <trans-unit id="2837248686284270505" datatype="html">
+        <source>Please enter a valid email.</source>
+        <target>Introdueix un correu electrònic vàlid.</target>
+      </trans-unit>
+
+      <trans-unit id="2330577642930707695" datatype="html">
+        <source> Cancel </source>
+        <target> Cancel·la </target>
+      </trans-unit>
+
+      <trans-unit id="7563035552061651664" datatype="html">
+        <source> Send </source>
+        <target> Envia </target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.title" datatype="html">
+        <source>Welcome back</source>
+        <target>Quina alegria tornar-te a veure</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.quote" datatype="html">
+        <source>Please enter your details to sign in.</source>
+        <target>Introdueix les teves dades per iniciar sessió.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.emailLabel" datatype="html">
+        <source>Email Address</source>
+        <target>Adreça electrònica</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.emailPlaceholder" datatype="html">
+        <source>name@example.com</source>
+        <target>name@example.com</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.passwordLabel" datatype="html">
+        <source>Password</source>
+        <target>Contrasenya</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.passwordPlaceholder" datatype="html">
+        <source>••••••••</source>
+        <target>••••••••</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.forgotLink" datatype="html">
+        <source>Forgot Password?</source>
+        <target>Has oblidat la contrasenya?</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.recoveryLink" datatype="html">
+        <source> Did we send a code? </source>
+        <target> T’hem enviat un codi? </target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.submit" datatype="html">
+        <source> LogIn </source>
+        <target> Inicia sessió </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.planned.list.title" datatype="html">
+        <source>Planned items</source>
+        <target>Moviments planificats</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.loading" datatype="html">
+        <source>Loading…</source>
+        <target>Carregant…</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.planned.empty" datatype="html">
+        <source> No planned items for these filters. </source>
+        <target> No hi ha moviments planificats amb aquests filtres. </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.planned.due" datatype="html">
+        <source>Due</source>
+        <target>Venciment</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.planned.category" datatype="html">
+        <source>Category</source>
+        <target>Categoria</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.edit" datatype="html">
+        <source> Edit </source>
+        <target> Edita </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.delete" datatype="html">
+        <source> Delete </source>
+        <target> Elimina </target>
+      </trans-unit>
+
+      <trans-unit id="planned.delete.title" datatype="html">
+        <source>Delete planned item</source>
+        <target>Elimina el moviment planificat</target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="planned.delete.message" datatype="html">
+        <source>Are you sure you want to delete this planned item?</source>
+        <target>Segur que vols eliminar aquest moviment planificat?</target>
+      </trans-unit>
+
+      <trans-unit id="planned.delete.success" datatype="html">
+        <source>Planned item deleted successfully.</source>
+        <target>Moviment planificat eliminat correctament.</target>
+      </trans-unit>
+
+      <trans-unit id="planned.delete.error" datatype="html">
+        <source>Could not delete the planned item. Please try again.</source>
+        <target>No s’ha pogut eliminar el moviment planificat. Torna-ho a provar.</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.planned.title" datatype="html">
+        <source>Planned</source>
+        <target>Planificats</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.planned.add" datatype="html">
+        <source> Add planned </source>
+        <target> Afegeix planificat </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.title" datatype="html">
+        <source>Planned &amp; Recurring</source>
+        <target>Planificats i recurrents</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.tab.recurring" datatype="html">
+        <source> Recurring </source>
+        <target> Recurrents </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.tab.planned" datatype="html">
+        <source> Planned </source>
+        <target> Planificats </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.list.title" datatype="html">
+        <source>Recurring definitions</source>
+        <target>Definicions recurrents</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.empty" datatype="html">
+        <source> No recurring definitions for these filters. </source>
+        <target> No hi ha definicions recurrents amb aquests filtres. </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.schedule" datatype="html">
+        <source>Schedule</source>
+        <target>Programació</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.dayOfMonth" datatype="html">
+        <source>Day</source>
+        <target>Dia</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.noSchedule" datatype="html">
+        <source> Not configured </source>
+        <target> Sense configurar </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.category" datatype="html">
+        <source>Category</source>
+        <target>Categoria</target>
+      </trans-unit>
+
+      <trans-unit id="recurring.delete.title" datatype="html">
+        <source>Delete recurring definition</source>
+        <target>Elimina la definició recurrent</target>
+      </trans-unit>
+
+      <trans-unit id="recurring.delete.message" datatype="html">
+        <source>Are you sure you want to delete this recurring definition?</source>
+        <target>Segur que vols eliminar aquesta definició recurrent?</target>
+      </trans-unit>
+
+      <trans-unit id="recurring.delete.success" datatype="html">
+        <source>Recurring definition deleted successfully.</source>
+        <target>Definició recurrent eliminada correctament.</target>
+      </trans-unit>
+
+      <trans-unit id="recurring.delete.error" datatype="html">
+        <source>Could not delete the recurring definition. Please try again.</source>
+        <target>No s’ha pogut eliminar la definició recurrent. Torna-ho a provar.</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.title" datatype="html">
+        <source>Recurring</source>
+        <target>Recurrents</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.add" datatype="html">
+        <source> Add recurring </source>
+        <target> Afegeix recurrent </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.ariaLabel" datatype="html">
+        <source>Planned/Recurring dialog</source>
+        <target>Diàleg de planificats/recurrents</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.title.edit" datatype="html">
+        <source>Edit</source>
+        <target>Edita</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.title.new" datatype="html">
+        <source>New</source>
+        <target>Nou</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.kind.planned" datatype="html">
+        <source>Planned</source>
+        <target>Planificat</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.kind.recurring" datatype="html">
+        <source>Recurring</source>
+        <target>Recurrent</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.tab.planned" datatype="html">
+        <source> Planned </source>
+        <target> Planificat </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.tab.recurring" datatype="html">
+        <source> Recurring </source>
+        <target> Recurrent </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.typeLabel" datatype="html">
+        <source> Type </source>
+        <target> Tipus </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.types.expense" datatype="html">
+        <source>Expense</source>
+        <target>Despesa</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.types.income" datatype="html">
+        <source>Income</source>
+        <target>Ingrés</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.close" datatype="html">
+        <source>Close</source>
+        <target>Tanca</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.fields.amount" datatype="html">
+        <source>Amount</source>
+        <target>Import</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.fields.dueDate" datatype="html">
+        <source>Due date</source>
+        <target>Data de venciment</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.fields.concept" datatype="html">
+        <source>Concept</source>
+        <target>Concepte</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.fields.category" datatype="html">
+        <source>Category</source>
+        <target>Categoria</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.fields.notes" datatype="html">
+        <source>Notes</source>
+        <target>Notes</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.schedule.dayOfMonth" datatype="html">
+        <source> Day </source>
+        <target> Dia </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.schedule.rrule" datatype="html">
+        <source> RRULE </source>
+        <target> RRULE </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.dayOfMonthLabel" datatype="html">
+        <source>Day of month</source>
+        <target>Dia del mes</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.rruleLabel" datatype="html">
+        <source>RRULE</source>
+        <target>RRULE</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.recurring.rrulePlaceholder" datatype="html">
+        <source>FREQ=MONTHLY;INTERVAL=1</source>
+        <target>FREQ=MONTHLY;INTERVAL=1</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.cancel" datatype="html">
+        <source> Cancel </source>
+        <target> Cancel·la </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.save.update" datatype="html">
+        <source>Update</source>
+        <target>Actualitza</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.modal.save.save" datatype="html">
+        <source>Save</source>
+        <target>Desa</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.title" datatype="html">
+        <source>Filters</source>
+        <target>Filtres</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.clear" datatype="html">
+        <source> Clear </source>
+        <target> Neteja </target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.month" datatype="html">
+        <source>Month</source>
+        <target>Mes</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.type" datatype="html">
+        <source>Type</source>
+        <target>Tipus</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.category" datatype="html">
+        <source>Category</source>
+        <target>Categoria</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.category.placeholder" datatype="html">
+        <source>e.g. groceries</source>
+        <target>p. ex., supermercat</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.accountType" datatype="html">
+        <source>Account type</source>
+        <target>Tipus de compte</target>
+      </trans-unit>
+
+      <trans-unit id="recurrent.filters.accountType.placeholder" datatype="html">
+        <source>e.g. cash</source>
+        <target>p. ex., efectiu</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.title" datatype="html">
+        <source>Create Account</source>
+        <target>Crea un compte</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.quote" datatype="html">
+        <source>Join EcoPulse and track your money calmly.</source>
+        <target>Uneix-te a EcoPulse i controla els teus diners amb calma.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.usernameLabel" datatype="html">
+        <source>Username</source>
+        <target>Nom d’usuari</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.usernamePlaceholder" datatype="html">
+        <source>yourname</source>
+        <target>elteunom</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.usernameRequired" datatype="html">
+        <source>Username is required.</source>
+        <target>El nom d’usuari és obligatori.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.usernameMin" datatype="html">
+        <source>Minimum 3 characters.</source>
+        <target>Mínim 3 caràcters.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.usernameMax" datatype="html">
+        <source>Maximum 24 characters.</source>
+        <target>Màxim 24 caràcters.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.usernamePattern" datatype="html">
+        <source> Only letters, numbers, dot, underscore and dash. Must start with a letter or
+          number. </source>
+        <target> Només lletres, números, punt, guió baix i guió. Ha de començar per una lletra o un
+          número. </target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.emailLabel" datatype="html">
+        <source>Email Address</source>
+        <target>Adreça electrònica</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.emailPlaceholder" datatype="html">
+        <source>name@example.com</source>
+        <target>name@example.com</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.emailRequired" datatype="html">
+        <source>Email is required.</source>
+        <target>El correu electrònic és obligatori.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.emailInvalid" datatype="html">
+        <source>Enter a valid email.</source>
+        <target>Introdueix un correu electrònic vàlid.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.passwordLabel" datatype="html">
+        <source>Password</source>
+        <target>Contrasenya</target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="auth.register.passwordPlaceholder" datatype="html">
+        <source>••••••••</source>
+        <target>••••••••</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.passwordRequired" datatype="html">
+        <source>Password is required.</source>
+        <target>La contrasenya és obligatòria.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.passwordMin" datatype="html">
+        <source>Minimum 6 characters.</source>
+        <target>Mínim 6 caràcters.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.passwordMax" datatype="html">
+        <source>Password is too long.</source>
+        <target>La contrasenya és massa llarga.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.password2Label" datatype="html">
+        <source>Confirm Password</source>
+        <target>Confirma la contrasenya</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.password2Placeholder" datatype="html">
+        <source>••••••••</source>
+        <target>••••••••</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.password2Required" datatype="html">
+        <source>Confirm your password.</source>
+        <target>Confirma la teva contrasenya.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.passwordMismatch" datatype="html">
+        <source> Passwords do not match. </source>
+        <target> Les contrasenyes no coincideixen. </target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.submit" datatype="html">
+        <source> Register </source>
+        <target> Registra’m </target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.toastSuccess" datatype="html">
+        <source>Registered successfully!</source>
+        <target>Registre completat!</target>
+      </trans-unit>
+
+      <trans-unit id="common.unexpectedError" datatype="html">
+        <source>Unexpected error. Try again.</source>
+        <target>Error inesperat. Torna-ho a provar.</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.emailConflict" datatype="html">
+        <source>Email already registered</source>
+        <target>Aquest correu ja està registrat</target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.badRequest" datatype="html">
+        <source>Check the form fields and try again</source>
+        <target>Revisa els camps del formulari i torna-ho a provar</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.title" datatype="html">
+        <source> Reset password </source>
+        <target> Restableix la contrasenya </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.subtitle" datatype="html">
+        <source> Enter your email and a new password. </source>
+        <target> Introdueix el teu correu i una nova contrasenya. </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.detectedCodeLabel" datatype="html">
+        <source>Code:</source>
+        <target>Codi:</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.manualCodeLabel" datatype="html">
+        <source> Enter code manually </source>
+        <target> Introdueix el codi manualment </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.manualCodePlaceholder" datatype="html">
+        <source>paste the code here</source>
+        <target>enganxa el codi aquí</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.manualCodeHint" datatype="html">
+        <source> If the link didn’t include a code, paste it from the email. </source>
+        <target> Si l’enllaç no incloïa cap codi, enganxa’l des del correu. </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.emailLabel" datatype="html">
+        <source>Email</source>
+        <target>Correu electrònic</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.emailPlaceholder" datatype="html">
+        <source>you@email.com</source>
+        <target>tu@correu.com</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.newPasswordLabel" datatype="html">
+        <source> New password </source>
+        <target> Nova contrasenya </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.newPasswordPlaceholder" datatype="html">
+        <source>minimum 6 characters</source>
+        <target>mínim 6 caràcters</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.repeatPasswordLabel" datatype="html">
+        <source> Repeat password </source>
+        <target> Repeteix la contrasenya </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.repeatPasswordPlaceholder" datatype="html">
+        <source>repeat the password</source>
+        <target>repeteix la contrasenya</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.passwordMismatch" datatype="html">
+        <source> Passwords do not match. </source>
+        <target> Les contrasenyes no coincideixen. </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.successMessage" datatype="html">
+        <source> Password updated. Redirecting to login… </source>
+        <target> Contrasenya actualitzada. Redirigint a l’inici de sessió… </target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.submitLoading" datatype="html">
+        <source>Updating…</source>
+        <target>Actualitzant…</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.submitButton" datatype="html">
+        <source>Update password</source>
+        <target>Actualitza la contrasenya</target>
+      </trans-unit>
+
+      <trans-unit id="resetPassword.backToLogin" datatype="html">
+        <source> Back to login </source>
+        <target> Torna a l’inici de sessió </target>
+      </trans-unit>
+
+      <trans-unit id="savingId.editTitle" datatype="html">
+        <source>Edit goal</source>
+        <target>Edita l’objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.nameLabel" datatype="html">
+        <source>Goal name</source>
+        <target>Nom de l’objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.targetLabel" datatype="html">
+        <source>Target amount</source>
+        <target>Import objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.deadlineLabel" datatype="html">
+        <source>Deadline</source>
+        <target>Data límit</target>
+      </trans-unit>
+
+      <trans-unit id="common.save" datatype="html">
+        <source> Save </source>
+        <target> Desa </target>
+      </trans-unit>
+
+      <trans-unit id="savingId.title" datatype="html">
+        <source> Goal Details </source>
+        <target> Detalls de l’objectiu </target>
+      </trans-unit>
+
+      <trans-unit id="savings.refreshAria2" datatype="html">
+        <source>Refresh</source>
+        <target>Actualitza</target>
+      </trans-unit>
+
+      <trans-unit id="savings.refreshBtn" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;span class=&quot;text-base leading-none&quot; aria-hidden=&quot;true&quot;&gt;" />
+          ↻<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
+            id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span class=&quot;ml-2&quot;&gt;" />
+          Refresh<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></source>
+        <target><x id="START_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;span class=&quot;text-base leading-none&quot; aria-hidden=&quot;true&quot;&gt;" />
+          ↻<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /><x
+            id="START_TAG_SPAN_1" ctype="x-span_1" equiv-text="&lt;span class=&quot;ml-2&quot;&gt;" />
+          Actualitza<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;" /></target>
+      </trans-unit>
+
+      <trans-unit id="common.loading" datatype="html">
+        <source>Loading...</source>
+        <target>Carregant…</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.savedLabel" datatype="html">
+        <source>Saved</source>
+        <target>Estalviat</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.targetLabel" datatype="html">
+        <source>Target</source>
+        <target>Objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.goal.progress" datatype="html">
+        <source>Progress</source>
+        <target>Progrés</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.progressLabel" datatype="html">
+        <source>Completion</source>
+        <target>Completat</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.addTxnTitle" datatype="html">
+        <source>Add transaction</source>
+        <target>Afegeix un moviment</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txnType" datatype="html">
+        <source>Type</source>
+        <target>Tipus</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txnAmount" datatype="html">
+        <source>Amount</source>
+        <target>Import</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txnNote" datatype="html">
+        <source>Note</source>
+        <target>Nota</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txnDate" datatype="html">
+        <source>Date</source>
+        <target>Data</target>
+      </trans-unit>
+
+      <trans-unit id="common.add" datatype="html">
+        <source> Add </source>
+        <target> Afegeix </target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txnsTitle" datatype="html">
+        <source>Transactions</source>
+        <target>Moviments</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.noTxns" datatype="html">
+        <source> No transactions yet. </source>
+        <target> Encara no hi ha moviments. </target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txn.deleteAria" datatype="html">
+        <source>Delete transaction</source>
+        <target>Elimina el moviment</target>
+      </trans-unit>
+
+      <trans-unit id="savings.selectHousehold" datatype="html">
+        <source> Select a household to see savings goals. </source>
+        <target> Selecciona una llar per veure els objectius d’estalvi. </target>
+      </trans-unit>
+
+      <trans-unit id="savings.err.loadFailed" datatype="html">
+        <source>Failed to load data</source>
+        <target>No s’han pogut carregar les dades</target>
+      </trans-unit>
+
+      <trans-unit id="savings.err.loadTxnsFailed" datatype="html">
+        <source>Failed to load transactions</source>
+        <target>No s’han pogut carregar els moviments</target>
+      </trans-unit>
+
+      <trans-unit id="savings.err.noHousehold" datatype="html">
+        <source>No household selected</source>
+        <target>No s’ha seleccionat cap llar</target>
+      </trans-unit>
+
+      <trans-unit id="common.saved" datatype="html">
+        <source>Saved</source>
+        <target>Desat</target>
+      </trans-unit>
+
+      <trans-unit id="savings.err.saveFailed" datatype="html">
+        <source>Failed to save changes</source>
+        <target>No s’han pogut desar els canvis</target>
+      </trans-unit>
+
+      <trans-unit id="savings.goal.deleteConfirm.title" datatype="html">
+        <source>Delete goal</source>
+        <target>Elimina l’objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.goal.deleteConfirm.message" datatype="html">
+        <source>This action cannot be undone.</source>
+        <target>Aquesta acció no es pot desfer.</target>
+      </trans-unit>
+
+      <trans-unit id="savings.goal.deleted" datatype="html">
+        <source>Goal deleted</source>
+        <target>Objectiu eliminat</target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="savings.err.deleteFailed" datatype="html">
+        <source>Failed to delete goal</source>
+        <target>No s’ha pogut eliminar l’objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.txn.added" datatype="html">
+        <source>Transaction added</source>
+        <target>Moviment afegit</target>
+      </trans-unit>
+
+      <trans-unit id="savings.err.addTxnFailed" datatype="html">
+        <source>Failed to add transaction</source>
+        <target>No s’ha pogut afegir el moviment</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txn.deleteConfirm.title" datatype="html">
+        <source>Delete transaction</source>
+        <target>Elimina el moviment</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txn.deleteConfirm.message" datatype="html">
+        <source>This action cannot be undone.</source>
+        <target>Aquesta acció no es pot desfer.</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txn.deleted" datatype="html">
+        <source>Transaction deleted</source>
+        <target>Moviment eliminat</target>
+      </trans-unit>
+
+      <trans-unit id="savingId.txn.deleteFailed" datatype="html">
+        <source>Failed to delete transaction</source>
+        <target>No s’ha pogut eliminar el moviment</target>
+      </trans-unit>
+
+      <trans-unit id="savings.goal.targetLabel" datatype="html">
+        <source>Target</source>
+        <target>Objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.goal.deleteAria" datatype="html">
+        <source>Delete goal</source>
+        <target>Elimina l’objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.createTitle" datatype="html">
+        <source> Create New Goal </source>
+        <target> Crea un objectiu nou </target>
+      </trans-unit>
+
+      <trans-unit id="savings.createSubtitle" datatype="html">
+        <source> Define your target and start saving. </source>
+        <target> Defineix el teu objectiu i comença a estalviar. </target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.namePlaceholder" datatype="html">
+        <source>e.g. New Camera</source>
+        <target>p. ex. Càmera nova</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.nameAria" datatype="html">
+        <source>Goal name</source>
+        <target>Nom de l’objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.targetPlaceholder" datatype="html">
+        <source>0.00</source>
+        <target>0.00</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.targetAria" datatype="html">
+        <source>Target amount</source>
+        <target>Import objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.deadlineAria" datatype="html">
+        <source>Deadline</source>
+        <target>Data límit</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.errorPrefix" datatype="html">
+        <source>Error:</source>
+        <target>Error:</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.createdOk" datatype="html">
+        <source> Goal created. </source>
+        <target> Objectiu creat. </target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.createAria" datatype="html">
+        <source>Create goal</source>
+        <target>Crea l’objectiu</target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.createBtn" datatype="html">
+        <source><x id="START_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;span aria-hidden=&quot;true&quot;&gt;" />✓<x id="CLOSE_TAG_SPAN"
+            ctype="x-span" equiv-text="&lt;/span&gt;" /><x id="START_TAG_SPAN_1" ctype="x-span_1"
+            equiv-text="&lt;span&gt;" />Create Goal<x id="CLOSE_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;/span&gt;" /></source>
+        <target><x id="START_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;span aria-hidden=&quot;true&quot;&gt;" />✓<x id="CLOSE_TAG_SPAN"
+            ctype="x-span" equiv-text="&lt;/span&gt;" /><x id="START_TAG_SPAN_1" ctype="x-span_1"
+            equiv-text="&lt;span&gt;" />Crea l’objectiu<x id="CLOSE_TAG_SPAN" ctype="x-span"
+            equiv-text="&lt;/span&gt;" /></target>
+      </trans-unit>
+
+      <trans-unit id="savings.form.needsHousehold" datatype="html">
+        <source> Select a household first. </source>
+        <target> Selecciona primer una llar. </target>
+      </trans-unit>
+
+      <trans-unit id="savings.empty" datatype="html">
+        <source> No goals yet. Create your first one on the right. </source>
+        <target> Encara no hi ha objectius. Crea el primer a la dreta. </target>
+      </trans-unit>
+
+      <trans-unit id="savings.loadErrorPrefix" datatype="html">
+        <source>Error:</source>
+        <target>Error:</target>
+      </trans-unit>
+
+      <trans-unit id="savings.title" datatype="html">
+        <source>Financial Goals</source>
+        <target>Objectius financers</target>
+      </trans-unit>
+
+      <trans-unit id="savings.subtitle" datatype="html">
+        <source> Track progress towards your targets </source>
+        <target> Fes seguiment del progrés cap als teus objectius </target>
+      </trans-unit>
+
+      <trans-unit id="savings.refreshAria" datatype="html">
+        <source>Refresh goals</source>
+        <target>Actualitza els objectius</target>
+      </trans-unit>
+
+      <trans-unit id="savings.err.loadGoalsFailed" datatype="html">
+        <source>Failed to load savings goals</source>
+        <target>No s’han pogut carregar els objectius d’estalvi</target>
+        <note priority="1" from="description">Error when loading savings goals</note>
+        <note priority="1" from="meaning">Savings</note>
+      </trans-unit>
+
+      <trans-unit id="settings_active_invite_title" datatype="html">
+        <source> Active Invite Code </source>
+        <target> Codi d’invitació actiu </target>
+      </trans-unit>
+
+      <trans-unit id="settings_active_invite_desc" datatype="html">
+        <source> Share this code with trusted people to give them access to this account. </source>
+        <target> Comparteix aquest codi amb persones de confiança per donar-los accés a aquest
+          compte. </target>
+      </trans-unit>
+
+      <trans-unit id="settings_copy" datatype="html">
+        <source> Copy </source>
+        <target> Copia </target>
+      </trans-unit>
+
+      <trans-unit id="settings_expires_prefix" datatype="html">
+        <source>Expires</source>
+        <target>Caduca</target>
+      </trans-unit>
+
+      <trans-unit id="settings_expires_unknown" datatype="html">
+        <source>in 7 days</source>
+        <target>en 7 dies</target>
+      </trans-unit>
+
+      <trans-unit id="1808419493242205986" datatype="html">
+        <source> Shared account </source>
+        <target> Compte compartit </target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="settings_currency_label" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ h.currency }}" />
+        </source>
+        <target>
+          <x id="INTERPOLATION" equiv-text="{{ h.currency }}" />
+        </target>
+      </trans-unit>
+
+      <trans-unit id="settings_household_title" datatype="html">
+        <source>
+          <x id="INTERPOLATION" equiv-text="{{ household()?.name || &apos;—&apos; }}" />
+        </source>
+        <target>
+          <x id="INTERPOLATION" equiv-text="{{ household()?.name || &apos;—&apos; }}" />
+        </target>
+      </trans-unit>
+
+      <trans-unit id="settings_created_label" datatype="html">
+        <source>Created</source>
+        <target>Creat</target>
+      </trans-unit>
+
+      <trans-unit id="settings_created_unknown" datatype="html">
+        <source>Unknown</source>
+        <target>Desconegut</target>
+      </trans-unit>
+
+      <trans-unit id="settings_management_actions_title" datatype="html">
+        <source> Management Actions </source>
+        <target> Accions de gestió </target>
+      </trans-unit>
+
+      <trans-unit id="settings_invite_member" datatype="html">
+        <source> Invite Member </source>
+        <target> Convida un membre </target>
+      </trans-unit>
+
+      <trans-unit id="settings_invite_member_desc" datatype="html">
+        <source> Share link or code </source>
+        <target> Comparteix enllaç o codi </target>
+      </trans-unit>
+
+      <trans-unit id="settings_see_members" datatype="html">
+        <source>See Members</source>
+        <target>Veure membres</target>
+      </trans-unit>
+
+      <trans-unit id="settings_see_members_desc" datatype="html">
+        <source> Manage access &amp; roles </source>
+        <target> Gestiona accessos i rols </target>
+      </trans-unit>
+
+      <trans-unit id="settings_log_out" datatype="html">
+        <source>Log Out</source>
+        <target>Tanca la sessió</target>
+      </trans-unit>
+
+      <trans-unit id="settings_delete_account" datatype="html">
+        <source> Delete Account </source>
+        <target> Elimina el compte </target>
+      </trans-unit>
+
+      <trans-unit id="settings_delete_account_hint" datatype="html">
+        <source> This action cannot be undone. Owner only. </source>
+        <target> Aquesta acció no es pot desfer. Només el propietari. </target>
+      </trans-unit>
+
+      <trans-unit id="settings_delete_modal_title" datatype="html">
+        <source>Delete account?</source>
+        <target>Eliminar el compte?</target>
+      </trans-unit>
+
+      <trans-unit id="settings_delete_modal_msg_named" datatype="html">
+        <source>This will permanently delete &quot;<x id="PH" equiv-text="householdName" />&quot;.
+          This action cannot be undone.</source>
+        <target>Això eliminarà permanentment &quot;<x id="PH" equiv-text="householdName" />&quot;.
+          Aquesta acció no es pot desfer.</target>
+      </trans-unit>
+
+      <trans-unit id="settings_delete_modal_msg" datatype="html">
+        <source>This will permanently delete this account. This action cannot be undone.</source>
+        <target>Això eliminarà permanentment aquest compte. Aquesta acció no es pot desfer.</target>
+      </trans-unit>
+
+      <trans-unit id="common_cancel" datatype="html">
+        <source>Cancel</source>
+        <target>Cancel·la</target>
+      </trans-unit>
+
+      <trans-unit id="common_delete" datatype="html">
+        <source>Delete</source>
+        <target>Elimina</target>
+      </trans-unit>
+
+      <trans-unit id="settings_delete_success" datatype="html">
+        <source>Account deleted successfully!</source>
+        <target>Compte eliminat correctament!</target>
+      </trans-unit>
+
+      <trans-unit id="settings_members_admin_title" datatype="html">
+        <source> Members </source>
+        <target> Membres </target>
+      </trans-unit>
+
+      <trans-unit id="settings_members_admin_subtitle" datatype="html">
+        <source> Manage roles and access for this household. </source>
+        <target> Gestiona els rols i els accessos d’aquesta llar. </target>
+      </trans-unit>
+
+      <trans-unit id="settings_my_role" datatype="html">
+        <source>My role:</source>
+        <target>El meu rol:</target>
+      </trans-unit>
+
+      <trans-unit id="settings_me" datatype="html">
+        <source> Me </source>
+        <target> Jo </target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_downgrade_btn" datatype="html">
+        <source> Downgrade to Member </source>
+        <target> Baixa a membre </target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_upgrade_btn" datatype="html">
+        <source> Upgrade to Admin </source>
+        <target> Pujar a administrador </target>
+      </trans-unit>
+
+      <trans-unit id="settings_remove_member" datatype="html">
+        <source> Remove </source>
+        <target> Treu </target>
+      </trans-unit>
+
+      <trans-unit id="settings_members_empty" datatype="html">
+        <source> No members found. </source>
+        <target> No s’han trobat membres. </target>
+      </trans-unit>
+
+      <trans-unit id="role_owner" datatype="html">
+        <source>Owner</source>
+        <target>Propietari</target>
+      </trans-unit>
+
+      <trans-unit id="role_admin" datatype="html">
+        <source>Admin</source>
+        <target>Administrador</target>
+      </trans-unit>
+
+      <trans-unit id="role_member" datatype="html">
+        <source>Member</source>
+        <target>Membre</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_upgrade_title" datatype="html">
+        <source>Promote member?</source>
+        <target>Promocionar el membre?</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_upgrade_msg" datatype="html">
+        <source>This will grant admin permissions to this member.</source>
+        <target>Això atorgarà permisos d’administrador a aquest membre.</target>
+      </trans-unit>
+
+      <trans-unit id="common_promote" datatype="html">
+        <source>Promote</source>
+        <target>Promociona</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_upgrade_success" datatype="html">
+        <source>Member promoted to admin.</source>
+        <target>Membre promocionat a administrador.</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_upgrade_error" datatype="html">
+        <source>Could not promote member. Please try again.</source>
+        <target>No s’ha pogut promocionar el membre. Torna-ho a provar.</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_downgrade_title" datatype="html">
+        <source>Demote member?</source>
+        <target>Degradar el membre?</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_downgrade_msg" datatype="html">
+        <source>This will remove admin permissions from this member.</source>
+        <target>Això eliminarà els permisos d’administrador d’aquest membre.</target>
+      </trans-unit>
+
+      <trans-unit id="common_demote" datatype="html">
+        <source>Demote</source>
+        <target>Degrada</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_downgrade_success" datatype="html">
+        <source>Member demoted to member.</source>
+        <target>Membre degradat a membre.</target>
+      </trans-unit>
+
+      <trans-unit id="settings_role_downgrade_error" datatype="html">
+        <source>Could not demote member. Please try again.</source>
+        <target>No s’ha pogut degradar el membre. Torna-ho a provar.</target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="settings_remove_member_title" datatype="html">
+        <source>Remove member?</source>
+        <target>Treure el membre?</target>
+      </trans-unit>
+
+      <trans-unit id="settings_remove_member_msg" datatype="html">
+        <source>This will remove this member from the household.</source>
+        <target>Això eliminarà aquest membre de la llar.</target>
+      </trans-unit>
+
+      <trans-unit id="common_remove" datatype="html">
+        <source>Remove</source>
+        <target>Treu</target>
+      </trans-unit>
+
+      <trans-unit id="settings_remove_member_success" datatype="html">
+        <source>Member removed successfully.</source>
+        <target>Membre eliminat correctament.</target>
+      </trans-unit>
+
+      <trans-unit id="settings_remove_member_error" datatype="html">
+        <source>Could not remove member. Please try again.</source>
+        <target>No s’ha pogut eliminar el membre. Torna-ho a provar.</target>
+      </trans-unit>
+
+      <trans-unit id="settings_members_label" datatype="html">
+        <source>Members</source>
+        <target>Membres</target>
+      </trans-unit>
+
+      <trans-unit id="6121866259229402013" datatype="html">
+        <source> Loading settings... </source>
+        <target> Carregant els ajustos… </target>
+      </trans-unit>
+
+      <trans-unit id="4606091236515013460" datatype="html">
+        <source>Error:</source>
+        <target>Error:</target>
+      </trans-unit>
+
+      <trans-unit id="3226661974700139719" datatype="html">
+        <source>Secure access to your finances</source>
+        <target>Accés segur a les teves finances</target>
+      </trans-unit>
+
+      <trans-unit id="auth.login.noAccount" datatype="html">
+        <source> Don&apos;t have an account? <x id="START_LINK" ctype="x-a"
+            equiv-text="&lt;a
+    class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
+    [routerLink]=&quot;[&apos;/auth/register&apos;]&quot;
+  &gt;" />
+          Create Account <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></source>
+        <target> No tens cap compte? <x id="START_LINK" ctype="x-a"
+            equiv-text="&lt;a
+    class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
+    [routerLink]=&quot;[&apos;/auth/register&apos;]&quot;
+  &gt;" />
+          Crea un compte <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></target>
+      </trans-unit>
+
+      <trans-unit id="auth.register.haveAccount" datatype="html">
+        <source> Already have an account? <x id="START_LINK" ctype="x-a"
+            equiv-text="&lt;a
+    class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
+    [routerLink]=&quot;[&apos;/auth/login&apos;]&quot;
+  &gt;" />
+          Sign In <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></source>
+        <target> Ja tens compte? <x id="START_LINK" ctype="x-a"
+            equiv-text="&lt;a
+    class=&quot;text-teal-600 cursor-pointer font-[&apos;ImpactWeb&apos;,&apos;Impact&apos;,&apos;Haettenschweiler&apos;,&apos;Arial_Narrow_Bold&apos;,sans-serif]&quot;
+    [routerLink]=&quot;[&apos;/auth/login&apos;]&quot;
+  &gt;" />
+          Inicia sessió <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /></target>
+      </trans-unit>
+      <trans-unit id="sharedMembers.title" datatype="html">
+        <source> SHARED MEMBERS </source>
+        <target> MEMBRES COMPARTITS </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/shared/components/house-hold-members/house-hold-members.html</context>
+          <context context-type="linenumber">6,9</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="sharedMembers.loading" datatype="html">
+        <source> Loading... </source>
+        <target> Carregant… </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/shared/components/house-hold-members/house-hold-members.html</context>
+          <context context-type="linenumber">11,14</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="sharedMembers.extraCountAria" datatype="html">
+        <source>+<x id="INTERPOLATION" equiv-text="{{ extraCount() }}" /></source>
+        <target>+<x id="INTERPOLATION" equiv-text="{{ extraCount() }}" /></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/shared/components/house-hold-members/house-hold-members.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="sharedMembers.error.network" datatype="html">
+        <source>Network error. Try again.</source>
+        <target>Error de xarxa. Torna-ho a provar.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/shared/components/house-hold-members/house-hold-members.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="sharedMembers.error.unauthorized" datatype="html">
+        <source>Session expired. Please sign in again.</source>
+        <target>La sessió ha caducat. Torna a iniciar sessió.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/shared/components/house-hold-members/house-hold-members.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="sharedMembers.error.unknown" datatype="html">
+        <source>Something went wrong.</source>
+        <target>Alguna cosa ha anat malament.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">
+            src/app/shared/components/house-hold-members/house-hold-members.ts</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+
+      <trans-unit id="household.create.title" datatype="html">
+        <source> Create household </source>
+        <target> Crea una llar </target>
+      </trans-unit>
+
+      <trans-unit id="household.create.namePlaceholder" datatype="html">
+        <source>Household name</source>
+        <target>Nom de la llar</target>
+      </trans-unit>
+
+      <trans-unit id="household.create.currencyPlaceholder" datatype="html">
+        <source>EUR</source>
+        <target>EUR</target>
+      </trans-unit>
+
+      <trans-unit id="household.create.creating" datatype="html">
+        <source>Creating...</source>
+        <target>Creant…</target>
+      </trans-unit>
+
+      <trans-unit id="household.create.create" datatype="html">
+        <source>Create</source>
+        <target>Crea</target>
+      </trans-unit>
+
+      <trans-unit id="household.create.cancel" datatype="html">
+        <source> Cancel </source>
+        <target> Cancel·la </target>
+      </trans-unit>
+
+      <trans-unit id="household.list.createButton" datatype="html">
+        <source> + Create household
+</source>
+        <target> + Crear llar
+</target>
+      </trans-unit>
+
+      <trans-unit id="household.role.owner" datatype="html">
+        <source>Owner</source>
+        <target>Propietari</target>
+      </trans-unit>
+
+      <trans-unit id="household.role.admin" datatype="html">
+        <source>Admin</source>
+        <target>Administrador</target>
+      </trans-unit>
+
+      <trans-unit id="household.role.member" datatype="html">
+        <source>Member</source>
+        <target>Membre</target>
+      </trans-unit>
+
+      <trans-unit id="household.selector.placeholder" datatype="html">
+        <source>Select household</source>
+        <target>Selecciona una llar</target>
+      </trans-unit>
+
+      <trans-unit id="lang.label" datatype="html">
+        <source>Lang</source>
+        <target>Idioma</target>
+      </trans-unit>
+
+      <trans-unit id="lang.aria" datatype="html">
+        <source>Language</source>
+        <target>Idioma</target>
+      </trans-unit>
+
+      <trans-unit id="nav.dashboard" datatype="html">
+        <source>Dashboard</source>
+        <target>Tauler</target>
+      </trans-unit>
+
+      <trans-unit id="nav.history" datatype="html">
+        <source>History</source>
+        <target>Historial</target>
+      </trans-unit>
+
+      <trans-unit id="nav.charts" datatype="html">
+        <source>Charts</source>
+        <target>Gràfics</target>
+      </trans-unit>
+
+      <trans-unit id="nav.savings" datatype="html">
+        <source>Savings</source>
+        <target>Estalvis</target>
+      </trans-unit>
+
+      <trans-unit id="nav.settings" datatype="html">
+        <source>Settings</source>
+        <target>Ajustos</target>
+      </trans-unit>
+
+      <trans-unit id="nav.home" datatype="html">
+        <source>Home</source>
+        <target>Inici</target>
+      </trans-unit>
+
+      <trans-unit id="nav.add" datatype="html">
+        <source>Add</source>
+        <target>Afegeix</target>
+      </trans-unit>
+
+      <trans-unit id="nav.Savings" datatype="html">
+        <source>Savings</source>
+        <target>Estalvis</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.ariaLabel" datatype="html">
+        <source>Transaction dialog</source>
+        <target>Diàleg de transacció</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.title.edit" datatype="html">
+        <source>Edit Transaction</source>
+        <target>Edita la transacció</target>
+      </trans-unit>
+
+      <!-- aqui -->
+      <trans-unit id="tx.modal.title.new" datatype="html">
+        <source>New Transaction</source>
+        <target>Nova transacció</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.typeLabel" datatype="html">
+        <source> Transaction Type </source>
+        <target> Tipus de transacció </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.type.expense" datatype="html">
+        <source>Expense</source>
+        <target>Despesa</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.type.income" datatype="html">
+        <source>Income</source>
+        <target>Ingrés</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.close" datatype="html">
+        <source>Close</source>
+        <target>Tanca</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.amount" datatype="html">
+        <source> Amount </source>
+        <target> Import </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.amount.inputAria" datatype="html">
+        <source>Amount</source>
+        <target>Import</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.paymentMethod" datatype="html">
+        <source> Payment Method </source>
+        <target> Mètode de pagament </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.pay.cash" datatype="html">
+        <source>Cash</source>
+        <target>Efectiu</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.pay.card" datatype="html">
+        <source>Card</source>
+        <target>Targeta</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.pay.bank" datatype="html">
+        <source>Bank</source>
+        <target>Banc</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.category" datatype="html">
+        <source> Category </source>
+        <target> Categoria </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.category.custom" datatype="html">
+        <source> Custom </source>
+        <target> Personalitzada </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.category.customPlaceholder" datatype="html">
+        <source>Type a custom category...</source>
+        <target>Escriu una categoria personalitzada…</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.category.apply" datatype="html">
+        <source>Apply</source>
+        <target>Aplica</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.category.tip" datatype="html">
+        <source> Tip: press Apply to lock it as the selected category. </source>
+        <target> Consell: prem Aplica per fixar-la com a categoria seleccionada. </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.date" datatype="html">
+        <source> Date </source>
+        <target> Data </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.date.change" datatype="html">
+        <source>Change</source>
+        <target>Canvia</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.note" datatype="html">
+        <source> Note (optional) </source>
+        <target> Nota (opcional) </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.note.placeholder" datatype="html">
+        <source>Add a note...</source>
+        <target>Afegeix una nota…</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.cancel" datatype="html">
+        <source> Cancel </source>
+        <target> Cancel·la </target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.save.update" datatype="html">
+        <source>Update Transaction</source>
+        <target>Actualitza la transacció</target>
+      </trans-unit>
+
+      <trans-unit id="tx.modal.save.save" datatype="html">
+        <source>Save Transaction</source>
+        <target>Desa la transacció</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.food" datatype="html">
+        <source>Food</source>
+        <target>Menjar</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.transport" datatype="html">
+        <source>Transport</source>
+        <target>Transport</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.rent" datatype="html">
+        <source>Rent</source>
+        <target>Lloguer</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.shopping" datatype="html">
+        <source>Shopping</source>
+        <target>Compres</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.utilities" datatype="html">
+        <source>Utilities</source>
+        <target>Subministraments</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.fun" datatype="html">
+        <source>Fun</source>
+        <target>Oci</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.health" datatype="html">
+        <source>Health</source>
+        <target>Salut</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.salary" datatype="html">
+        <source>Salary</source>
+        <target>Sou</target>
+      </trans-unit>
+
+      <trans-unit id="tx.cat.pets" datatype="html">
+        <source>Pets</source>
+        <target>Mascotes</target>
+      </trans-unit>
+
+      <trans-unit id="auth.legal.consent" datatype="html">
+        <source> By continuing, you agree to our <x id="START_LINK" ctype="x-a"
+            equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com&quot;&gt;" />
+          Privacy<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /> &amp; <x
+            id="START_LINK_1"
+            equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com/terms&quot;&gt;" />
+          Terms<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" />. </source>
+        <target> En continuar, acceptes la nostra <x id="START_LINK" ctype="x-a"
+            equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com&quot;&gt;" />
+          Privacitat<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" /> i els <x
+            id="START_LINK_1"
+            equiv-text="&lt;a class=&quot;text-teal-600 cursor-pointer&quot; href=&quot;https://apps.reimii.com/terms&quot;&gt;" />
+          Termes<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;" />. </target>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

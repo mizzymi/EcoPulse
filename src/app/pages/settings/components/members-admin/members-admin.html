@@ -1,0 +1,95 @@
+<div class="flex items-center justify-between gap-3">
+  <div>
+    <div class="text-sm font-semibold text-slate-900" i18n="@@settings_members_admin_title">
+      Members
+    </div>
+    <div class="text-xs text-slate-500" i18n="@@settings_members_admin_subtitle">
+      Manage roles and access for this household.
+    </div>
+  </div>
+
+  <div class="text-xs text-slate-400">
+    <span i18n="@@settings_my_role">My role:</span>
+    <span class="ml-1 font-semibold text-slate-700">{{ roleLabel(myRole()) }}</span>
+  </div>
+</div>
+
+<div class="mt-4 space-y-2">
+  @for (m of rows(); track m.userId) {
+    <div class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <app-user-avatar
+          [id]="m.user.id"
+          [size]="36"
+          ringClass="ring-white"
+          class="ring-2 rounded-full"
+        />
+        <div class="min-w-0">
+          <div class="text-sm font-semibold text-slate-900 truncate">
+            {{ m.user.username }}
+            @if (m.isMe) {
+              <span
+                class="ml-2 text-xs font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full"
+                i18n="@@settings_me"
+              >
+                Me
+              </span>
+            }
+          </div>
+          <div class="text-xs text-slate-500">
+            {{ roleLabel(m.role) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Role action (upgrade/downgrade) -->
+        <div
+          class="flex items-center gap-2"
+          *ngIf="canManageRoles() && m.role !== 'OWNER' && !m.isMe"
+        >
+          @if (m.role === 'ADMIN') {
+            <!-- Downgrade -->
+            <button
+              type="button"
+              class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition disabled:opacity-60"
+              [disabled]="isBusy()"
+              (click)="changeRole(m.userId, 'MEMBER')"
+              i18n="@@settings_role_downgrade_btn"
+            >
+              Downgrade to Member
+            </button>
+          } @else {
+            <!-- Upgrade -->
+            <button
+              type="button"
+              class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition disabled:opacity-60"
+              [disabled]="isBusy()"
+              (click)="changeRole(m.userId, 'ADMIN')"
+              i18n="@@settings_role_upgrade_btn"
+            >
+              Upgrade to Admin
+            </button>
+          }
+        </div>
+        <!-- Remove -->
+        <button
+          type="button"
+          class="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition disabled:opacity-60"
+          [disabled]="isBusy() || !canRemove() || m.isMe || m.role === 'OWNER'"
+          (click)="remove(m.userId)"
+          i18n="@@settings_remove_member"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  } @empty {
+    <div
+      class="rounded-2xl border border-slate-200 bg-white p-4 text-slate-500"
+      i18n="@@settings_members_empty"
+    >
+      No members found.
+    </div>
+  }
+</div>

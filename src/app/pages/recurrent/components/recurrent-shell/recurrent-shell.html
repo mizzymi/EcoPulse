@@ -1,37 +1,106 @@
 <section class="w-full max-w-full flex flex-col gap-3">
   <header class="flex flex-col gap-3">
     <div class="flex items-center justify-between gap-3 flex-wrap">
-      <h1 class="text-xl font-semibold" i18n="@@recurrent.title">Planned & Recurring</h1>
+      <h1 class="text-xl font-semibold" i18n="@@recurrent.title">Planned &amp; Recurring</h1>
     </div>
 
     <app-filters-bar />
+    @if (isSmall()) {
+      <div class="flex justify-around gap-2 p-3">
+        <button
+          type="button"
+          class="rounded-xl border px-3 py-2 text-sm font-semibold transition"
+          [class.border-slate-200]="!isTabActive('RECURRING')"
+          [class.bg-white]="!isTabActive('RECURRING')"
+          [class.hover:bg-slate-50]="!isTabActive('RECURRING')"
+          [class.text-slate-800]="!isTabActive('RECURRING')"
+          [class.border-teal-300]="isTabActive('RECURRING')"
+          [class.bg-teal-50]="isTabActive('RECURRING')"
+          [class.text-teal-900]="isTabActive('RECURRING')"
+          (click)="setTab('RECURRING')"
+          i18n="@@recurrent.tab.recurring"
+        >
+          Recurring
+        </button>
+
+        <button
+          type="button"
+          class="rounded-xl border px-3 py-2 text-sm font-semibold transition"
+          [class.border-slate-200]="!isTabActive('PLANNED')"
+          [class.bg-white]="!isTabActive('PLANNED')"
+          [class.hover:bg-slate-50]="!isTabActive('PLANNED')"
+          [class.text-slate-800]="!isTabActive('PLANNED')"
+          [class.border-teal-300]="isTabActive('PLANNED')"
+          [class.bg-teal-50]="isTabActive('PLANNED')"
+          [class.text-teal-900]="isTabActive('PLANNED')"
+          (click)="setTab('PLANNED')"
+          i18n="@@recurrent.tab.planned"
+        >
+          Planned
+        </button>
+      </div>
+    }
   </header>
 
-  <main class="w-full max-w-full">
-    <section class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-      <app-planned-panel
-        (create)="createPlanned.emit()"
-        (edit)="editPlanned.emit($event)"
-      ></app-planned-panel>
+  @if (!isSmall()) {
+    <!-- Desktop: show both columns -->
+    <main class="w-full max-w-full">
+      <section class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+        <app-planned-panel
+          (create)="createPlanned.emit()"
+          (edit)="editPlanned.emit($event)"
+        ></app-planned-panel>
 
-      <app-recurring-panel
-        (create)="createRecurring.emit()"
-        (edit)="editRecurring.emit($event)"
-      ></app-recurring-panel>
-    </section>
+        <app-recurring-panel
+          (create)="createRecurring.emit()"
+          (edit)="editRecurring.emit($event)"
+        ></app-recurring-panel>
+      </section>
 
-    <section class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-      <app-planned-list
-        [rows]="facade.planned()"
-        [loading]="facade.isLoadingPlanned()"
-        (edit)="editPlanned.emit($event)"
-      ></app-planned-list>
+      <section class="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+        <app-planned-list
+          [rows]="facade.planned()"
+          [loading]="facade.isLoadingPlanned()"
+          (edit)="editPlanned.emit($event)"
+        ></app-planned-list>
 
-      <app-recurring-list
-        [rows]="facade.recurring()"
-        [loading]="facade.isLoadingRecurring()"
-        (edit)="editRecurring.emit($event)"
-      ></app-recurring-list>
-    </section>
-  </main>
+        <app-recurring-list
+          [rows]="facade.recurring()"
+          [loading]="facade.isLoadingRecurring()"
+          (edit)="editRecurring.emit($event)"
+        ></app-recurring-list>
+      </section>
+    </main>
+  } @else {
+    <!-- Mobile: show only the selected tab -->
+    <main class="w-full max-w-full">
+      @if (tab() === 'RECURRING') {
+        <section class="grid w-full grid-cols-1 gap-3">
+          <app-recurring-panel
+            (create)="createRecurring.emit()"
+            (edit)="editRecurring.emit($event)"
+          ></app-recurring-panel>
+
+          <app-recurring-list
+            [rows]="facade.recurring()"
+            [loading]="facade.isLoadingRecurring()"
+            (edit)="editRecurring.emit($event)"
+          ></app-recurring-list>
+        </section>
+      } @else {
+        <section class="grid w-full grid-cols-1 gap-3">
+          <app-planned-panel
+            (create)="createPlanned.emit()"
+            (edit)="editPlanned.emit($event)"
+          ></app-planned-panel>
+
+          <app-planned-list
+            [rows]="facade.planned()"
+            [loading]="facade.isLoadingPlanned()"
+            (edit)="editPlanned.emit($event)"
+          ></app-planned-list>
+        </section>
+      }
+    </main>
+  }
 </section>

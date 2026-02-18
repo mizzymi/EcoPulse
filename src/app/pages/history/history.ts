@@ -69,7 +69,6 @@ export class History {
       paymentMethod: (row.paymentMethod ?? 'CASH') as any,
       categoryLabel: row.category ?? null,
       dateISO: this.toISODate(new Date(row.date)),
-      recurring: false,
       note: row.note ?? '',
     });
   }

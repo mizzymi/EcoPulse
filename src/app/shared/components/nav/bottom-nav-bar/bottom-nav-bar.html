@@ -1,19 +1,23 @@
 @if (isSmall()) {
   <nav
-    class="w-full flex items-center justify-around pt-2 pb-2 bg-white border-t-1 border-teal-700"
+    class="w-full grid items-center gap-2 pt-2 pb-2 bg-white border-t-1 border-teal-700"
+    style="grid-template-columns: 1fr 1fr 1.2fr 1fr 1fr"
   >
     <app-nav-options link="/dashboard" name="Home" i18n-name="@@nav.home" [icon]="home" />
 
     <app-nav-options link="/history" name="History" i18n-name="@@nav.history" [icon]="history" />
 
-    <button
-      type="button"
-      class="relative -mt-12 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr from-teal-700 to-teal-300 shadow-lg shadow-teal-700/50 ring-4 ring-white"
-      aria-label="Add"
-      i18n-aria-label="@@nav.add"
-    >
-      <lucide-icon class="h-7 w-7 text-white" [img]="plus" color="currentColor"></lucide-icon>
-    </button>
+    <div class="flex justify-center">
+      <button
+        type="button"
+        (click)="onAddClick()"
+        class="relative -mt-12 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr from-teal-700 to-teal-300 shadow-lg shadow-teal-700/50 ring-4 ring-white"
+        aria-label="Add"
+        i18n-aria-label="@@nav.add"
+      >
+        <lucide-icon class="h-7 w-7 text-white" [img]="plus" color="currentColor"></lucide-icon>
+      </button>
+    </div>
 
     <app-nav-options link="/savings" name="Savings" i18n-name="@@nav.Savings" [icon]="savings" />
 
